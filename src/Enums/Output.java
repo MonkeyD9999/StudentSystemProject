@@ -9,7 +9,10 @@ public enum Output {
     IMP("Invalid menu price!"),
     IRP("Invalid room price!"),
     ITP("Invalid ticket price"),
-    UNKNOWN("Unknown command. Type help to see available commands.");
+    IDP("Invalid discount price!"),
+    IC("Invalid capacity!"),
+    UNKNOWN("Unknown command. Type help to see available commands."),
+    ALREADY_EXISTS("%s already exists!"),;
 
     String helpMsg;
 

@@ -21,13 +21,13 @@ public class Main {
 
         switch (command.toLowerCase()){
             case "help" -> printHelp();
-            case "exit" -> System.out.println(Output.EXIT.getMsg());;
+            case "exit" -> System.out.println(Output.EXIT.getMsg());
             case "bounds" -> processBound(in, manager);
             case "save" -> processSave(manager);
             case "load" -> processLoad(in.nextLine(),manager);
             case "service" -> processService(in, manager);
 
-            default -> System.out.println(Output.UNKNOWN.getMsg());;
+            default -> System.out.println(Output.UNKNOWN.getMsg());
         }
     }
 
@@ -66,7 +66,7 @@ public class Main {
 
     }
 
-    private static void processService(Scanner in, StudentSystemClass manager){
+    private static void processService(Scanner in, StudentSystemClass manager) throws DuplicatedObjectException{
         String type = in.next();
         int lat = in.nextInt();
         int lng = in.nextInt();
@@ -77,7 +77,7 @@ public class Main {
         if(!type.equals("eating") && !type.equals("lodging") && !type.equals("leisure")){
             System.out.println(Output.IT.getMsg());
         }
-        else if(!manager.checkLocation(lat, lng)){
+        else if(!manager.isLocationInside(lat, lng)){
             System.out.println(Output.IL.getMsg());
         }
         else if(price<=0){
@@ -87,10 +87,22 @@ public class Main {
                 case "leisure" -> System.out.println(Output.ITP.getMsg());
             }
         }
-        else if(type.equals(""))
-
-        System.out.print(Output.SC.getMsg(), type, name);
-
+        else if(type.equals("leisure")) {
+            if(value<0 || value>100){
+                System.out.println(Output.IDP.getMsg());
+            }
+        }
+        else if(value<=0){
+                System.out.println(Output.IC.getMsg());
+        }
+        else{
+            try {
+                manager.addService(name, value, lat, lng, price);
+            }
+            catch (DuplicatedObjectException e){
+                System.out.printf(Output.ALREADY_EXISTS.getMsg(), name);
+            }
+        }
     }
 
 
