@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @param <E> Generic Element
  */
 public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 0L;
 	/**
      *  Node at the head of the list.
      */

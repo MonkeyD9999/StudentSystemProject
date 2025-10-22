@@ -9,9 +9,9 @@ import dataStructures.exceptions.NoSuchElementException;
  * @param <E> Generic Element
  * 
  */
-class TwoWayDoublyIterator<E> extends DoublyIterator<E>
-        implements TwoWayIterator<E> {
+class TwoWayDoublyIterator<E> extends DoublyIterator<E> implements TwoWayIterator<E> {
 
+    private static final long serialVersionUID = 0L;
     /**
      * Node with the first element in the iteration.
      */

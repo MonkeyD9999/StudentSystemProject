@@ -1,5 +1,8 @@
+import java.io.*;
 import java.util.Scanner;
 import Enums.Output;
+import Exceptions.AlreadyExistsObjectException;
+import System.*;
 
 public class Main {
 	
@@ -36,13 +39,13 @@ public class Main {
     }
 
     private static void processBound(Scanner in, StudentSystemClass manager){
-        int latTop = in.nextInt();
-        int latBottom = in.nextInt();
-        int longRigth = in.nextInt();
-        int longLeft = in.nextInt();
+        long latTop = in.nextInt();
+        long latBottom = in.nextInt();
+        long longRigth = in.nextInt();
+        long longLeft = in.nextInt();
         String name = in.nextLine();
 
-        if(load(name)!=null){
+        if(processLoad(name, manager)!=null){
             System.out.println("Bounds already exists. Please load it!");
         }
         else if(latTop<=latBottom || longRigth<=longLeft ){
@@ -57,16 +60,7 @@ public class Main {
         }
     }
 
-    private static void processSave(StudentSystemClass manager){
-
-    }
-
-    private static void processLoad (String areaName, StudentSystemClass manager){
-
-
-    }
-
-    private static void processService(Scanner in, StudentSystemClass manager) throws DuplicatedObjectException{
+    private static void processService(Scanner in, StudentSystemClass manager) throws AlreadyExistsObjectException {
         String type = in.next();
         int lat = in.nextInt();
         int lng = in.nextInt();
@@ -99,11 +93,35 @@ public class Main {
             try {
                 manager.addService(name, value, lat, lng, price);
             }
-            catch (DuplicatedObjectException e){
+            catch (AlreadyExistsObjectException e){
                 System.out.printf(Output.ALREADY_EXISTS.getMsg(), name);
             }
         }
     }
 
+    private static void processSave (StudentSystem system){
+        try{
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(TRAINS_FILE));
+            oos.writeObject(system);
+            oos.flush();
+            oos.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    private static StudentSystem processLoad(){
+        try{
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(TRAINS_FILE));
+            StudentSystem system = (StudentSystemClass) in.readObject();
+            in.close();
+            return system;
+        } catch (IOException e) {
+            return new StudentSystemClass();
+        }catch(ClassNotFoundException e){
+            throw new RuntimeException(e);
+        }
+    }
 
 }

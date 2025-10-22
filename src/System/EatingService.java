@@ -1,4 +1,6 @@
-public class EatingService extends ServiceClass{
+package System;
+
+public class EatingService extends ServiceClass {
     private long price;
     private int number_seats;
     public EatingService(String name, LocationClass location, long price, int number_seats) {

@@ -1,5 +1,7 @@
 package dataStructures;
 
+import java.io.Serializable;
+
 /**
  * Iterator Abstract Data Type with Filter
  * Includes description of general methods for one way iterator.
@@ -8,7 +10,7 @@ package dataStructures;
  * @param <E> Generic Element
  *
  */
-public interface Predicate<E> {
+public interface Predicate<E> extends Serializable {
     /**
      *  Filter that an element needs to check
      * @param elem

@@ -1,4 +1,6 @@
-public class LeisureService extends ServiceClass{
+package System;
+
+public class LeisureService extends ServiceClass {
     private long ticket_cost;
     private int student_disc;
 

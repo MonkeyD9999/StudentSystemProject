@@ -1,4 +1,8 @@
-public class LocationClass implements Location {
+package System;
+
+import java.io.Serializable;
+
+public class LocationClass implements Location, Serializable {
 
     private long lat;
     private long lng;

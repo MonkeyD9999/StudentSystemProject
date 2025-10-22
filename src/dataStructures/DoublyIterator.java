@@ -9,6 +9,7 @@ import dataStructures.exceptions.NoSuchElementException;
  * 
  */
 class DoublyIterator<E> implements Iterator<E> {
+    static final long serialVersionUID = 0L;
     /**
      * Node with the first element in the iteration.
      */

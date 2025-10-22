@@ -2,6 +2,8 @@ package dataStructures;
 
 import dataStructures.exceptions.NoSuchElementException;
 
+import java.io.Serializable;
+
 /**
  * Iterator Abstract Data Type with Filter
  * Includes description of general methods for one way iterator.
@@ -10,7 +12,8 @@ import dataStructures.exceptions.NoSuchElementException;
  * @param <E> Generic Element
  *
  */
-public class FilterIterator<E> implements Iterator<E> {
+public class FilterIterator<E> implements Iterator<E>, Serializable {
+    private static final long serialVersionUID = 0L;
 
     /**
      *  Iterator of elements to filter.

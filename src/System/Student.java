@@ -1,4 +1,8 @@
-public interface Student {
+package System;
+
+import java.io.Serializable;
+
+public interface Student extends Serializable {
 
     public void moveTo(Service service);
 

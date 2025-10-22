@@ -1,12 +1,13 @@
+package System;
+
 import dataStructures.DoublyLinkedList;
 import dataStructures.SortedDoublyLinkedList;
 
-import java.security.Provider;
+import java.io.Serializable;
 
-public class StudentSystemClass implements StudentSystem{
+public class StudentSystemClass implements StudentSystem, Serializable {
 
     private Area currentArea;
-    private SortedDoublyLinkedList<Service> services;
     private DoublyLinkedList<Student> students;
 
     public StudentSystemClass(){
@@ -16,7 +17,7 @@ public class StudentSystemClass implements StudentSystem{
 
 
     @Override
-    public void createNewArea(String name, int latTop, int latBottom, int lngTop, int lngBottom) {
+    public void createNewArea(String name, long latTop, long latBottom, long lngRight, long lngLeft) {
 
     }
 
@@ -26,8 +27,8 @@ public class StudentSystemClass implements StudentSystem{
     }
 
     @Override
-    public void addService(String name, int latTop, int latBottom, int lngTop, int lngBottom) {
-
+    public void addService(String name, int value, long lat, long lng, int price) {
+        currentArea.addService(name, value, price, new LocationClass(lat, lng));
     }
 
     @Override

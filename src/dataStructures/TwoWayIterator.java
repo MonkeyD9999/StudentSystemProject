@@ -2,6 +2,8 @@ package dataStructures;
 
 import dataStructures.exceptions.NoSuchElementException;
 
+import java.io.Serializable;
+
 /**
  * TwoWayIterator Abstract Data Type 
  * Includes description of general methods for two-way iterator.
@@ -10,7 +12,7 @@ import dataStructures.exceptions.NoSuchElementException;
  * @param <E> Generic Element
  * 
  */
-public interface TwoWayIterator<E> extends Iterator<E> {
+public interface TwoWayIterator<E> extends Iterator<E>, Serializable {
 
     /**
      * Returns true if previous would return an element 

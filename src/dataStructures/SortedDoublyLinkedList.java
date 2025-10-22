@@ -11,7 +11,7 @@ import dataStructures.exceptions.*;
  * 
  */
 public class SortedDoublyLinkedList<E> implements SortedList<E> {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 0L;
 	
 	/**
      *  Node at the head of the list.

@@ -1,7 +1,11 @@
+package System;
+
 import dataStructures.DoublyLinkedList;
 
+import java.io.Serializable;
 
-public abstract class StudentClass implements Student{
+
+public abstract class StudentClass implements Student, Serializable {
     private String id;
     private String name;
     private Service currentService;

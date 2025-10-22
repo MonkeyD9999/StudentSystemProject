@@ -9,7 +9,7 @@ import dataStructures.exceptions.*;
  */
 public class ListInArray<E> implements List<E> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 0L;
 	private static final int FACTOR = 2;
     /**
      * Array of generic elements E.

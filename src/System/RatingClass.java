@@ -1,4 +1,8 @@
-public class RatingClass implements Rating {
+package System;
+
+import java.io.Serializable;
+
+public class RatingClass implements Rating, Serializable {
     private StudentClass student;
     private int stars;
     public RatingClass(StudentClass student, int stars) {

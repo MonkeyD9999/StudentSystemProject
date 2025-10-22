@@ -1,4 +1,6 @@
-public class LodgeService extends ServiceClass{
+package System;
+
+public class LodgeService extends ServiceClass {
     private long monthly_cost;
     private int number_rooms;
 

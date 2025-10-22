@@ -1,7 +1,19 @@
-import dataStructures.DoublyLinkedList;
-import dataStructures.SortedDoublyLinkedList;
+package System;
 
-public class AreaClass implements Area {
+import Exceptions.AlreadyExistsObjectException;
+import dataStructures.DoublyLinkedList;
+import dataStructures.Iterator;
+
+import java.io.Serial;
+import java.io.Serializable;
+
+public class AreaClass implements Area, Serializable {
+    /**
+     * Serial Version UID of the Class
+     */
+    @Serial
+    private static final long serialVersionUID = 0L;
+
     private String name;
     private int max_lat;
     private int max_lng;
@@ -25,14 +37,18 @@ public class AreaClass implements Area {
     }
 
     @Override
-    public void addService(Service service) throws DuplicatedObjectException {
-        if(services.indexOf(service)!=-1){
-            throw new DuplicatedObjectException();
+    public void addService(String name, int value, int price, LocationClass loc) throws AlreadyExistsObjectException {
+        Iterator<Service> it = services.iterator();
+        while (it.hasNext()){
+            Service s = it.next();
+            if(s.getName().equals(name)){
+                throw new AlreadyExistsObjectException();
+            }
         }
-        else {
-            services.addLast(service);
-        }
+        services.addLast();
     }
+
+
 
 
 }

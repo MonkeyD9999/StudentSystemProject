@@ -10,6 +10,7 @@ import dataStructures.exceptions.NoSuchElementException;
  *
  */
 class ArrayIterator<E> implements Iterator<E> {
+    static final long serialVersionUID = 0L;
     private E[] elems;
     private int counter;
     private int current;
