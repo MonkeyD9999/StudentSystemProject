@@ -12,7 +12,18 @@ public enum Output {
     IDP("Invalid discount price!"),
     IC("Invalid capacity!"),
     UNKNOWN("Unknown command. Type help to see available commands."),
-    ALREADY_EXISTS("%s already exists!"),;
+    ALREADY_EXISTS("%s already exists!"),
+    PRINT_SERVICE("%s: %s %.0f %.0f.\n"),
+    NS("No services yet!\n"),
+    SA("%s %s added.\n"),
+    IST("Invalid student type!"),
+    LDNE("lodging %s does not exist!\n"),
+    LIF("lodging %s is full!\n"),
+    SNAE("%s already exists!\n"),
+    SHL("%s has left.\n"),
+    NDNE("%s does not exist!\n"),
+    NST("No students yet!"),
+    NSF("No students from %s!\n");
 
     String helpMsg;
 

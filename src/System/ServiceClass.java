@@ -2,14 +2,16 @@ package System;
 
 import java.io.Serializable;
 
-public abstract class ServiceClass implements Serializable {
+public abstract class ServiceClass implements Service,Serializable {
 
     private String name;
     private LocationClass location;
+    private String type;
 
-    public ServiceClass(String name, LocationClass location) {
+    public ServiceClass(String name,String type, LocationClass location) {
         this.name = name;
         this.location = location;
+        this.type = type;
     }
 
     public String getName() {
@@ -17,5 +19,9 @@ public abstract class ServiceClass implements Serializable {
     }
     public LocationClass getLocation() {
         return location;
+    }
+
+    public String getType() {
+        return type;
     }
 }

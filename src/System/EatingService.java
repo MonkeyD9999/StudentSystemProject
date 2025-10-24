@@ -1,10 +1,10 @@
 package System;
 
 public class EatingService extends ServiceClass {
-    private long price;
+    private int price;
     private int number_seats;
-    public EatingService(String name, LocationClass location, long price, int number_seats) {
-        super(name, location);
+    public EatingService(String name, String type, LocationClass location, int price, int number_seats) {
+        super(name, type, location);
         this.price = price;
         this.number_seats = number_seats;
     }

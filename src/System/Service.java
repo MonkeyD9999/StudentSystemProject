@@ -4,5 +4,6 @@ import java.io.Serializable;
 
 public interface Service extends Serializable {
     String getName();
-    String getLocation();
+    LocationClass getLocation();
+    String getType();
 }

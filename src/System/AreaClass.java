@@ -14,41 +14,70 @@ public class AreaClass implements Area, Serializable {
     @Serial
     private static final long serialVersionUID = 0L;
 
+    private final String EAT="eating";
+    private final String LODGE="lodging";
+    private final String LEISURE="leisure";
+
     private String name;
-    private int max_lat;
-    private int max_lng;
-    private int min_lat;
-    private int min_lng;
+    private long latMax;
+    private long lngMax;
+    private long latMin;
+    private long lngMin;
 
     private DoublyLinkedList<Service> services;
 
-    public AreaClass(int max_lat, int max_lng, int min_lat, int min_lng) {
-        this.max_lat = max_lat;
-        this.max_lng = max_lng;
-        this.min_lat = min_lat;
-        this.min_lng = min_lng;
+    public AreaClass(String name, long latMax, long lngMax, long latMin, long lngMin) {
+        this.name = name;
+        this.latMax = latMax;
+        this.lngMax = lngMax;
+        this.latMin = latMin;
+        this.lngMin = lngMin;
         services = new DoublyLinkedList<Service>();
     }
 
     @Override
     public boolean isInside(LocationClass loc) {
-        return loc.getLatitude()>=this.min_lat && loc.getLatitude()<=this.max_lat &&
-                loc.getLongitude()>=this.min_lng && loc.getLongitude()<=this.max_lng;
+        return loc.getLatitude()>=this.latMin && loc.getLatitude()<=this.latMax &&
+                loc.getLongitude()>=this.lngMin && loc.getLongitude()<=this.lngMax;
     }
 
     @Override
-    public void addService(String name, int value, int price, LocationClass loc) throws AlreadyExistsObjectException {
+    public void addService(String type, String name, int value, int price, LocationClass loc) throws AlreadyExistsObjectException {
         Iterator<Service> it = services.iterator();
         while (it.hasNext()){
             Service s = it.next();
             if(s.getName().equals(name)){
-                throw new AlreadyExistsObjectException();
+                throw new AlreadyExistsObjectException(name);
             }
         }
-        services.addLast();
+        switch (type){
+            case EAT -> services.addLast(new EatingService(name, type, loc, price, value));
+            case LODGE -> services.addLast(new LodgeService(name, type, loc, price, value));
+            case LEISURE -> services.addLast(new LeisureService(name, type, loc, price, value));
+        }
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
 
+    @Override
+    public DoublyLinkedList<Service> getServices() {
+        return services;
+    }
+
+    @Override
+    public Service getLodge(String name) {
+        Iterator<Service> it = services.iterator();
+        while (it.hasNext()){
+            Service s = it.next();
+            if(s.getName().equals(name)){
+                return s;
+            }
+        }
+        return null;
+    }
 
 
 }

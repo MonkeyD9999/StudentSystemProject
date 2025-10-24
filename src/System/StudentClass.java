@@ -6,20 +6,20 @@ import java.io.Serializable;
 
 
 public abstract class StudentClass implements Student, Serializable {
-    private String id;
+    private String country;
     private String name;
-    private Service currentService;
+    private Service currentLodge;
     private DoublyLinkedList<Service> visited;
 
-    public StudentClass(String id, String name) {
-        this.id = id;
+    public StudentClass(String name, String country) {
+        this.country = country;
         this.name = name;
-        this.currentService = null;
+        this.currentLodge = null;
         this.visited =  new DoublyLinkedList<>();
     }
 
     public void moveTo(Service service){
-        this.currentService = service;
+        this.currentLodge = service;
     }
 
     public void addVisit(Service service){
@@ -27,7 +27,20 @@ public abstract class StudentClass implements Student, Serializable {
     }
 
     public void evaluate(Service service){
-        this.currentService = service;
+        this.currentLodge = service;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public Service getCurrentLodge() {
+        return currentLodge;
+    }
+    public DoublyLinkedList<Service> getVisited() {
+        return visited;
+    }
+    public String getCountry() {
+        return country;
     }
 
 
