@@ -12,6 +12,7 @@ public interface Student extends Serializable {
 
     public void addVisit(Service service);
     public String getName();
+    public Service getCurrentService();
     public Service getCurrentLodge();
     public DoublyLinkedList<Service> getVisited();
     public String getCountry();

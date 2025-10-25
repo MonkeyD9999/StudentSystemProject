@@ -95,10 +95,23 @@ public class StudentSystemClass implements StudentSystem, Serializable {
     @Override
     public void changeLocation(String name, String location) {
         Student student = getStudent(name);
+        Service service = getService(location);
         if(student==null){
             throw new Error1Exception(name);
         }
-
+        if(location==null){
+            throw new Error2Exception(location);
+        }
+        if(!(service instanceof LeisureService) && !(service instanceof EatingService)){
+            throw new Error3Exception(location);
+        }
+        if(student.getCurrentService().equals(service)) {
+            throw new Error4Exception("");
+        }
+        if(service instanceof EatingService && ((EatingService) service).isFull()){
+            throw new Error5Exception(location);
+        }
+        student.changeLocation(service);
 
     }
 
@@ -108,6 +121,17 @@ public class StudentSystemClass implements StudentSystem, Serializable {
             Student student = it.next();
             if(student.getName().equals(name)){
                 return student;
+            }
+        }
+        return null;
+    }
+
+    private Service getService(String location){
+        Iterator<Service> it =  services.iterator();
+        while(it.hasNext()){
+            Service service = it.next();
+            if(service.getName().equals(location)){
+                return service;
             }
         }
         return null;

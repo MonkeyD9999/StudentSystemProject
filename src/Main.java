@@ -1,10 +1,7 @@
 import java.io.*;
 import java.util.Scanner;
 import Enums.Output;
-import Exceptions.AlreadyExistsObjectException;
-import Exceptions.Error1Exception;
-import Exceptions.Error2Exception;
-import Exceptions.Error3Exception;
+import Exceptions.*;
 import System.*;
 import dataStructures.*;
 
@@ -37,7 +34,7 @@ public class Main {
             case "services" -> listServices(manager);
             case "student" -> processAddStudent(in, manager);
             case "leave" -> processRemoveStudent(in.nextLine(), manager);
-            case "students" -> listAllStudents(in.nextLine(), manager);
+            case "students" -> listStudents(in.nextLine(), manager);
             case "go" -> changeLocation(in, manager);
 
             default -> System.out.println(Output.UNKNOWN.getMsg());
@@ -190,7 +187,7 @@ public class Main {
         }
     }
 
-    private  static void listAllStudents(String place, StudentSystemClass manager){
+    private  static void listStudents(String place, StudentSystemClass manager){
         Iterator<Student> it = manager.getStudentsAll();
         if(!it.hasNext()){
             if(place.equals("all")){
@@ -217,7 +214,16 @@ public class Main {
         }
         catch (Error1Exception e){
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
+        } catch(Error2Exception e){
+            System.out.printf(Output.UL.getMsg(), e.getMessage());
+        } catch(Error3Exception e){
+            System.out.printf(Output.AT.getMsg(), e.getMessage());
+        } catch(Error4Exception e){
+            System.out.printf(Output.ELF.getMsg());
+        } catch (Error5Exception e) {
+            System.out.printf(Output.ELF.getMsg());
         }
+
     }
 
 }
