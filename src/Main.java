@@ -37,7 +37,8 @@ public class Main {
             case "services" -> listServices(manager);
             case "student" -> processAddStudent(in, manager);
             case "leave" -> processRemoveStudent(in.nextLine(), manager);
-            case "students" -> listStudents(in.nextLine(), manager);
+            case "students" -> listAllStudents(in.nextLine(), manager);
+            case "go" -> changeLocation(in, manager);
 
             default -> System.out.println(Output.UNKNOWN.getMsg());
         }
@@ -189,8 +190,8 @@ public class Main {
         }
     }
 
-    private  static void listStudents(String place, StudentSystemClass manager){
-        Iterator<Student> it = manager.getStudents();
+    private  static void listAllStudents(String place, StudentSystemClass manager){
+        Iterator<Student> it = manager.getStudentsAll();
         if(!it.hasNext()){
             if(place.equals("all")){
                 System.out.println(Output.NST.getMsg());
@@ -205,6 +206,18 @@ public class Main {
 
         }
 
+    }
+
+    private static void changeLocation(Scanner in, StudentSystemClass manager){
+        try{
+            String name = in.nextLine();
+            String location = in.nextLine();
+            manager.changeLocation(name, location);
+            System.out.printf(Output.SHL.getMsg(), name);
+        }
+        catch (Error1Exception e){
+            System.out.printf(Output.NDNE.getMsg(), e.getMessage());
+        }
     }
 
 }

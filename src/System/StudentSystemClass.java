@@ -11,6 +11,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
 
     private Area currentArea;
     private DoublyLinkedList<Student> students;
+    private DoublyLinkedList<Service> services;
 
     public StudentSystemClass(){
         this.currentArea= null;
@@ -31,6 +32,11 @@ public class StudentSystemClass implements StudentSystem, Serializable {
     @Override
     public void addService(String type, String name, int value, long lat, long lng, int price) {
         currentArea.addService(type, name, value, price, new LocationClass(lat, lng));
+    }
+
+    @Override
+    public Iterator<Service> getServices() {
+        return services.iterator();
     }
 
     @Override
@@ -71,14 +77,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
 
     @Override
     public void removeStudent(String name) {
-        Iterator<Student> it =  students.iterator();
-        Student remove = null;
-        while (it.hasNext()){
-            Student student = it.next();
-            if(student.getName().equals(name)){
-                remove = student;
-            }
-        }
+        Student remove = getStudent(name);
         if(remove==null){
             throw new Error1Exception(name);
         }
@@ -89,7 +88,30 @@ public class StudentSystemClass implements StudentSystem, Serializable {
     }
 
     @Override
-    public Iterator<Student> getStudents() {
+    public Iterator<Student> getStudentsAll() {
         return students.iterator();
     }
+
+    @Override
+    public void changeLocation(String name, String location) {
+        Student student = getStudent(name);
+        if(student==null){
+            throw new Error1Exception(name);
+        }
+
+
+    }
+
+    private Student getStudent(String name){
+        Iterator<Student> it =  students.iterator();
+        while(it.hasNext()){
+            Student student = it.next();
+            if(student.getName().equals(name)){
+                return student;
+            }
+        }
+        return null;
+    }
+
+
 }

@@ -8,4 +8,8 @@ public class EatingService extends ServiceClass {
         this.price = price;
         this.number_seats = number_seats;
     }
+
+    public int getPrice() { return price; }
+
+    public int getNumber_seats() { return number_seats; }
 }

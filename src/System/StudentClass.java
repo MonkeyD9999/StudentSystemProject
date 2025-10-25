@@ -8,7 +8,7 @@ import java.io.Serializable;
 public abstract class StudentClass implements Student, Serializable {
     private String country;
     private String name;
-    private Service currentLodge;
+    protected Service currentLodge;
     private DoublyLinkedList<Service> visited;
 
     public StudentClass(String name, String country) {
@@ -43,6 +43,6 @@ public abstract class StudentClass implements Student, Serializable {
         return country;
     }
 
-
+    public abstract boolean changeLocation(Service service);
 
 }

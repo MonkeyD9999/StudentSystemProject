@@ -15,4 +15,6 @@ public interface Student extends Serializable {
     public Service getCurrentLodge();
     public DoublyLinkedList<Service> getVisited();
     public String getCountry();
+
+    public boolean changeLocation(Service service);
 }
