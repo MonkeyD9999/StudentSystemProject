@@ -99,7 +99,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
         if(student==null){
             throw new Error1Exception(name);
         }
-        if(location==null){
+        if(service==null){
             throw new Error2Exception(location);
         }
         if(!(service instanceof LeisureService) && !(service instanceof EatingService)){
@@ -114,6 +114,26 @@ public class StudentSystemClass implements StudentSystem, Serializable {
         student.changeLocation(service);
 
     }
+
+    @Override
+    public void changeLodge(String name, String lodge) {
+        Student student = getStudent(name);
+        Service service = getService(lodge);
+
+        if(student==null)
+            throw new Error1Exception(name);
+        if(!(service instanceof LodgeService))
+            throw new Error2Exception(lodge);
+        if(service.equals(student.getCurrentLodge()))
+            throw new Error3Exception(name);
+        if(((LodgeService) service).isFull())
+            throw new Error4Exception(lodge);
+        if(student instanceof ThriftyStudent && !((ThriftyStudent) student).cheaperLodge(service))
+            throw new Error5Exception(name);
+
+        student.changeLodge(service);
+    }
+
 
     private Student getStudent(String name){
         Iterator<Student> it =  students.iterator();

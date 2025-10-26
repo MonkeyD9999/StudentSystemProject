@@ -13,7 +13,15 @@ public class OutgoingStudent extends StudentClass {
     @Override
     public boolean changeLocation(Service service) {
         services.addLast(service);
-        currentLodge = service;
+        currentService = service;
         return false;
     }
+
+    @Override
+    public void changeLodge(Service service) {
+        services.addLast(service);
+        currentService = service;
+        currentLodge = service;
+    }
+
 }

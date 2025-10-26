@@ -47,5 +47,6 @@ public abstract class StudentClass implements Student, Serializable {
     }
 
     public abstract boolean changeLocation(Service service);
+    public abstract void changeLodge(Service service);
 
 }

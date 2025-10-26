@@ -210,7 +210,30 @@ public class Main {
             String name = in.nextLine();
             String location = in.nextLine();
             manager.changeLocation(name, location);
+            //Systemout "Todd Anderson is distracted!"
             System.out.printf(Output.SHL.getMsg(), name);
+        }
+        catch (Error1Exception e){
+            System.out.printf(Output.NDNE.getMsg(), e.getMessage());
+        } catch(Error2Exception e){
+            System.out.printf(Output.UL.getMsg(), e.getMessage());
+        } catch(Error3Exception e){
+            System.out.printf(Output.AT.getMsg(), e.getMessage());
+        } catch(Error4Exception e){
+            System.out.printf(Output.ELF.getMsg());
+        } catch (Error5Exception e) {
+            System.out.printf(Output.ELF.getMsg());
+        }
+
+    }
+
+    private static void changeLodge(Scanner in, StudentSystemClass manager){
+        try {
+            String name = in.nextLine();
+            String location = in.nextLine();
+            manager.changeLodge(name, location);
+
+            System.out.printf(Output.LSUC.getMsg(), location, name, name);
         }
         catch (Error1Exception e){
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());

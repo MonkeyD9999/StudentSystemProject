@@ -6,10 +6,11 @@ public class ThriftyStudent extends StudentClass {
         super(id, name);
     }
     private int cheapestPlaceYet = Integer.MAX_VALUE;
+    private long lodgingRent = Integer.MAX_VALUE;
 
     @Override
     public boolean changeLocation(Service service) {
-        currentLodge = service;
+        currentService = service;
         if (service instanceof EatingService eatingService) {
             if (eatingService.getPrice() < cheapestPlaceYet) {
                 cheapestPlaceYet = eatingService.getPrice();
@@ -19,4 +20,16 @@ public class ThriftyStudent extends StudentClass {
         }
         return false;
     }
+
+    @Override
+    public void changeLodge(Service service) {
+        lodgingRent = ((LodgeService) service).getMonthly_cost();
+        currentService = service;
+        currentLodge = service;
+    }
+
+    public boolean cheaperLodge(Service service){
+        return ((LodgeService) service).getMonthly_cost() < lodgingRent;
+    }
+
 }

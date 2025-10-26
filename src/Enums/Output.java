@@ -19,6 +19,7 @@ public enum Output {
     ELF("eating %s is full!"),
     NS("No services yet!\n"),
     SA("%s %s added.\n"),
+    LSUC("lodging %s is now %s’s home. %s is at home."),
     IST("Invalid student type!"),
     LDNE("lodging %s does not exist!\n"),
     LIF("lodging %s is full!\n"),

@@ -20,4 +20,5 @@ public interface StudentSystem  extends Serializable {
     public Iterator<Student> getStudentsAll();
 
     public void changeLocation(String name, String location);
+    public void changeLodge(String name, String lodge);
 }

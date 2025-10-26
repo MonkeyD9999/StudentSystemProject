@@ -12,6 +12,16 @@ public class LodgeService extends ServiceClass {
         this.used_rooms = 0;
     }
 
+    public long getMonthly_cost() { return monthly_cost; }
+
+    public void newStudent() {
+        used_rooms++;
+    }
+
+    public void leavingStudent() {
+        used_rooms--;
+    }
+
     public boolean isFull() {
         return number_rooms == used_rooms;
     }

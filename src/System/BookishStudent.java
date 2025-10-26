@@ -13,7 +13,15 @@ public class BookishStudent extends StudentClass {
         if (service instanceof LeisureService) {
             leisureServices.addLast(service);
         }
-        currentLodge = service;
+        currentService = service;
         return false;
     }
+
+    @Override
+    public void changeLodge(Service service) {
+        currentService = service;
+        currentLodge = service;
+    }
+
+
 }
