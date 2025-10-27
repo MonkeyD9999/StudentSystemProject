@@ -5,18 +5,18 @@ import dataStructures.DoublyLinkedList;
 import java.io.Serializable;
 
 
-public abstract class StudentClass implements Student, Serializable {
+public abstract class StudentClass implements Student {
     private String country;
     private String name;
     protected Service currentLodge;
     protected Service currentService;
     private DoublyLinkedList<Service> visited;
 
-    public StudentClass(String name, String country) {
+    public StudentClass(String name, String country, Service currentLodge) {
         this.country = country;
         this.name = name;
-        this.currentLodge = null;
-        this.currentService = null;
+        this.currentLodge = currentLodge;
+        this.currentService = currentLodge;
         this.visited =  new DoublyLinkedList<>();
     }
 

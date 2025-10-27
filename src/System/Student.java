@@ -4,7 +4,7 @@ import dataStructures.DoublyLinkedList;
 
 import java.io.Serializable;
 
-public interface Student extends Serializable {
+public interface Student {
 
     public void moveTo(Service service);
 

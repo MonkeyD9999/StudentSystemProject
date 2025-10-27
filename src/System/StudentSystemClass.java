@@ -1,31 +1,28 @@
 package System;
 
 import Exceptions.*;
-import dataStructures.DoublyLinkedList;
-import dataStructures.Iterator;
-import dataStructures.SortedDoublyLinkedList;
+import dataStructures.*;
 
 import java.io.Serializable;
 
 public class StudentSystemClass implements StudentSystem, Serializable {
 
-    private Area currentArea;
+    private AreaClass currentArea;
     private DoublyLinkedList<Student> students;
-    private DoublyLinkedList<Service> services;
 
     public StudentSystemClass(){
         this.currentArea= null;
-        SortedDoublyLinkedList<Service> services = null;
+        students = new DoublyLinkedList<Student>();
     }
 
 
     @Override
-    public void createNewArea(String name, long latMax, long latMin, long lngMax, long lngMin) {
-        currentArea = new AreaClass(name, latMax, lngMax, latMin, lngMin);
+    public void createNewArea(String name, long topLeftLat, long topLeftLong, long bottomRightLat, long bottomRightLong) {
+        currentArea = new AreaClass(name, topLeftLat, topLeftLong, bottomRightLat, bottomRightLong);
     }
 
     @Override
-    public Area getCurrentArea() {
+    public AreaClass getCurrentArea() {
         return currentArea;
     }
 
@@ -36,7 +33,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
 
     @Override
     public Iterator<Service> getServices() {
-        return services.iterator();
+        return currentArea.getServices().iterator();
     }
 
     @Override
@@ -54,9 +51,9 @@ public class StudentSystemClass implements StudentSystem, Serializable {
         if(currentArea.getLodge(currentLodge)==null){
             throw new Error1Exception(currentLodge);
         }
-        Service s = currentArea.getLodge(currentLodge);
-        if(s instanceof LodgeService && !(((LodgeService) s).isFull())){
-            throw new Error2Exception(s.getName());
+        Service lodge = currentArea.getLodge(currentLodge);
+        if(lodge instanceof LodgeService && !(((LodgeService) lodge).isFull())){
+            throw new Error2Exception(lodge.getName());
         }
         else{
             Iterator<Student> it =  students.iterator();
@@ -68,9 +65,9 @@ public class StudentSystemClass implements StudentSystem, Serializable {
             }
 
             switch (type){
-                case "bookish" -> students.addLast(new BookishStudent(name, country));
-                case "outgoing" -> students.addLast(new OutgoingStudent(name, country));
-                case "thrifty" -> students.addLast(new ThriftyStudent(name, country));
+                case "bookish" -> students.addLast(new BookishStudent(name, country, lodge));
+                case "outgoing" -> students.addLast(new OutgoingStudent(name, country, lodge));
+                case "thrifty" -> students.addLast(new ThriftyStudent(name, country, lodge));
             }
         }
     }
@@ -88,19 +85,37 @@ public class StudentSystemClass implements StudentSystem, Serializable {
     }
 
     @Override
-    public Iterator<Student> getStudentsAll() {
-        return students.iterator();
+    public Iterator<Student> getStudentsAll(String place) {
+        if(place.equals("all")){
+            Comparator<Student> comparator = new Comparator<Student>() {
+                @Override
+                public int compare(Student o1, Student o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            };
+            SortedDoublyLinkedList<Student> organized = new SortedDoublyLinkedList<>(comparator);
+            for(int i=0; i<students.size(); i++){
+                organized.add(students.get(i));
+            }
+            return organized.iterator();
+        }
+        else{
+            Predicate<Student> fromPlace = p ->p.getCountry().equals(place);
+            Iterator<Student> temp =  students.iterator();
+            return new FilterIterator<Student>(temp, fromPlace);
+        }
+
     }
 
     @Override
     public void changeLocation(String name, String location) {
         Student student = getStudent(name);
         Service service = getService(location);
-        if(student==null){
-            throw new Error1Exception(name);
-        }
         if(location==null){
-            throw new Error2Exception(location);
+            throw new Error1Exception(location);
+        }
+        if(student==null){
+            throw new Error2Exception(name);
         }
         if(!(service instanceof LeisureService) && !(service instanceof EatingService)){
             throw new Error3Exception(location);
@@ -115,6 +130,11 @@ public class StudentSystemClass implements StudentSystem, Serializable {
 
     }
 
+    @Override
+    public void changeArea(AreaClass area) {
+        this.currentArea = area;
+    }
+
     private Student getStudent(String name){
         Iterator<Student> it =  students.iterator();
         while(it.hasNext()){
@@ -127,7 +147,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
     }
 
     private Service getService(String location){
-        Iterator<Service> it =  services.iterator();
+        Iterator<Service> it =  currentArea.getServices().iterator();
         while(it.hasNext()){
             Service service = it.next();
             if(service.getName().equals(location)){
