@@ -1,19 +1,41 @@
 package System;
 
+import dataStructures.DoublyLinkedList;
+import dataStructures.Iterator;
+import dataStructures.TwoWayIterator;
+
 public class EatingService extends ServiceClass {
     private int price;
     private int number_seats;
-    private int count_seats;
+    private DoublyLinkedList<Student> costumers;
+
     public EatingService(String name, String type, LocationClass location, int price, int number_seats) {
         super(name, type, location);
         this.price = price;
         this.number_seats = number_seats;
-        this.count_seats = 0;
+        costumers = new DoublyLinkedList<Student>();
     }
 
     public int getPrice() { return price; }
 
-    public int getNumber_seats() { return number_seats; }
+    public boolean isFull(){ return costumers.size() >= number_seats; }
 
-    public boolean isFull(){ return count_seats >= number_seats; }
+    public void newCostumer(Student newStudent) { costumers.addLast(newStudent); }
+    public void leaveSeat(Student student) { costumers.remove(find(student.getName())); }
+
+    public TwoWayIterator<Student> listStudentsInService() { return costumers.twoWayiterator(); }
+
+    private int find(String name) {
+        Iterator<Student> iterator = costumers.iterator();
+        int index = 0;
+        while(iterator.hasNext()) {
+            Student current = iterator.next();
+            if (current.getName().equals(name)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
 }

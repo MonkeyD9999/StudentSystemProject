@@ -1,6 +1,7 @@
 package System;
 
 import dataStructures.DoublyLinkedList;
+import dataStructures.TwoWayIterator;
 
 import java.io.Serializable;
 
@@ -10,12 +11,13 @@ public interface Student {
 
     public void evaluate(Service service);
 
-    public void addVisit(Service service);
     public String getName();
     public Service getCurrentService();
     public Service getCurrentLodge();
-    public DoublyLinkedList<Service> getVisited();
     public String getCountry();
+    public String getType();
 
     public boolean changeLocation(Service service);
+    public void changeLodge(Service service);
+
 }

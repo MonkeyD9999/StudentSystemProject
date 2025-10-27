@@ -1,7 +1,5 @@
 import java.io.*;
 import java.util.Scanner;
-
-import Enums.Help;
 import Enums.Output;
 import Exceptions.*;
 import System.*;
@@ -15,128 +13,99 @@ public class Main {
         Scanner in = new Scanner(System.in);
 
         StudentSystemClass manager = new StudentSystemClass();
+
         String command;
         do{
             command = in.next();
             processCommand(in, manager, command);
         }
-        while(!"exit".equals(command));
-
-        in.close();
+        while(!command.equals(Output.EXIT.getMsg()));
     }
 
     public static void processCommand(Scanner in, StudentSystemClass manager, String command){
 
         switch (command.toLowerCase().trim()){
             case "help" -> printHelp();
-            case "exit" -> {
-                processSave(manager);
-                System.out.println(Output.EXIT.getMsg());
-            }
+            case "exit" -> System.out.println(Output.EXIT.getMsg());
             case "bounds" -> processAddBound(in, manager);
-            case "save" -> {
-                processSave(manager);
-                if(manager.getCurrentArea()!=null){
-                    System.out.printf(AS, manager.getCurrentArea().getName());
-                }
-            }
-            case "load" -> processLoad(in.nextLine().trim(),manager);
+            case "save" -> processSave(manager);
+            case "load" -> processLoad(in.nextLine(),manager);
             case "service" -> processAddService(in, manager);
             case "services" -> listServices(manager);
             case "student" -> processAddStudent(in, manager);
             case "leave" -> processRemoveStudent(in.nextLine(), manager);
-            case "students" -> listStudents(in.nextLine().trim(), manager);
+            case "students" -> listStudents(in.nextLine(), manager);
             case "go" -> changeLocation(in, manager);
+            case "move" -> changeLodge(in, manager);
+            case "users" -> listUsersInService(in, manager);
 
             default -> System.out.println(Output.UNKNOWN.getMsg());
         }
     }
 
     private static void printHelp(){
-        for(Help h : Help.values()){
-            System.out.printf(Output.HELP.getMsg(),h.name().toLowerCase(), h.getMsg());
-        }
+
     }
 
-    private static void processSave (StudentSystemClass system){
+    private static void processSave (StudentSystem system){
         try{
-            if(system.getCurrentArea()==null){
-                System.out.println(Output.BND.getMsg());
-            }
-            else{
-                String fileName = "AREA_"+system.getCurrentArea().getName().toLowerCase();
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
-                oos.writeObject(system);
-                oos.flush();
-                oos.close();
-            }
+            String fileName = "AREA_"+system.getCurrentArea().getName();
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
+            oos.writeObject(system);
+            oos.flush();
+            oos.close();
+            System.out.printf(AS, system.getCurrentArea().getName());
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
 
 
-    private static void processLoad(String name, StudentSystemClass manager){
+    private static StudentSystem processLoad(String fileName, StudentSystemClass manager){
         try{
-            String fileName = "AREA_"+name.toLowerCase();
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
-            StudentSystemClass system = (StudentSystemClass) in.readObject();
-            if(manager.getCurrentArea()!=null){
-                processSave(manager);
-            }
-            manager.changeArea(system.getCurrentArea());
-            System.out.printf(Output.BL.getMsg(), manager.getCurrentArea().getName());
+            StudentSystem system = (StudentSystemClass) in.readObject();
             in.close();
-        } catch (FileNotFoundException e){
-            System.out.printf(Output.NB.getMsg(), name);
-        }
-        catch(ClassNotFoundException | IOException e){
+            return system;
+        } catch (IOException e) {
+            return new StudentSystemClass();
+        }catch(ClassNotFoundException e){
             throw new RuntimeException(e);
         }
     }
 
     private static void processAddBound(Scanner in, StudentSystemClass manager){
-        long topLeftLat = in.nextLong();
-        long topLeftLong = in.nextLong();
-        long bottomRightLat = in.nextLong();
-        long bottomRightLong = in.nextLong();
-        String name = in.nextLine().trim();
+        long latMax = in.nextLong();
+        long latMin = in.nextLong();
+        long longMax = in.nextLong();
+        long longMin = in.nextLong();
+        String name = in.nextLine();
 
-
-        try{
-            if(manager.getCurrentArea()!=null && manager.getCurrentArea().getName().equals(name)){
-                System.out.println(Output.BAE.getMsg());
-            }
-            else{
-                String fileName = "AREA_"+name.toLowerCase();
-                ObjectInputStream inn = new ObjectInputStream(new FileInputStream(fileName));
-                System.out.println(Output.BAE.getMsg());
-            }
+        //if(processLoad(name, manager)!=null){
+        //    System.out.println("Bounds already exists. Please load it!");
+        //}
+        //else
+        if(latMax<=latMin || longMax<=longMin ){
+            System.out.println("Invalid bounds.");
         }
-        catch (FileNotFoundException e){
-            if(topLeftLat<=bottomRightLat || bottomRightLong<=topLeftLong){
-                System.out.println(Output.IB.getMsg());
+        else {
+            if(manager.getCurrentArea()!=null){
+                processSave(manager);
             }
-            else {
-                if(manager.getCurrentArea()!=null){
-                    processSave(manager);
-                }
-                manager.createNewArea(name, topLeftLat, topLeftLong, bottomRightLat, bottomRightLong);
-                System.out.printf(Output.BOUNDS.getMsg(), name);
-            }
-        }
-        catch(IOException e){
-            throw new RuntimeException(e);
+            manager.createNewArea(name, latMax, latMin, longMax, longMin);
+            System.out.print(name + " created.\n");
         }
     }
 
     private static void processAddService(Scanner in, StudentSystemClass manager) throws AlreadyExistsObjectException {
-        String type = in.next().toLowerCase();
+        String type = in.next();
         long lat = in.nextLong();
         long lng = in.nextLong();
         int price = in.nextInt();
         int value = in.nextInt();
         String name = in.nextLine().trim();
+
+        System.out.println("ok");
 
         //check invalid type
         if(!type.equals("eating") && !type.equals("lodging") && !type.equals("leisure")){
@@ -187,10 +156,10 @@ public class Main {
     }
 
     private static void processAddStudent(Scanner in, StudentSystemClass manager){
-        String type = in.nextLine().trim();
-        String name = in.nextLine().trim();
-        String country = in.nextLine().trim();
-        String currentLodge = in.nextLine().trim();
+        String type = in.nextLine();
+        String name = in.nextLine();
+        String country = in.nextLine();
+        String currentLodge = in.nextLine();
 
         if(!type.equals("bookish") && !type.equals("outgoing") && !type.equals("thrifty")){
             System.out.println(Output.IST.getMsg());
@@ -206,7 +175,7 @@ public class Main {
             System.out.printf(Output.LIF.getMsg(), e.getMessage());
         }
         catch (Error3Exception e){
-            System.out.printf(Output.ALREADY_EXISTS.getMsg(), e.getMessage());
+            System.out.printf(Output.SNAE.getMsg(), e.getMessage());
         }
     }
 
@@ -221,7 +190,7 @@ public class Main {
     }
 
     private  static void listStudents(String place, StudentSystemClass manager){
-        Iterator<Student> it = manager.getStudentsAll(place);
+        Iterator<Student> it = manager.getStudentsAll();
         if(!it.hasNext()){
             if(place.equals("all")){
                 System.out.println(Output.NST.getMsg());
@@ -230,46 +199,94 @@ public class Main {
                 System.out.printf(Output.NSF.getMsg(), place);
             }
         }
+        // print nos alunos, alfabeticamente em caso de all, inserçao em pais
         while(it.hasNext()){
             Student s = it.next();
-            String type = null;
-            if(s instanceof BookishStudent){
-                type = "bookish";
-            }
-            else if(s instanceof OutgoingStudent){
-                type = "outgoing";
-            }
-            else if(s instanceof ThriftyStudent){
-                type = "thrifty";
-            }
-            System.out.printf(Output.PRINT_STUDENT.getMsg(), s.getName(), type, s.getCurrentLodge().getName());
 
         }
 
     }
 
     private static void changeLocation(Scanner in, StudentSystemClass manager){
-        /*
-        Ajeitei os catch que tavam trocados, falta só no caso de ser thrifty e ser mais caro mandar "ăstudent nameą is distracted!"
-         */
         try{
-            String name = in.nextLine();
-            String location = in.nextLine();
-            manager.changeLocation(name, location);
-            System.out.printf(Output.SHL.getMsg(), name);
+            String name = in.nextLine().trim();
+            String location = in.nextLine().trim();
+
+            boolean isDistracted =  manager.changeLocation(name, location);
+            if (isDistracted){
+                System.out.printf(Output.CHLD.getMsg(), name, location, name);
+            } else {
+                System.out.printf(Output.CHL.getMsg(), name, location);
+            }
         }
         catch (Error1Exception e){
-            System.out.printf(Output.UL.getMsg(), e.getMessage());
-        } catch(Error2Exception e){
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
+        } catch(Error2Exception e){
+            System.out.printf(Output.UL.getMsg(), e.getMessage());
         } catch(Error3Exception e){
-            System.out.printf(Output.NVS.getMsg(), e.getMessage());
+            System.out.printf(Output.IS.getMsg(), e.getMessage());
         } catch(Error4Exception e){
             System.out.printf(Output.AT.getMsg());
         } catch (Error5Exception e) {
-            System.out.printf(Output.ELF.getMsg(), e.getMessage());
+            System.out.printf(Output.ESF.getMsg(), e.getMessage());
         }
 
     }
+
+    private static void changeLodge(Scanner in, StudentSystemClass manager){
+        try {
+            String name = in.nextLine().trim();
+            String location = in.nextLine(). trim();
+            manager.changeLodge(name, location);
+
+            System.out.printf(Output.LSUC.getMsg(), location, name, name);
+        }
+        catch (Error2Exception e){
+            System.out.printf(Output.LDNE.getMsg(), e.getMessage());
+        } catch(Error1Exception e){
+            System.out.printf(Output.NDNE.getMsg(), e.getMessage());
+        } catch(Error3Exception e){
+            System.out.printf(Output.ISH.getMsg(), e.getMessage());
+        } catch(Error4Exception e){
+            System.out.println(Output.LSF.getMsg());
+        } catch (Error5Exception e) {
+            System.out.println(Output.MNAF.getMsg());
+        }
+
+    }
+
+
+    private static void listUsersInService(Scanner in, StudentSystemClass manager){
+        try {
+            String order = in.next();
+            String location = in.nextLine().trim();
+
+            if (!order.equals("<") && !order.equals(">")){
+                System.out.println(Output.ONE.getMsg());
+            }
+
+            TwoWayIterator<Student> it = manager.listStudentsInService(location);
+            boolean oldFirst = order.equals(">");
+            if(!oldFirst) {
+                it.fullForward();
+                while(it.hasPrevious()){
+                    Student s = it.previous();
+                    System.out.printf(Output.ONE.getMsg(), s.getName(), s.getType());
+                }
+            } else {
+                while(it.hasNext()){
+                    Student s = it.next();
+                    System.out.printf(Output.ONE.getMsg(), s.getName(), s.getType());
+                }
+            }
+        }
+        catch (Error1Exception e) {
+            System.out.printf(Output.NDNE.getMsg(), e.getMessage());
+        } catch (Error2Exception e) {
+            System.out.printf(Output.NCSE.getMsg(), e.getMessage());
+        }
+    }
+
+
 
 }

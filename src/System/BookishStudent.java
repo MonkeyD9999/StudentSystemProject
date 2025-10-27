@@ -3,8 +3,8 @@ package System;
 import dataStructures.DoublyLinkedList;
 
 public class BookishStudent extends StudentClass {
-    public BookishStudent(String id, String name, Service currentLodge) {
-        super(id, name, currentLodge);
+    public BookishStudent(String id, String name, String type) {
+        super(id, name, type);
     }
     private DoublyLinkedList<Service> leisureServices = new DoublyLinkedList<Service>();
 
@@ -16,4 +16,12 @@ public class BookishStudent extends StudentClass {
         currentService = service;
         return false;
     }
+
+    @Override
+    public void changeLodge(Service service) {
+        currentService = service;
+        currentLodge = service;
+    }
+
+
 }

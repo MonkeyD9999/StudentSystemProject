@@ -1,5 +1,7 @@
 package System;
 
+import dataStructures.TwoWayIterator;
+
 public class LeisureService extends ServiceClass {
     private long ticket_cost;
     private int student_disc;
@@ -9,5 +11,10 @@ public class LeisureService extends ServiceClass {
         this.ticket_cost = ticket_cost;
         this.student_disc = student_disc;
 
+    }
+
+    @Override
+    public TwoWayIterator<Student> listStudentsInService() {
+        return null;
     }
 }

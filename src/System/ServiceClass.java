@@ -1,5 +1,7 @@
 package System;
 
+import dataStructures.TwoWayIterator;
+
 import java.io.Serializable;
 
 public abstract class ServiceClass implements Service,Serializable {
@@ -24,4 +26,6 @@ public abstract class ServiceClass implements Service,Serializable {
     public String getType() {
         return type;
     }
+
+    public abstract TwoWayIterator<Student> listStudentsInService();
 }
