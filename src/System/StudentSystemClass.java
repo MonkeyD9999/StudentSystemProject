@@ -179,6 +179,15 @@ public class StudentSystemClass implements StudentSystem, Serializable {
         return service.listStudentsInService();
     }
 
+    @Override
+    public Service getStudentCurrentService(String name) {
+        Student student = getStudent(name);
+
+        if (student == null)
+            throw new Error1Exception(name);
+        return student.getCurrentService();
+    }
+
 
     private Student getStudent(String name){
         Iterator<Student> it =  students.iterator();

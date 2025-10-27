@@ -49,6 +49,7 @@ public class Main {
             case "go" -> changeLocation(in, manager);
             case "move" -> changeLodge(in, manager);
             case "users" -> listUsersInService(in, manager);
+            case "where" -> getStudentLocation(in, manager);
 
             default -> System.out.println(Output.UNKNOWN.getMsg());
         }
@@ -300,7 +301,6 @@ public class Main {
 
     }
 
-
     private static void listUsersInService(Scanner in, StudentSystemClass manager){
         try {
             String order = in.next();
@@ -316,12 +316,12 @@ public class Main {
                 it.fullForward();
                 while(it.hasPrevious()){
                     Student s = it.previous();
-                    System.out.printf(Output.ONE.getMsg(), s.getName(), s.getType());
+                    System.out.printf(Output.LUIS.getMsg(), s.getName(), s.getType());
                 }
             } else {
                 while(it.hasNext()){
                     Student s = it.next();
-                    System.out.printf(Output.ONE.getMsg(), s.getName(), s.getType());
+                    System.out.printf(Output.LUIS.getMsg(), s.getName(), s.getType());
                 }
             }
         }
@@ -329,6 +329,17 @@ public class Main {
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
         } catch (Error2Exception e) {
             System.out.printf(Output.NCSE.getMsg(), e.getMessage());
+        }
+    }
+
+    private static void getStudentLocation(Scanner in, StudentSystemClass manager){
+        try {
+            String name = in.nextLine().trim();
+            Service service = manager.getStudentCurrentService(name);
+
+            System.out.printf(Output.SLOC.getMsg(), service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
+        } catch (Error1Exception e) {
+            System.out.printf(Output.NDNE.getMsg(), e.getMessage());
         }
     }
 

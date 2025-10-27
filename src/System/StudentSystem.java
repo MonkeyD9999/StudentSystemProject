@@ -25,4 +25,6 @@ public interface StudentSystem  extends Serializable {
     public void changeLodge(String name, String lodge);
 
     public TwoWayIterator<Student> listStudentsInService(String location);
+
+    public Service getStudentCurrentService(String name);
 }
