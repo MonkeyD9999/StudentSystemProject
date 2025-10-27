@@ -12,7 +12,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
 
     public StudentSystemClass(){
         this.currentArea= null;
-        DoublyLinkedList<Student> students = new DoublyLinkedList<>();
+         students = new DoublyLinkedList<Student>();
     }
 
 
@@ -57,7 +57,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
             throw new Error1Exception(currentLodge);
         }
         Service lodge = currentArea.getLodge(currentLodge);
-        if(lodge instanceof LodgeService && !(((LodgeService) lodge).isFull())){
+        if(lodge instanceof LodgeService && (((LodgeService) lodge).isFull())){
             throw new Error2Exception(lodge.getName());
         }
         if(getStudent(name) != null){
@@ -68,6 +68,9 @@ public class StudentSystemClass implements StudentSystem, Serializable {
             case "bookish" -> students.addLast(new BookishStudent(name, country, type, lodge));
             case "outgoing" -> students.addLast(new OutgoingStudent(name, country, type, lodge));
             case "thrifty" -> students.addLast(new ThriftyStudent(name, country, type, lodge));
+        }
+        if(lodge instanceof LodgeService){
+            ((LodgeService) lodge).newCostumer(students.getLast());
         }
 
     }
@@ -86,7 +89,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
 
     @Override
     public Iterator<Student> getStudentsAll(String place) {
-        if(students==null){
+        if(students.isEmpty()){
             throw new Error1Exception(place);
         }
         if(place.equals("all")){
@@ -103,7 +106,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
             return organized.iterator();
         }
         else{
-            Predicate<Student> fromPlace = p ->p.getCountry().equals(place);
+            Predicate<Student> fromPlace = p ->p.getCountry().equalsIgnoreCase(place);
             Iterator<Student> temp =  students.iterator();
             FilterIterator<Student> filter = new FilterIterator<Student>(temp, fromPlace);
             if(!filter.hasNext()){
@@ -222,19 +225,22 @@ public class StudentSystemClass implements StudentSystem, Serializable {
 
     @Override
     public Service getStudentCurrentService(String name) {
+        if(students.isEmpty()){
+            throw new Error1Exception(name);
+        }
         Student student = getStudent(name);
-
         if (student == null)
             throw new Error1Exception(name);
         return student.getCurrentService();
     }
 
+    @Override
+    public Student getStudent(String name){
 
-    private Student getStudent(String name){
         Iterator<Student> it =  students.iterator();
         while(it.hasNext()){
             Student student = it.next();
-            if(student.getName().equals(name)){
+            if(student.getName().equalsIgnoreCase(name)){
                 return student;
             }
         }

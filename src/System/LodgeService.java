@@ -18,7 +18,10 @@ public class LodgeService extends ServiceClass {
 
     public long getMonthly_cost() { return monthly_cost; }
 
-    public void newCostumer(Student student) { costumers.addLast(student); }
+    public void newCostumer(Student student) {
+        costumers.addLast(student);
+    }
+
     public void leavingCostumer(Student student) {
         costumers.remove(find(student.getName()));
     }

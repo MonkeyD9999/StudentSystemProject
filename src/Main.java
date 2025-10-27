@@ -44,7 +44,7 @@ public class Main {
             case "service" -> processAddService(in, manager);
             case "services" -> listServices(manager);
             case "student" -> processAddStudent(in, manager);
-            case "leave" -> processRemoveStudent(in.nextLine(), manager);
+            case "leave" -> processRemoveStudent(in.nextLine().trim(), manager);
             case "students" -> listStudents(in.nextLine().trim(), manager);
             case "go" -> changeLocation(in, manager);
             case "move" -> changeLodge(in, manager);
@@ -137,7 +137,7 @@ public class Main {
     }
 
     private static void processAddService(Scanner in, StudentSystemClass manager) throws AlreadyExistsObjectException {
-        String type = in.next().toLowerCase();
+        String type = in.next().toLowerCase().trim();
         long lat = in.nextLong();
         long lng = in.nextLong();
         int price = in.nextInt();
@@ -193,17 +193,20 @@ public class Main {
     }
 
     private static void processAddStudent(Scanner in, StudentSystemClass manager){
-        String type = in.nextLine().trim();
+        String type = in.nextLine().trim().toLowerCase();
         String name = in.nextLine().trim();
         String country = in.nextLine().trim();
         String currentLodge = in.nextLine().trim();
 
-        if(!type.equals("bookish") && !type.equals("outgoing") && !type.equals("thrifty")){
-            System.out.println(Output.IST.getMsg());
-        }
+
         try{
-            manager.addStudent(type, name, country, currentLodge);
-            System.out.printf(Output.SA.getMsg(), name);
+            if(!type.equals("bookish") && !type.equals("outgoing") && !type.equals("thrifty")){
+                System.out.println(Output.IST.getMsg());
+            }
+            else{
+                manager.addStudent(type, name, country, currentLodge);
+                System.out.printf(Output.SC.getMsg(), name);
+            }
         }
         catch (Error1Exception e){
             System.out.printf(Output.LDNE.getMsg(), e.getMessage());
@@ -228,6 +231,7 @@ public class Main {
 
     private  static void listStudents(String place, StudentSystemClass manager){
         try{
+
             Iterator<Student> it = manager.getStudentsAll(place);
             while(it.hasNext()){
                 Student s = it.next();
@@ -250,7 +254,7 @@ public class Main {
                 System.out.println(Output.NST.getMsg());
             }
             else {
-                System.out.println(Output.NSF.getMsg());
+                System.out.printf(Output.NSF.getMsg(), place);
             }
         }
 
@@ -275,7 +279,7 @@ public class Main {
         } catch(Error3Exception e){
             System.out.printf(Output.IS.getMsg(), e.getMessage());
         } catch(Error4Exception e){
-            System.out.printf(Output.AT.getMsg());
+            System.out.println(Output.AT.getMsg());
         } catch (Error5Exception e) {
             System.out.printf(Output.ESF.getMsg(), e.getMessage());
         }
@@ -339,8 +343,9 @@ public class Main {
         try {
             String name = in.nextLine().trim();
             Service service = manager.getStudentCurrentService(name);
+            Student s = manager.getStudent(name);
 
-            System.out.printf(Output.SLOC.getMsg(), service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
+            System.out.printf(Output.SLOC.getMsg(),s.getName(), service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
         } catch (Error1Exception e) {
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
         }

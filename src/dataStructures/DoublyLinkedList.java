@@ -92,11 +92,12 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      */
     public void addLast( E element ) {
         DoublyListNode<E> newNode = new DoublyListNode<E>(element, tail, null);
-        if (this.isEmpty())
+        if (this.isEmpty()){
             head = newNode;
-        else
+        }
+        else{
             tail.setNext(newNode);
-
+        }
         tail = newNode;
         currentSize++;
     }
@@ -119,7 +120,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * @throws NoSuchElementException - if size() == 0
      */
     public E getLast( ) {
-        if (!this.isEmpty())
+        if (this.isEmpty())
             throw new NoSuchElementException();
 
         return tail.getElement();

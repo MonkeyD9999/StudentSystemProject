@@ -31,5 +31,6 @@ public interface StudentSystem  extends Serializable {
 
     public Service getStudentCurrentService(String name);
 
+    public Student getStudent(String name);
 
 }

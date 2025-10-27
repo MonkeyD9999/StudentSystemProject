@@ -4,7 +4,7 @@ package System;
 import dataStructures.DoublyLinkedList;
 import dataStructures.Iterator;
 
-public class OutgoingStudent extends StudentClass {
+public class OutgoingStudent extends StudentClass{
 
     public OutgoingStudent(String id, String name, String type, Service lodge) {
         super(id, name, type, lodge);
