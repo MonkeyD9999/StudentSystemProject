@@ -1,16 +1,13 @@
 package System;
 
 import Exceptions.*;
-import dataStructures.DoublyLinkedList;
-import dataStructures.Iterator;
-import dataStructures.SortedDoublyLinkedList;
-import dataStructures.TwoWayIterator;
+import dataStructures.*;
 
 import java.io.Serializable;
 
 public class StudentSystemClass implements StudentSystem, Serializable {
 
-    private Area currentArea;
+    private AreaClass currentArea;
     private DoublyLinkedList<Student> students;
     private DoublyLinkedList<Service> services;
 
@@ -26,8 +23,13 @@ public class StudentSystemClass implements StudentSystem, Serializable {
     }
 
     @Override
-    public Area getCurrentArea() {
+    public AreaClass getCurrentArea() {
         return currentArea;
+    }
+
+    @Override
+    public void changeArea(AreaClass area) {
+        currentArea=area;
     }
 
     @Override
@@ -55,18 +57,18 @@ public class StudentSystemClass implements StudentSystem, Serializable {
         if(currentArea.getLodge(currentLodge)==null){
             throw new Error1Exception(currentLodge);
         }
-        Service s = currentArea.getLodge(currentLodge);
-        if(s instanceof LodgeService && !(((LodgeService) s).isFull())){
-            throw new Error2Exception(s.getName());
+        Service lodge = currentArea.getLodge(currentLodge);
+        if(lodge instanceof LodgeService && !(((LodgeService) lodge).isFull())){
+            throw new Error2Exception(lodge.getName());
         }
         if(getStudent(name) != null){
-            throw new Error3Exception(s.getName());
+            throw new Error3Exception(lodge.getName());
         }
 
         switch (type){
-            case "bookish" -> students.addLast(new BookishStudent(name, country, type));
-            case "outgoing" -> students.addLast(new OutgoingStudent(name, country, type));
-            case "thrifty" -> students.addLast(new ThriftyStudent(name, country, type));
+            case "bookish" -> students.addLast(new BookishStudent(name, country, type, lodge));
+            case "outgoing" -> students.addLast(new OutgoingStudent(name, country, type, lodge));
+            case "thrifty" -> students.addLast(new ThriftyStudent(name, country, type, lodge));
         }
 
     }
@@ -84,8 +86,25 @@ public class StudentSystemClass implements StudentSystem, Serializable {
     }
 
     @Override
-    public Iterator<Student> getStudentsAll() {
-        return students.iterator();
+    public Iterator<Student> getStudentsAll(String place) {
+        if(place.equals("all")){
+            Comparator<Student> comparator = new Comparator<Student>() {
+                @Override
+                public int compare(Student o1, Student o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            };
+            SortedDoublyLinkedList<Student> organized = new SortedDoublyLinkedList<>(comparator);
+            for(int i=0; i<students.size(); i++){
+                organized.add(students.get(i));
+            }
+            return organized.iterator();
+        }
+        else{
+            Predicate<Student> fromPlace = p ->p.getCountry().equals(place);
+            Iterator<Student> temp =  students.iterator();
+            return new FilterIterator<Student>(temp, fromPlace);
+        }
     }
 
     @Override

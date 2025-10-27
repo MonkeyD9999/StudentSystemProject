@@ -2,8 +2,8 @@ package System;
 
 public class ThriftyStudent extends StudentClass {
 
-    public ThriftyStudent(String id, String name, String type) {
-        super(id, name, type);
+    public ThriftyStudent(String id, String name, String type,Service lodge) {
+        super(id, name, type, lodge);
     }
     private int cheapestPlaceYet = Integer.MAX_VALUE;
     private long lodgingRent = Integer.MAX_VALUE;

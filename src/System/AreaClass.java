@@ -19,26 +19,29 @@ public class AreaClass implements Area, Serializable {
     private final String LEISURE="leisure";
 
     private String name;
-    private long latMax;
-    private long lngMax;
-    private long latMin;
-    private long lngMin;
+    private long topLeftLat;
+    private long topLeftLong;
+    private long bottomRightLat;
+    private long bottomRightLong;
 
     private DoublyLinkedList<Service> services;
 
-    public AreaClass(String name, long latMax, long lngMax, long latMin, long lngMin) {
+    public AreaClass(String name, long topLeftLat, long topLeftLong, long bottomRightLat, long bottomRightLong) {
         this.name = name;
-        this.latMax = latMax;
-        this.lngMax = lngMax;
-        this.latMin = latMin;
-        this.lngMin = lngMin;
+        this.topLeftLat = topLeftLat;
+        this.topLeftLong = topLeftLong;
+        this.bottomRightLat = bottomRightLat;
+        this.bottomRightLong = bottomRightLong;
         services = new DoublyLinkedList<Service>();
     }
 
+    /*
+    permite ser igual/tar no limite (checar se occorre erro)
+     */
     @Override
     public boolean isInside(LocationClass loc) {
-        return loc.getLatitude()>=this.latMin && loc.getLatitude()<=this.latMax &&
-                loc.getLongitude()>=this.lngMin && loc.getLongitude()<=this.lngMax;
+        return loc.getLatitude()<=topLeftLat && loc.getLatitude()>=bottomRightLat &&
+                loc.getLongitude()>=topLeftLong && loc.getLongitude()<=bottomRightLong;
     }
 
     @Override
@@ -46,8 +49,8 @@ public class AreaClass implements Area, Serializable {
         Iterator<Service> it = services.iterator();
         while (it.hasNext()){
             Service s = it.next();
-            if(s.getName().equals(name)){
-                throw new AlreadyExistsObjectException(name);
+            if(s.getName().equalsIgnoreCase(name)){
+                throw new AlreadyExistsObjectException(s.getName());
             }
         }
         switch (type){
