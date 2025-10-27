@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.Scanner;
+
+import Enums.Help;
 import Enums.Output;
 import Exceptions.*;
 import System.*;
@@ -20,21 +22,30 @@ public class Main {
             processCommand(in, manager, command);
         }
         while(!command.equals(Output.EXIT.getMsg()));
+        in.close();
     }
 
     public static void processCommand(Scanner in, StudentSystemClass manager, String command){
 
         switch (command.toLowerCase().trim()){
             case "help" -> printHelp();
-            case "exit" -> System.out.println(Output.EXIT.getMsg());
+            case "exit" -> {
+                processSave(manager);
+                System.out.println(Output.EXIT.getMsg());
+            }
             case "bounds" -> processAddBound(in, manager);
-            case "save" -> processSave(manager);
-            case "load" -> processLoad(in.nextLine(),manager);
+            case "save" -> {
+                processSave(manager);
+                if(manager.getCurrentArea()!=null){
+                    System.out.printf(AS, manager.getCurrentArea().getName());
+                }
+            }
+            case "load" -> processLoad(in.nextLine().trim(),manager);
             case "service" -> processAddService(in, manager);
             case "services" -> listServices(manager);
             case "student" -> processAddStudent(in, manager);
             case "leave" -> processRemoveStudent(in.nextLine(), manager);
-            case "students" -> listStudents(in.nextLine(), manager);
+            case "students" -> listStudents(in.nextLine().trim(), manager);
             case "go" -> changeLocation(in, manager);
             case "move" -> changeLodge(in, manager);
             case "users" -> listUsersInService(in, manager);
@@ -44,68 +55,90 @@ public class Main {
     }
 
     private static void printHelp(){
-
+        for(Help h : Help.values()){
+            System.out.printf(Output.HELP.getMsg(),h.name().toLowerCase(), h.getMsg());
+        }
     }
 
     private static void processSave (StudentSystem system){
         try{
-            String fileName = "AREA_"+system.getCurrentArea().getName();
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
-            oos.writeObject(system);
-            oos.flush();
-            oos.close();
-            System.out.printf(AS, system.getCurrentArea().getName());
+            if(system.getCurrentArea()==null){
+                System.out.println(Output.BND.getMsg());
+            }
+            else{
+                String fileName = "AREA_"+system.getCurrentArea().getName().toLowerCase();
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
+                oos.writeObject(system);
+                oos.flush();
+                oos.close();
+            }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
 
 
-    private static StudentSystem processLoad(String fileName, StudentSystemClass manager){
+    private static void processLoad(String name, StudentSystemClass manager){
         try{
+            String fileName = "AREA_"+name.toLowerCase();
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
-            StudentSystem system = (StudentSystemClass) in.readObject();
+            StudentSystemClass system = (StudentSystemClass) in.readObject();
+            if(manager.getCurrentArea()!=null){
+                processSave(manager);
+            }
+            manager.changeArea(system.getCurrentArea());
+            System.out.printf(Output.BL.getMsg(), manager.getCurrentArea().getName());
             in.close();
-            return system;
-        } catch (IOException e) {
-            return new StudentSystemClass();
-        }catch(ClassNotFoundException e){
+        } catch (FileNotFoundException e){
+            System.out.printf(Output.NB.getMsg(), name);
+        }
+        catch(ClassNotFoundException | IOException e){
             throw new RuntimeException(e);
         }
     }
 
     private static void processAddBound(Scanner in, StudentSystemClass manager){
-        long latMax = in.nextLong();
-        long latMin = in.nextLong();
-        long longMax = in.nextLong();
-        long longMin = in.nextLong();
-        String name = in.nextLine();
+        long topLeftLat = in.nextLong();
+        long topLeftLong = in.nextLong();
+        long bottomRightLat = in.nextLong();
+        long bottomRightLong = in.nextLong();
+        String name = in.nextLine().trim();
 
-        //if(processLoad(name, manager)!=null){
-        //    System.out.println("Bounds already exists. Please load it!");
-        //}
-        //else
-        if(latMax<=latMin || longMax<=longMin ){
-            System.out.println("Invalid bounds.");
-        }
-        else {
-            if(manager.getCurrentArea()!=null){
-                processSave(manager);
+
+        try{
+            if(manager.getCurrentArea()!=null && manager.getCurrentArea().getName().equals(name)){
+                System.out.println(Output.BAE.getMsg());
             }
-            manager.createNewArea(name, latMax, latMin, longMax, longMin);
-            System.out.print(name + " created.\n");
+            else{
+                String fileName = "AREA_"+name.toLowerCase();
+                ObjectInputStream inn = new ObjectInputStream(new FileInputStream(fileName));
+                System.out.println(Output.BAE.getMsg());
+            }
+        }
+        catch (FileNotFoundException e){
+            if(topLeftLat<=bottomRightLat || bottomRightLong<=topLeftLong){
+                System.out.println(Output.IB.getMsg());
+            }
+            else {
+                if(manager.getCurrentArea()!=null){
+                    processSave(manager);
+                }
+                manager.createNewArea(name, topLeftLat, topLeftLong, bottomRightLat, bottomRightLong);
+                System.out.printf(Output.BOUNDS.getMsg(), name);
+            }
+        }
+        catch(IOException e){
+            throw new RuntimeException(e);
         }
     }
 
     private static void processAddService(Scanner in, StudentSystemClass manager) throws AlreadyExistsObjectException {
-        String type = in.next();
+        String type = in.next().toLowerCase();
         long lat = in.nextLong();
         long lng = in.nextLong();
         int price = in.nextInt();
         int value = in.nextInt();
         String name = in.nextLine().trim();
-
-        System.out.println("ok");
 
         //check invalid type
         if(!type.equals("eating") && !type.equals("lodging") && !type.equals("leisure")){
@@ -129,7 +162,7 @@ public class Main {
         }
         // else eat/lodge check valid capacity
         else if(value<=0 && (type.equals("eating") || type.equals("lodging"))){
-                System.out.println(Output.IC.getMsg());
+            System.out.println(Output.IC.getMsg());
         }
         // try to add service
         else{
@@ -156,10 +189,10 @@ public class Main {
     }
 
     private static void processAddStudent(Scanner in, StudentSystemClass manager){
-        String type = in.nextLine();
-        String name = in.nextLine();
-        String country = in.nextLine();
-        String currentLodge = in.nextLine();
+        String type = in.nextLine().trim();
+        String name = in.nextLine().trim();
+        String country = in.nextLine().trim();
+        String currentLodge = in.nextLine().trim();
 
         if(!type.equals("bookish") && !type.equals("outgoing") && !type.equals("thrifty")){
             System.out.println(Output.IST.getMsg());
@@ -175,7 +208,7 @@ public class Main {
             System.out.printf(Output.LIF.getMsg(), e.getMessage());
         }
         catch (Error3Exception e){
-            System.out.printf(Output.SNAE.getMsg(), e.getMessage());
+            System.out.printf(Output.ALREADY_EXISTS.getMsg(), e.getMessage());
         }
     }
 
@@ -190,7 +223,7 @@ public class Main {
     }
 
     private  static void listStudents(String place, StudentSystemClass manager){
-        Iterator<Student> it = manager.getStudentsAll();
+        Iterator<Student> it = manager.getStudentsAll(place);
         if(!it.hasNext()){
             if(place.equals("all")){
                 System.out.println(Output.NST.getMsg());
@@ -199,9 +232,19 @@ public class Main {
                 System.out.printf(Output.NSF.getMsg(), place);
             }
         }
-        // print nos alunos, alfabeticamente em caso de all, inserçao em pais
         while(it.hasNext()){
             Student s = it.next();
+            String type = null;
+            if(s instanceof BookishStudent){
+                type = "bookish";
+            }
+            else if(s instanceof OutgoingStudent){
+                type = "outgoing";
+            }
+            else if(s instanceof ThriftyStudent){
+                type = "thrifty";
+            }
+            System.out.printf(Output.PRINT_STUDENT.getMsg(), s.getName(), type, s.getCurrentLodge().getName());
 
         }
 

@@ -12,12 +12,12 @@ public abstract class StudentClass implements Student, Serializable {
     protected Service currentLodge;
     protected Service currentService;
 
-    public StudentClass(String name, String country, String type) {
+    public StudentClass(String name, String country, String type, Service lodge) {
         this.country = country;
         this.name = name;
         this.type = type;
-        this.currentLodge = null;
-        this.currentService = null;
+        this.currentLodge = lodge;
+        this.currentService = lodge;
     }
 
     public void moveTo(Service service){
