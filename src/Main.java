@@ -21,7 +21,7 @@ public class Main {
             command = in.next();
             processCommand(in, manager, command);
         }
-        while(!command.equals(Output.EXIT.getMsg()));
+        while(!command.equals("exit"));
         in.close();
     }
 
@@ -80,7 +80,7 @@ public class Main {
 
     private static void processLoad(String name, StudentSystemClass manager){
         try{
-            String fileName = "AREA_"+name.toLowerCase();
+            String fileName = "AREA_"+name.toLowerCase().trim();
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
             StudentSystemClass system = (StudentSystemClass) in.readObject();
             if(manager.getCurrentArea()!=null){
@@ -223,29 +223,31 @@ public class Main {
     }
 
     private  static void listStudents(String place, StudentSystemClass manager){
-        Iterator<Student> it = manager.getStudentsAll(place);
-        if(!it.hasNext()){
-            if(place.equals("all")){
-                System.out.println(Output.NST.getMsg());
-            }
-            else{
-                System.out.printf(Output.NSF.getMsg(), place);
+        try{
+            Iterator<Student> it = manager.getStudentsAll(place);
+            while(it.hasNext()){
+                Student s = it.next();
+                String type = null;
+                if(s instanceof BookishStudent){
+                    type = "bookish";
+                }
+                else if(s instanceof OutgoingStudent){
+                    type = "outgoing";
+                }
+                else if(s instanceof ThriftyStudent){
+                    type = "thrifty";
+                }
+                System.out.printf(Output.PRINT_STUDENT.getMsg(), s.getName(), type, s.getCurrentLodge().getName());
+
             }
         }
-        while(it.hasNext()){
-            Student s = it.next();
-            String type = null;
-            if(s instanceof BookishStudent){
-                type = "bookish";
+        catch(Error1Exception e){
+            if(e.getMessage().equals("all")){
+                System.out.println(Output.NST.getMsg());
             }
-            else if(s instanceof OutgoingStudent){
-                type = "outgoing";
+            else {
+                System.out.println(Output.NSF.getMsg());
             }
-            else if(s instanceof ThriftyStudent){
-                type = "thrifty";
-            }
-            System.out.printf(Output.PRINT_STUDENT.getMsg(), s.getName(), type, s.getCurrentLodge().getName());
-
         }
 
     }

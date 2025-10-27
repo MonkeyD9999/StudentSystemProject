@@ -9,17 +9,16 @@ public class StudentSystemClass implements StudentSystem, Serializable {
 
     private AreaClass currentArea;
     private DoublyLinkedList<Student> students;
-    private DoublyLinkedList<Service> services;
 
     public StudentSystemClass(){
         this.currentArea= null;
-        SortedDoublyLinkedList<Service> services = null;
+        DoublyLinkedList<Student> students = new DoublyLinkedList<>();
     }
 
 
     @Override
-    public void createNewArea(String name, long latMax, long latMin, long lngMax, long lngMin) {
-        currentArea = new AreaClass(name, latMax, lngMax, latMin, lngMin);
+    public void createNewArea(String name, long topLeftLat, long topLeftLong, long bottomRightLat, long bottomRightLong) {
+        currentArea = new AreaClass(name, topLeftLat, topLeftLong, bottomRightLat, bottomRightLong);
     }
 
     @Override
@@ -39,7 +38,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
 
     @Override
     public Iterator<Service> getServices() {
-        return services.iterator();
+        return currentArea.getServices().iterator();
     }
 
     @Override
@@ -87,6 +86,9 @@ public class StudentSystemClass implements StudentSystem, Serializable {
 
     @Override
     public Iterator<Student> getStudentsAll(String place) {
+        if(students==null){
+            throw new Error1Exception(place);
+        }
         if(place.equals("all")){
             Comparator<Student> comparator = new Comparator<Student>() {
                 @Override
@@ -103,7 +105,11 @@ public class StudentSystemClass implements StudentSystem, Serializable {
         else{
             Predicate<Student> fromPlace = p ->p.getCountry().equals(place);
             Iterator<Student> temp =  students.iterator();
-            return new FilterIterator<Student>(temp, fromPlace);
+            FilterIterator<Student> filter = new FilterIterator<Student>(temp, fromPlace);
+            if(!filter.hasNext()){
+               throw new Error1Exception(place);
+            }
+            return filter;
         }
     }
 
@@ -186,7 +192,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
     }
 
     private Service getService(String location){
-        Iterator<Service> it =  services.iterator();
+        Iterator<Service> it =  currentArea.getServices().iterator();
         while(it.hasNext()){
             Service service = it.next();
             if(service.getName().equals(location)){
