@@ -27,5 +27,5 @@ public abstract class ServiceClass implements Service,Serializable {
         return type;
     }
 
-    public abstract TwoWayIterator<Student> getCostumers();
+    public abstract TwoWayIterator<Student> listStudentsInService();
 }

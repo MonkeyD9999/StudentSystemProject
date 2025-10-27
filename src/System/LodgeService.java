@@ -28,8 +28,8 @@ public class LodgeService extends ServiceClass {
     }
 
     @Override
-    public TwoWayIterator<Student> getCostumers() {
-        return null;
+    public TwoWayIterator<Student> listStudentsInService() {
+        return costumers.twoWayiterator();
     }
 
     private int find(String name) {

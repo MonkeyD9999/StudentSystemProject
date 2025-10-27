@@ -23,7 +23,7 @@ public class EatingService extends ServiceClass {
     public void newCostumer(Student newStudent) { costumers.addLast(newStudent); }
     public void leaveSeat(Student student) { costumers.remove(find(student.getName())); }
 
-    public TwoWayIterator<Student> getCostumers() { return costumers.twoWayiterator(); }
+    public TwoWayIterator<Student> listStudentsInService() { return costumers.twoWayiterator(); }
 
     private int find(String name) {
         Iterator<Student> iterator = costumers.iterator();

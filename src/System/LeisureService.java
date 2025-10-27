@@ -14,7 +14,7 @@ public class LeisureService extends ServiceClass {
     }
 
     @Override
-    public TwoWayIterator<Student> getCostumers() {
+    public TwoWayIterator<Student> listStudentsInService() {
         return null;
     }
 }
