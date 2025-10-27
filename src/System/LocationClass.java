@@ -13,12 +13,12 @@ public class LocationClass implements Location, Serializable {
     }
 
     @Override
-    public double getLatitude() {
+    public long getLatitude() {
         return lat;
     }
 
     @Override
-    public double getLongitude() {
+    public long getLongitude() {
         return lng;
     }
 }

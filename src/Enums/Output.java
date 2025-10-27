@@ -36,7 +36,8 @@ public enum Output {
     MNAF("Move is not acceptable for %s!"),
     ONE("This order does not exists!"),
     NCSE("%s does not control student entry and exit!"),
-    LUIS("%s: %s.");
+    LUIS("%s: %s."),
+    SLOC("%s is at %s %s (%d, %d).");
 
     String helpMsg;
 
