@@ -1,11 +1,13 @@
 package System;
 
 import dataStructures.DoublyLinkedList;
+import dataStructures.Iterator;
 
 public class BookishStudent extends StudentClass {
     public BookishStudent(String id, String name, String type, Service lodge) {
         super(id, name, type, lodge);
     }
+
     private DoublyLinkedList<Service> leisureServices = new DoublyLinkedList<Service>();
 
     @Override
@@ -23,5 +25,14 @@ public class BookishStudent extends StudentClass {
         currentLodge = service;
     }
 
+    @Override
+    public Iterator<Service> listVisitedServices() {
+        return leisureServices.iterator();
+    }
+
+    @Override
+    public boolean hasVisits() {
+        return leisureServices.isEmpty();
+    }
 
 }

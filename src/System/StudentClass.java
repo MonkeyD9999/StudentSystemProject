@@ -1,6 +1,6 @@
 package System;
 
-import dataStructures.DoublyLinkedList;
+import dataStructures.Iterator;
 
 import java.io.Serializable;
 
@@ -39,6 +39,10 @@ public abstract class StudentClass implements Student, Serializable {
     public String getCountry() {
         return country;
     }
+
+    public abstract boolean hasVisits();
+
+    public abstract Iterator<Service> listVisitedServices();
 
     public abstract boolean changeLocation(Service service);
     public abstract void changeLodge(Service service);

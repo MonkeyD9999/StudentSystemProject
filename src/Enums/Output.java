@@ -21,6 +21,7 @@ public enum Output {
     ITP("Invalid ticket price"),
     IDP("Invalid discount price!"),
     IC("Invalid capacity!"),
+    IEV("Invalid evaluation!"),
     UNKNOWN("Unknown command. Type help to see available commands."),
     UL("Unknown %s!"),
     ALREADY_EXISTS("%s already exists!\n"),
@@ -28,6 +29,7 @@ public enum Output {
     ESF("eating %s is full!"),
     LSF("lodging %s is full!"),
     NS("No services yet!\n"),
+    NIS("No services in the system."),
     SA("%s %s added.\n"),
     LSUC("lodging %s is now %s’s home. %s is at home."),
     ISH("That is %s’s home!"),
@@ -46,7 +48,12 @@ public enum Output {
     ONE("This order does not exists!"),
     NCSE("%s does not control student entry and exit!"),
     LUIS("%s: %s."),
-    SLOC("%s is at %s %s (%d, %d).");
+    LSBR("%s: %d"),
+    SLOC("%s is at %s %s (%d, %d)."),
+    THR("%s is thrifty!"),
+    NVL("%s has not visited any locations!"),
+    EVAL("Your evaluation has been registered!"),
+    SORD("Services sorted in descending order");
 
     String helpMsg;
 

@@ -20,11 +20,16 @@ public interface StudentSystem  extends Serializable {
     public void removeStudent(String name);
     public Iterator<Student> getStudentsAll(String place);
 
+    public void evaluateService(int star, String location, String description);
 
     public boolean changeLocation(String name, String location);
     public void changeLodge(String name, String lodge);
 
     public TwoWayIterator<Student> listStudentsInService(String location);
+    public Iterator<Service> listVisitedServices(String name);
+    public Iterator<Service> listServicesByRating();
 
     public Service getStudentCurrentService(String name);
+
+
 }

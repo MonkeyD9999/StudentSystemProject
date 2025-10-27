@@ -3,11 +3,14 @@ package System;
 import java.io.Serializable;
 
 public class RatingClass implements Rating, Serializable {
-    private StudentClass student;
     private int stars;
-    public RatingClass(StudentClass student, int stars) {
-        this.student = student;
+    private String description;
+    private String location;
+
+    public RatingClass(int stars, String location, String description) {
         this.stars = stars;
+        this.location = location;
+        this.description = description;
     }
 
     @Override
@@ -16,7 +19,14 @@ public class RatingClass implements Rating, Serializable {
     }
 
     @Override
-    public StudentClass getStudent() {
-        return student;
+    public String getLocation() {
+        return location;
     }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+
 }

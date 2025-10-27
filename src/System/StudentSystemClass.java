@@ -114,6 +114,17 @@ public class StudentSystemClass implements StudentSystem, Serializable {
     }
 
     @Override
+    public void evaluateService(int stars, String location, String description) {
+        Service service = getService(location);
+
+        if(service==null)
+            throw new Error1Exception(location);
+
+        Rating r = new RatingClass(stars, location, description);
+        service.newReview(stars);
+    }
+
+    @Override
     public boolean changeLocation(String name, String location) {
         Student student = getStudent(name);
         Service service = getService(location);
@@ -177,6 +188,36 @@ public class StudentSystemClass implements StudentSystem, Serializable {
             throw new Error2Exception(location);
 
         return service.listStudentsInService();
+    }
+
+    @Override
+    public Iterator<Service> listVisitedServices(String name) {
+        Student student = getStudent(name);
+
+        if (student == null)
+            throw new Error1Exception(name);
+        if (student instanceof ThriftyStudent)
+            throw new Error2Exception(name);
+        if (!student.hasVisits())
+            throw new Error3Exception(name);
+
+        return student.listVisitedServices();
+    }
+
+    @Override
+    public Iterator<Service> listServicesByRating() {
+        Iterator<Service> it = currentArea.getServices().iterator();
+        SortedList<Service> sortedByRating = new SortedDoublyLinkedList<>(new RatingComparator());
+
+        if (it.hasNext())
+            throw new Error1Exception("");
+
+        while (it.hasNext()) {
+            Service s = it.next();
+            sortedByRating.add(s);
+        }
+
+        return sortedByRating.iterator();
     }
 
     @Override

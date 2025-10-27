@@ -50,6 +50,9 @@ public class Main {
             case "move" -> changeLodge(in, manager);
             case "users" -> listUsersInService(in, manager);
             case "where" -> getStudentLocation(in, manager);
+            case "visited" -> listVisitedServices(in, manager);
+            case "star" -> evaluate(in, manager);
+            case "ranking" -> listSortedByRating(manager);
 
             default -> System.out.println(Output.UNKNOWN.getMsg());
         }
@@ -343,6 +346,53 @@ public class Main {
         }
     }
 
+    private static void listVisitedServices(Scanner in, StudentSystemClass manager){
+        try {
+            String name = in.nextLine().trim();
 
+            Iterator<Service> it = manager.listVisitedServices(name);
+            while(it.hasNext()){
+                Service s = it.next();
+                System.out.println(s.getName());
+            }
+        } catch (Error1Exception e) {
+            System.out.printf(Output.NDNE.getMsg(), e.getMessage());
+        } catch (Error2Exception e) {
+            System.out.printf(Output.THR.getMsg(), e.getMessage());
+        } catch (Error3Exception e) {
+            System.out.printf(Output.NVL.getMsg(), e.getMessage());
+        }
+    }
+
+    private static void evaluate(Scanner in, StudentSystemClass manager){
+        try {
+            int stars = Integer.parseInt(in.next());
+            String location = in.nextLine().trim();
+            String description = in.nextLine().trim();
+
+            if(stars<1 || stars>5)
+                System.out.println(Output.IEV.getMsg());
+            else {
+                manager.evaluateService(stars, location, description);
+                System.out.println(Output.EVAL.getMsg());
+            }
+
+        }   catch (Error1Exception e) {
+            System.out.printf(Output.NDNE.getMsg(), e.getMessage());
+        }
+    }
+
+    private static void listSortedByRating(StudentSystemClass manager){
+        try {
+            Iterator<Service> it = manager.listServicesByRating();
+            while(it.hasNext()){
+                Service s = it.next();
+                System.out.printf(Output.LSBR.getMsg(), s.getName(), Math.round(s.getAvgRating()));
+            }
+        } catch (Error1Exception e) {
+            System.out.printf(Output.NIS.getMsg(), e.getMessage());
+        }
+
+    }
 
 }

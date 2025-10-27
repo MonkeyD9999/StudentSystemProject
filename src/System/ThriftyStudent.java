@@ -1,10 +1,14 @@
 package System;
 
+import dataStructures.Iterator;
+
 public class ThriftyStudent extends StudentClass {
 
     public ThriftyStudent(String id, String name, String type,Service lodge) {
         super(id, name, type, lodge);
     }
+
+
     private int cheapestPlaceYet = Integer.MAX_VALUE;
     private long lodgingRent = Integer.MAX_VALUE;
 
@@ -31,5 +35,13 @@ public class ThriftyStudent extends StudentClass {
     public boolean cheaperLodge(Service service){
         return ((LodgeService) service).getMonthly_cost() < lodgingRent;
     }
+
+    @Override
+    public boolean hasVisits() {
+        return false;
+    }
+
+    @Override
+    public Iterator<Service> listVisitedServices() { return null; }
 
 }
