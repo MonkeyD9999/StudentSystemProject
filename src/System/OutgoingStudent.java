@@ -5,8 +5,8 @@ import dataStructures.DoublyLinkedList;
 
 public class OutgoingStudent extends StudentClass {
 
-    public OutgoingStudent(String id, String name) {
-        super(id, name);
+    public OutgoingStudent(String id, String name, String type) {
+        super(id, name, type);
     }
     private DoublyLinkedList<Service> services = new DoublyLinkedList<Service>();
 

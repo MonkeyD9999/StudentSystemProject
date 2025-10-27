@@ -4,6 +4,7 @@ import Exceptions.*;
 import dataStructures.DoublyLinkedList;
 import dataStructures.Iterator;
 import dataStructures.SortedDoublyLinkedList;
+import dataStructures.TwoWayIterator;
 
 import java.io.Serializable;
 
@@ -58,21 +59,16 @@ public class StudentSystemClass implements StudentSystem, Serializable {
         if(s instanceof LodgeService && !(((LodgeService) s).isFull())){
             throw new Error2Exception(s.getName());
         }
-        else{
-            Iterator<Student> it =  students.iterator();
-            while(it.hasNext()){
-                Student student = it.next();
-                if(student.getName().equals(name)){
-                    throw new Error3Exception(name);
-                }
-            }
-
-            switch (type){
-                case "bookish" -> students.addLast(new BookishStudent(name, country));
-                case "outgoing" -> students.addLast(new OutgoingStudent(name, country));
-                case "thrifty" -> students.addLast(new ThriftyStudent(name, country));
-            }
+        if(getStudent(name) != null){
+            throw new Error3Exception(s.getName());
         }
+
+        switch (type){
+            case "bookish" -> students.addLast(new BookishStudent(name, country, type));
+            case "outgoing" -> students.addLast(new OutgoingStudent(name, country, type));
+            case "thrifty" -> students.addLast(new ThriftyStudent(name, country, type));
+        }
+
     }
 
     @Override
@@ -93,9 +89,10 @@ public class StudentSystemClass implements StudentSystem, Serializable {
     }
 
     @Override
-    public void changeLocation(String name, String location) {
+    public boolean changeLocation(String name, String location) {
         Student student = getStudent(name);
         Service service = getService(location);
+
         if(student==null){
             throw new Error1Exception(name);
         }
@@ -108,11 +105,18 @@ public class StudentSystemClass implements StudentSystem, Serializable {
         if(student.getCurrentService().equals(service)) {
             throw new Error4Exception("");
         }
-        if(service instanceof EatingService && ((EatingService) service).isFull()){
-            throw new Error5Exception(location);
+        if(service instanceof EatingService) {
+            if (((EatingService) service).isFull())
+                throw new Error5Exception(location);
+            else
+                ((EatingService) service).newCostumer(student);
         }
-        student.changeLocation(service);
 
+        // -- prev EatingService seats, ++ current EatingService seats
+        Service current = student.getCurrentService();
+        if (current instanceof EatingService) { ((EatingService) current).leaveSeat(student); }
+
+        return student.changeLocation(service);
     }
 
     @Override
@@ -120,18 +124,34 @@ public class StudentSystemClass implements StudentSystem, Serializable {
         Student student = getStudent(name);
         Service service = getService(lodge);
 
-        if(student==null)
+        if (student == null)
             throw new Error1Exception(name);
-        if(!(service instanceof LodgeService))
+        if (!(service instanceof LodgeService))
             throw new Error2Exception(lodge);
-        if(service.equals(student.getCurrentLodge()))
+        if (service.equals(student.getCurrentLodge()))
             throw new Error3Exception(name);
-        if(((LodgeService) service).isFull())
+        if (((LodgeService) service).isFull())
             throw new Error4Exception(lodge);
-        if(student instanceof ThriftyStudent && !((ThriftyStudent) student).cheaperLodge(service))
+        if (student instanceof ThriftyStudent && !((ThriftyStudent) student).cheaperLodge(service))
             throw new Error5Exception(name);
 
+        // -- prev Lodge counter, ++ current Lodge counter
+        LodgeService current = (LodgeService) student.getCurrentLodge();
+        current.leavingCostumer(student);
+        ((LodgeService) service).newCostumer(student);
         student.changeLodge(service);
+    }
+
+    @Override
+    public TwoWayIterator<Student> listStudentsInService(String location) {
+        Service service = getService(location);
+
+        if(service==null)
+            throw new Error1Exception(location);
+        if(!(service instanceof LodgeService) && !(service instanceof EatingService))
+            throw new Error2Exception(location);
+
+        return service.listStudentsInService();
     }
 
 

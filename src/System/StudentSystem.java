@@ -19,6 +19,8 @@ public interface StudentSystem  extends Serializable {
     public void removeStudent(String name);
     public Iterator<Student> getStudentsAll();
 
-    public void changeLocation(String name, String location);
+    public boolean changeLocation(String name, String location);
     public void changeLodge(String name, String lodge);
+
+    public TwoWayIterator<Student> listStudentsInService(String location);
 }

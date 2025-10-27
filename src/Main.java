@@ -36,6 +36,8 @@ public class Main {
             case "leave" -> processRemoveStudent(in.nextLine(), manager);
             case "students" -> listStudents(in.nextLine(), manager);
             case "go" -> changeLocation(in, manager);
+            case "move" -> changeLodge(in, manager);
+            case "users" -> listUsersInService(in, manager);
 
             default -> System.out.println(Output.UNKNOWN.getMsg());
         }
@@ -207,46 +209,84 @@ public class Main {
 
     private static void changeLocation(Scanner in, StudentSystemClass manager){
         try{
-            String name = in.nextLine();
-            String location = in.nextLine();
-            manager.changeLocation(name, location);
-            //Systemout "Todd Anderson is distracted!"
-            System.out.printf(Output.SHL.getMsg(), name);
+            String name = in.nextLine().trim();
+            String location = in.nextLine().trim();
+
+            boolean isDistracted =  manager.changeLocation(name, location);
+            if (isDistracted){
+                System.out.printf(Output.CHLD.getMsg(), name, location, name);
+            } else {
+                System.out.printf(Output.CHL.getMsg(), name, location);
+            }
         }
         catch (Error1Exception e){
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
         } catch(Error2Exception e){
             System.out.printf(Output.UL.getMsg(), e.getMessage());
         } catch(Error3Exception e){
-            System.out.printf(Output.AT.getMsg(), e.getMessage());
+            System.out.printf(Output.IS.getMsg(), e.getMessage());
         } catch(Error4Exception e){
-            System.out.printf(Output.ELF.getMsg());
+            System.out.printf(Output.AT.getMsg());
         } catch (Error5Exception e) {
-            System.out.printf(Output.ELF.getMsg());
+            System.out.printf(Output.ESF.getMsg(), e.getMessage());
         }
 
     }
 
     private static void changeLodge(Scanner in, StudentSystemClass manager){
         try {
-            String name = in.nextLine();
-            String location = in.nextLine();
+            String name = in.nextLine().trim();
+            String location = in.nextLine(). trim();
             manager.changeLodge(name, location);
 
             System.out.printf(Output.LSUC.getMsg(), location, name, name);
         }
-        catch (Error1Exception e){
+        catch (Error2Exception e){
+            System.out.printf(Output.LDNE.getMsg(), e.getMessage());
+        } catch(Error1Exception e){
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
-        } catch(Error2Exception e){
-            System.out.printf(Output.UL.getMsg(), e.getMessage());
         } catch(Error3Exception e){
-            System.out.printf(Output.AT.getMsg(), e.getMessage());
+            System.out.printf(Output.ISH.getMsg(), e.getMessage());
         } catch(Error4Exception e){
-            System.out.printf(Output.ELF.getMsg());
+            System.out.println(Output.LSF.getMsg());
         } catch (Error5Exception e) {
-            System.out.printf(Output.ELF.getMsg());
+            System.out.println(Output.MNAF.getMsg());
         }
 
     }
+
+
+    private static void listUsersInService(Scanner in, StudentSystemClass manager){
+        try {
+            String order = in.next();
+            String location = in.nextLine().trim();
+
+            if (!order.equals("<") && !order.equals(">")){
+                System.out.println(Output.ONE.getMsg());
+            }
+
+            TwoWayIterator<Student> it = manager.listStudentsInService(location);
+            boolean oldFirst = order.equals(">");
+            if(!oldFirst) {
+                it.fullForward();
+                while(it.hasPrevious()){
+                    Student s = it.previous();
+                    System.out.printf(Output.ONE.getMsg(), s.getName(), s.getType());
+                }
+            } else {
+                while(it.hasNext()){
+                    Student s = it.next();
+                    System.out.printf(Output.ONE.getMsg(), s.getName(), s.getType());
+                }
+            }
+        }
+        catch (Error1Exception e) {
+            System.out.printf(Output.NDNE.getMsg(), e.getMessage());
+        } catch (Error2Exception e) {
+            System.out.printf(Output.NCSE.getMsg(), e.getMessage());
+        }
+    }
+
+
 
 }
