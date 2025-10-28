@@ -4,7 +4,9 @@ package System;
 import dataStructures.DoublyLinkedList;
 import dataStructures.Iterator;
 
-public class OutgoingStudent extends StudentClass{
+import java.io.Serializable;
+
+public class OutgoingStudent extends StudentClass implements Serializable {
 
     public OutgoingStudent(String id, String name, String type, Service lodge) {
         super(id, name, type, lodge);

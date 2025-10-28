@@ -2,7 +2,9 @@ package System;
 
 import dataStructures.Iterator;
 
-public class ThriftyStudent extends StudentClass {
+import java.io.Serializable;
+
+public class ThriftyStudent extends StudentClass implements Serializable {
 
     public ThriftyStudent(String id, String name, String type,Service lodge) {
         super(id, name, type, lodge);
