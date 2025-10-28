@@ -1,5 +1,6 @@
 package System;
 
+import dataStructures.Iterator;
 import dataStructures.TwoWayIterator;
 
 import java.io.Serializable;
@@ -8,9 +9,11 @@ public interface Service extends Serializable {
     String getName();
     LocationClass getLocation();
     String getType();
-    float getAvgRating();
+    int getAvgRating();
+    long getPrice();
 
     void newReview(int stars);
 
+    Iterator<Rating> listReviews();
     TwoWayIterator<Student> listStudentsInService();
 }

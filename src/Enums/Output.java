@@ -30,6 +30,8 @@ public enum Output {
     LSF("lodging %s is full!\n"),
     NS("No services yet!\n"),
     NIS("No services in the system."),
+    NSWT("No %s services!"),
+    NSWA("No %s services with average!"),
     SA("%s %s added.\n"),
     LSUC("lodging %s is now %s’s home. %s is at home.\n"),
     ISH("That is %s’s home!\n"),
@@ -42,6 +44,7 @@ public enum Output {
     NDNE("%s does not exist!\n"),
     NST("No students yet!"),
     NSF("No students from %s!\n"),
+    TSN("There are no services with this tag!"),
     CHL("%s is now at %s.\n"),
     CHLD("%s is now at %s. %s is distracted!\n"),
     MNAF("Move is not acceptable for %s!\n"),
@@ -53,7 +56,9 @@ public enum Output {
     THR("%s is thrifty!\n"),
     NVL("%s has not visited any locations!"),
     EVAL("Your evaluation has been registered!"),
-    SORD("Services sorted in descending order");
+    SORD("Services sorted in descending order"),
+    SCL("%s services closer with %d average"),
+    SPA("%s %s");
 
     String helpMsg;
 

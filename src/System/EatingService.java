@@ -5,7 +5,7 @@ import dataStructures.Iterator;
 import dataStructures.TwoWayIterator;
 
 public class EatingService extends ServiceClass {
-    private int price;
+    private long price;
     private int number_seats;
     private DoublyLinkedList<Student> costumers;
 
@@ -16,12 +16,14 @@ public class EatingService extends ServiceClass {
         costumers = new DoublyLinkedList<Student>();
     }
 
-    public int getPrice() { return price; }
+    public long getPrice() { return price; }
 
     public boolean isFull(){ return costumers.size() >= number_seats; }
 
     public void newCostumer(Student newStudent) { costumers.addLast(newStudent); }
     public void leaveSeat(Student student) { costumers.remove(find(student.getName())); }
+
+
 
     public TwoWayIterator<Student> listStudentsInService() { return costumers.twoWayiterator(); }
 

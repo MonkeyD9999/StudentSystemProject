@@ -225,17 +225,91 @@ public class StudentSystemClass implements StudentSystem, Serializable {
 
     @Override
     public Service getStudentCurrentService(String name) {
-        if(students.isEmpty()){
-            throw new Error1Exception(name);
-        }
         Student student = getStudent(name);
         if (student == null)
             throw new Error1Exception(name);
+
         return student.getCurrentService();
     }
 
     @Override
-    public Student getStudent(String name){
+    public Service getBestService(String name, String type) {
+        Student student = getStudent(name);
+
+        if (!(type.equalsIgnoreCase("eating") || type.equalsIgnoreCase("leisure") || type.equalsIgnoreCase("lodging")))
+            throw new Error2Exception("");
+        if (student == null)
+            throw new Error1Exception(name);
+
+        Iterator<Service> it = new FilterIterator<>(currentArea.getServices().iterator(), new IsServiceType(type));
+        if (!it.hasNext())
+            throw new Error3Exception(type);
+
+        SortedList<Service> ordered;
+        if (student instanceof ThriftyStudent) {
+            ordered = new SortedDoublyLinkedList<>(new PriceComparator());
+        } else {
+            ordered = new SortedDoublyLinkedList<>(new RatingComparator());
+        }
+
+        while (it.hasNext()) {
+            Service s = it.next();
+            ordered.add(s);
+        }
+
+        return ordered.getMin();
+    }
+
+    @Override
+    public Iterator<Service> listClosestServiceRanked(int stars, String type, String name) {
+        Student student = getStudent(name);
+
+        if (student == null)
+            throw new Error1Exception(name);
+        if (!(type.equalsIgnoreCase("eating") || type.equalsIgnoreCase("leisure") || type.equalsIgnoreCase("lodging")))
+            throw new Error2Exception("");
+
+        Iterator<Service> it = new FilterIterator<>(currentArea.getServices().iterator(), new IsServiceType(type));
+        if (!it.hasNext())
+            throw new Error3Exception(type);
+
+        Iterator<Service> iteratorR = new FilterIterator<>(it, new IsRatingStars(stars));
+        if (!it.hasNext())
+            throw new Error4Exception(type);
+
+        List<Service> r = new DoublyLinkedList<>();
+        long minDistance = Long.MAX_VALUE;
+        Location studentPos = student.getCurrentService().getLocation();
+        while (iteratorR.hasNext()) {
+            Service s = iteratorR.next();
+            Location servicePos = s.getLocation();
+
+            long distance = Math.abs(studentPos.getLatitude() - servicePos.getLatitude()) + Math.abs(studentPos.getLongitude() - servicePos.getLongitude());
+            if(distance < minDistance) {
+                while (!r.isEmpty()) {
+                    r.removeLast();
+                }
+                minDistance = distance;
+                r.addLast(s);
+            }
+            else if (distance == minDistance)
+                r.addLast(s);
+        }
+
+        return r.iterator();
+    }
+
+    @Override
+    public Iterator<Service> listServiceReviewsTagged(String tag) {
+        Iterator<Service> it = new FilterIterator<>(currentArea.getServices().iterator(), new ReviewHasTag(tag));
+
+        if (!it.hasNext())
+            throw new Error1Exception("");
+
+        return it;
+    }
+
+    private Student getStudent(String name){
 
         Iterator<Student> it =  students.iterator();
         while(it.hasNext()){
@@ -248,6 +322,7 @@ public class StudentSystemClass implements StudentSystem, Serializable {
     }
 
     private Service getService(String location){
+
         Iterator<Service> it =  currentArea.getServices().iterator();
         while(it.hasNext()){
             Service service = it.next();

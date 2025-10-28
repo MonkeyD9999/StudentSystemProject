@@ -1,8 +1,6 @@
 package System;
 
-import dataStructures.SortedDoublyLinkedList;
-import dataStructures.SortedList;
-import dataStructures.TwoWayIterator;
+import dataStructures.*;
 
 import java.io.Serializable;
 
@@ -13,6 +11,7 @@ public abstract class ServiceClass implements Service,Serializable {
     private String type;
     private int reviewCounter;
     private float avgRating;
+    private DoublyLinkedList<Rating> reviews;
 
     public ServiceClass(String name,String type, LocationClass location) {
         this.name = name;
@@ -20,6 +19,7 @@ public abstract class ServiceClass implements Service,Serializable {
         this.type = type;
         avgRating = 0;
         reviewCounter = 0;
+        reviews = new DoublyLinkedList<Rating>();
     }
 
     public String getName() {
@@ -31,11 +31,13 @@ public abstract class ServiceClass implements Service,Serializable {
     public String getType() {
         return type;
     }
-    public float getAvgRating() { return avgRating; }
+    public int getAvgRating() { return Math.round(avgRating); }
 
     public void newReview(int stars) {
         avgRating = (avgRating * reviewCounter + stars) / ++reviewCounter;
     }
+
+    public Iterator<Rating> listReviews() { return reviews.iterator(); }
 
     public abstract TwoWayIterator<Student> listStudentsInService();
 }

@@ -30,7 +30,9 @@ public interface StudentSystem  extends Serializable {
     public Iterator<Service> listServicesByRating();
 
     public Service getStudentCurrentService(String name);
+    public Service getBestService(String name, String type);
 
-    public Student getStudent(String name);
+    public Iterator<Service> listClosestServiceRanked(int stars, String type, String name);
+    public Iterator<Service> listServiceReviewsTagged(String tag);
 
 }

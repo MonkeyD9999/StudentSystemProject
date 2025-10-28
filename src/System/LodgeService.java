@@ -16,7 +16,7 @@ public class LodgeService extends ServiceClass {
         costumers = new DoublyLinkedList<Student>();
     }
 
-    public long getMonthly_cost() { return monthly_cost; }
+    public long getPrice() { return monthly_cost; }
 
     public void newCostumer(Student student) {
         costumers.addLast(student);

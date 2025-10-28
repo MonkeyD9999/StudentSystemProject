@@ -9,8 +9,8 @@ public class ThriftyStudent extends StudentClass {
     }
 
 
-    private int cheapestPlaceYet = Integer.MAX_VALUE;
-    private long lodgingRent = Integer.MAX_VALUE;
+    private long cheapestPlaceYet = Long.MAX_VALUE;
+    private long lodgingRent = Long.MAX_VALUE;
 
     @Override
     public boolean changeLocation(Service service) {
@@ -27,13 +27,13 @@ public class ThriftyStudent extends StudentClass {
 
     @Override
     public void changeLodge(Service service) {
-        lodgingRent = ((LodgeService) service).getMonthly_cost();
+        lodgingRent = ((LodgeService) service).getPrice();
         currentService = service;
         currentLodge = service;
     }
 
     public boolean cheaperLodge(Service service){
-        return ((LodgeService) service).getMonthly_cost() < lodgingRent;
+        return ((LodgeService) service).getPrice() < lodgingRent;
     }
 
     @Override

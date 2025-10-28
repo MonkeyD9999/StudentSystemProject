@@ -53,6 +53,9 @@ public class Main {
             case "visited" -> listVisitedServices(in, manager);
             case "star" -> evaluate(in, manager);
             case "ranking" -> listSortedByRating(manager);
+            case "ranked" -> getClosestRanked(in, manager);
+            case "tag" -> listServiceReviewsTagged(in, manager);
+            case "find" -> findBestService(in, manager);
 
             default -> System.out.println(Output.UNKNOWN.getMsg());
         }
@@ -343,9 +346,8 @@ public class Main {
         try {
             String name = in.nextLine().trim();
             Service service = manager.getStudentCurrentService(name);
-            Student s = manager.getStudent(name);
 
-            System.out.printf(Output.SLOC.getMsg(),s.getName(), service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
+            System.out.printf(Output.SLOC.getMsg(), name, service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
         } catch (Error1Exception e) {
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
         }
@@ -392,12 +394,72 @@ public class Main {
             Iterator<Service> it = manager.listServicesByRating();
             while(it.hasNext()){
                 Service s = it.next();
-                System.out.printf(Output.LSBR.getMsg(), s.getName(), Math.round(s.getAvgRating()));
+                System.out.printf(Output.LSBR.getMsg(), s.getName(), s.getAvgRating());
             }
         } catch (Error1Exception e) {
             System.out.printf(Output.NIS.getMsg(), e.getMessage());
         }
 
+    }
+
+    private static void getClosestRanked(Scanner in, StudentSystemClass manager){
+        try {
+            String type = in.next();
+            int stars = Integer.parseInt(in.next());
+            String name = in.nextLine().trim();
+
+            if(stars<1 || stars>5)
+                System.out.println(Output.IEV.getMsg());
+            else {
+                Iterator<Service> it = manager.listClosestServiceRanked(stars, type, name);
+                System.out.printf(Output.SCL.getMsg(), type, stars);
+                while (it.hasNext()) {
+                    Service s = it.next();
+                    System.out.println(s.getName());
+                }
+            }
+
+        } catch (Error1Exception e) {
+            System.out.printf(Output.NDNE.getMsg(), e.getMessage());
+        } catch (Error2Exception e) {
+            System.out.println(Output.IT.getMsg());
+        } catch (Error3Exception e) {
+            System.out.printf(Output.NSWT.getMsg(), e.getMessage());
+        } catch (Error4Exception e) {
+            System.out.printf(Output.NSWA.getMsg(), e.getMessage());
+        }
+    }
+
+    private static void listServiceReviewsTagged(Scanner in, StudentSystemClass manager){
+        try {
+            String tag = in.nextLine().trim();
+            Iterator<Service> it = manager.listServiceReviewsTagged(tag);
+
+            while(it.hasNext()){
+                Service s = it.next();
+                System.out.printf(Output.SPA.getMsg(), s.getType(), s.getName());
+            }
+
+        } catch (Error1Exception e) {
+            System.out.println(Output.TSN.getMsg());
+        }
+    }
+
+    private static void findBestService(Scanner in, StudentSystemClass manager){
+        try {
+            String name = in.nextLine().trim();
+            String type = in.nextLine().trim().toLowerCase();
+
+            Service best = manager.getBestService(name, type);
+            System.out.println(best.getName());
+
+        } catch (Error2Exception e) {
+            System.out.println(Output.IT.getMsg());
+        } catch (Error1Exception e) {
+            System.out.printf(Output.NDNE.getMsg(), e.getMessage());
+        } catch (Error3Exception e) {
+            System.out.printf(Output.NSWT.getMsg(), e.getMessage());
+        }
     }
 
 }

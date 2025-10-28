@@ -13,6 +13,8 @@ public class LeisureService extends ServiceClass {
 
     }
 
+    public long getPrice() { return ticket_cost; }
+
     @Override
     public TwoWayIterator<Student> listStudentsInService() {
         return null;
