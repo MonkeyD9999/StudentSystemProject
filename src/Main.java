@@ -40,7 +40,7 @@ public class Main {
                     System.out.printf(AS, manager.getCurrentArea().getName());
                 }
             }
-            case "load" -> processLoad(in.nextLine().trim(),manager);
+            case "load" -> manager = processLoad(in.nextLine().trim(),manager);
             case "service" -> processAddService(in, manager);
             case "services" -> listServices(manager);
             case "student" -> processAddStudent(in, manager);
@@ -85,7 +85,7 @@ public class Main {
     }
 
 
-    private static void processLoad(String name, StudentSystemClass manager){
+    private static StudentSystemClass processLoad(String name, StudentSystemClass manager){
         try{
             String fileName = "AREA_"+name.toLowerCase().trim();
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
@@ -94,16 +94,18 @@ public class Main {
                 processSave(manager);
             }
             AreaClass area = system.getCurrentArea();
-            manager = system;
             manager.changeArea(area);
+
             System.out.printf(Output.BL.getMsg(), manager.getCurrentArea().getName());
             in.close();
+            return system;
         } catch (FileNotFoundException e){
             System.out.printf(Output.NB.getMsg(), name);
         }
         catch(ClassNotFoundException | IOException e){
             throw new RuntimeException(e);
         }
+        return manager;
     }
 
     private static void processAddBound(Scanner in, StudentSystemClass manager){
@@ -141,7 +143,7 @@ public class Main {
         }
     }
 
-    private static void processAddService(Scanner in, StudentSystemClass manager) throws AlreadyExistsObjectException {
+    private static void processAddService(Scanner in, StudentSystemClass manager) {
         String type = in.next().toLowerCase().trim();
         long lat = in.nextLong();
         long lng = in.nextLong();
