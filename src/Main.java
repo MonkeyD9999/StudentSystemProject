@@ -90,7 +90,9 @@ public class Main {
             if(manager.getCurrentArea()!=null){
                 processSave(manager);
             }
-            manager.changeArea(system.getCurrentArea());
+            AreaClass area = system.getCurrentArea();
+            manager = system;
+            manager.changeArea(area);
             System.out.printf(Output.BL.getMsg(), manager.getCurrentArea().getName());
             in.close();
         } catch (FileNotFoundException e){
