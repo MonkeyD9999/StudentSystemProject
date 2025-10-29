@@ -9,11 +9,15 @@ public class ThriftyStudent extends StudentClass implements Serializable {
 
     public ThriftyStudent(String id, String name, String type,Service lodge) {
         super(id, name, type, lodge);
+        if (lodge != null)
+            lodgingRent = lodge.getPrice();
+        else
+            lodgingRent = Long.MAX_VALUE;
     }
 
 
     private long cheapestPlaceYet = Long.MAX_VALUE;
-    private long lodgingRent = Long.MAX_VALUE;
+    private long lodgingRent;
 
     @Override
     public boolean changeLocation(Service service) {

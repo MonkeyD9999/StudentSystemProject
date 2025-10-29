@@ -325,7 +325,7 @@ public class Main {
             } else {
                 area.changeLodge(name, location);
                 Student s = area.getStudent(name);
-                System.out.printf(Output.LSUC.getMsg(), location,s.getName(), s.getName());
+                System.out.printf(Output.LSUC.getMsg(), s.getCurrentLodge().getName(),s.getName(), s.getName());
             }
         }
         catch (Error2Exception e){
