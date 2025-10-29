@@ -14,51 +14,53 @@ public class Main {
 	public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
-        StudentSystemClass manager = new StudentSystemClass();
+        Area area = null;
 
         String command;
         do{
             command = in.next();
-            processCommand(in, manager, command);
+            area = processCommand(in, area, command);
         }
         while(!command.equals("exit"));
         in.close();
     }
 
-    public static void processCommand(Scanner in, StudentSystemClass manager, String command){
+    public static Area processCommand(Scanner in, Area area, String command){
 
         switch (command.toLowerCase().trim()){
             case "help" -> printHelp();
             case "exit" -> {
-                processSave(manager);
+                processSave(area);
                 System.out.println(Output.EXIT.getMsg());
             }
-            case "bounds" -> processAddBound(in, manager);
+            case "bounds" -> area = processAddBound(in, area);
             case "save" -> {
-                processSave(manager);
-                if(manager.getCurrentArea()!=null){
-                    System.out.printf(AS, manager.getCurrentArea().getName());
+                processSave(area);
+                if(area!=null){
+                    System.out.printf(AS, area.getName());
                 }
             }
-            case "load" -> manager = processLoad(in.nextLine().trim(),manager);
-            case "service" -> processAddService(in, manager);
-            case "services" -> listServices(manager);
-            case "student" -> processAddStudent(in, manager);
-            case "leave" -> processRemoveStudent(in.nextLine().trim(), manager);
-            case "students" -> listStudents(in.nextLine().trim(), manager);
-            case "go" -> changeLocation(in, manager);
-            case "move" -> changeLodge(in, manager);
-            case "users" -> listUsersInService(in, manager);
-            case "where" -> getStudentLocation(in, manager);
-            case "visited" -> listVisitedServices(in, manager);
-            case "star" -> evaluate(in, manager);
-            case "ranking" -> listSortedByRating(manager);
-            case "ranked" -> getClosestRanked(in, manager);
-            case "tag" -> listServiceReviewsTagged(in, manager);
-            case "find" -> findBestService(in, manager);
+            case "load" -> area = processLoad(in.nextLine().trim(),area);
+            case "service" -> processAddService(in, area);
+            case "services" -> listServices(area);
+            case "student" -> processAddStudent(in, area);
+            case "leave" -> processRemoveStudent(in.nextLine().trim(), area);
+            case "students" -> listStudents(in.nextLine().trim(), area);
+            case "go" -> changeLocation(in, area);
+            case "move" -> changeLodge(in, area);
+            case "users" -> listUsersInService(in, area);
+            case "where" -> getStudentLocation(in, area);
+            case "visited" -> listVisitedServices(in, area);
+            case "star" -> evaluate(in, area);
+            case "ranking" -> listSortedByRating(area);
+            case "ranked" -> getClosestRanked(in, area);
+            case "tag" -> listServiceReviewsTagged(in, area);
+            case "find" -> findBestService(in, area);
 
             default -> System.out.println(Output.UNKNOWN.getMsg());
         }
+
+        return area;
     }
 
     private static void printHelp(){
@@ -67,15 +69,15 @@ public class Main {
         }
     }
 
-    private static void processSave (StudentSystem system){
+    private static void processSave (Area area){
         try{
-            if(system.getCurrentArea()==null){
+            if(area==null){
                 System.out.println(Output.BND.getMsg());
             }
             else{
-                String fileName = "AREA_"+system.getCurrentArea().getName().toLowerCase();
+                String fileName = "AREA_"+area.getName().toLowerCase();
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
-                oos.writeObject(system);
+                oos.writeObject(area);
                 oos.flush();
                 oos.close();
             }
@@ -85,30 +87,28 @@ public class Main {
     }
 
 
-    private static StudentSystemClass processLoad(String name, StudentSystemClass manager){
+    private static Area processLoad(String name, Area area){
         try{
             String fileName = "AREA_"+name.toLowerCase().trim();
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
-            StudentSystemClass system = (StudentSystemClass) in.readObject();
-            if(manager.getCurrentArea()!=null){
-                processSave(manager);
+            if(area!=null){
+                processSave(area);
             }
-            AreaClass area = system.getCurrentArea();
-            manager.changeArea(area);
+            area = (AreaClass) in.readObject();
 
-            System.out.printf(Output.BL.getMsg(), manager.getCurrentArea().getName());
+            System.out.printf(Output.BL.getMsg(), area.getName());
             in.close();
-            return system;
+            return area;
         } catch (FileNotFoundException e){
-            System.out.printf(Output.NB.getMsg(), name);
+            System.out.println(Output.SBND.getMsg());
         }
         catch(ClassNotFoundException | IOException e){
             throw new RuntimeException(e);
         }
-        return manager;
+        return area;
     }
 
-    private static void processAddBound(Scanner in, StudentSystemClass manager){
+    private static Area processAddBound(Scanner in, Area area){
         long topLeftLat = in.nextLong();
         long topLeftLong = in.nextLong();
         long bottomRightLat = in.nextLong();
@@ -117,13 +117,14 @@ public class Main {
 
 
         try{
-            if(manager.getCurrentArea()!=null && manager.getCurrentArea().getName().equals(name)){
+            if(area!=null && area.getName().equals(name)){
                 System.out.println(Output.BAE.getMsg());
             }
             else{
                 String fileName = "AREA_"+name.toLowerCase();
                 ObjectInputStream inn = new ObjectInputStream(new FileInputStream(fileName));
                 System.out.println(Output.BAE.getMsg());
+                inn.close();
             }
         }
         catch (FileNotFoundException e){
@@ -131,19 +132,20 @@ public class Main {
                 System.out.println(Output.IB.getMsg());
             }
             else {
-                if(manager.getCurrentArea()!=null){
-                    processSave(manager);
+                if(area!=null){
+                    processSave(area);
                 }
-                manager.createNewArea(name, topLeftLat, topLeftLong, bottomRightLat, bottomRightLong);
+                area = new AreaClass(name, topLeftLat, topLeftLong, bottomRightLat, bottomRightLong);
                 System.out.printf(Output.BOUNDS.getMsg(), name);
             }
-        }
-        catch(IOException e){
+        } catch(IOException e){
             throw new RuntimeException(e);
         }
+
+        return area;
     }
 
-    private static void processAddService(Scanner in, StudentSystemClass manager) {
+    private static void processAddService(Scanner in, Area area) {
         String type = in.next().toLowerCase().trim();
         long lat = in.nextLong();
         long lng = in.nextLong();
@@ -154,10 +156,6 @@ public class Main {
         //check invalid type
         if(!type.equals("eating") && !type.equals("lodging") && !type.equals("leisure")){
             System.out.println(Output.IT.getMsg());
-        }
-        //check valid location
-        else if(!manager.isLocationInside(lat, lng)){
-            System.out.println(Output.IL.getMsg());
         }
         //check if valid price
         else if(price<=0){
@@ -178,17 +176,19 @@ public class Main {
         // try to add service
         else{
             try {
-                manager.addService(type, name, value, lat, lng, price);
+                LocationClass loc = new LocationClass(lat, lng);
+                area.addService(type, name, value, price, loc);
                 System.out.printf(Output.SA.getMsg(), type, name);
-            }
-            catch (AlreadyExistsObjectException e){
+            }catch (Error1Exception e) {
+                System.out.println(Output.IL.getMsg());
+            } catch (AlreadyExistsObjectException e){
                 System.out.printf(Output.ALREADY_EXISTS.getMsg(), e.getMessage());
             }
         }
     }
 
-    private static void listServices (StudentSystemClass manager){
-        Iterator<Service> it = manager.getCurrentArea().getServices().iterator();
+    private static void listServices (Area area){
+        Iterator<Service> it = area.getServicesAll();
         //check if empty
         if(!it.hasNext()){
             System.out.printf(Output.NS.getMsg());
@@ -199,7 +199,7 @@ public class Main {
         }
     }
 
-    private static void processAddStudent(Scanner in, StudentSystemClass manager){
+    private static void processAddStudent(Scanner in, Area area){
         String type = in.nextLine().trim().toLowerCase();
         String name = in.nextLine().trim();
         String country = in.nextLine().trim();
@@ -211,7 +211,7 @@ public class Main {
                 System.out.println(Output.IST.getMsg());
             }
             else{
-                manager.addStudent(type, name, country, currentLodge);
+                area.addStudent(type, name, country, currentLodge);
                 System.out.printf(Output.SC.getMsg(), name);
             }
         }
@@ -226,9 +226,9 @@ public class Main {
         }
     }
 
-    private static void processRemoveStudent(String name, StudentSystemClass manager){
+    private static void processRemoveStudent(String name, Area area){
         try{
-            manager.removeStudent(name);
+            area.removeStudent(name);
             System.out.printf(Output.SHL.getMsg(), name);
         }
         catch (Error1Exception e){
@@ -236,10 +236,10 @@ public class Main {
         }
     }
 
-    private  static void listStudents(String place, StudentSystemClass manager){
+    private  static void listStudents(String place, Area area){
         try{
 
-            Iterator<Student> it = manager.getStudentsAll(place);
+            Iterator<Student> it = area.getStudentsAll(place);
             while(it.hasNext()){
                 Student s = it.next();
                 String type = null;
@@ -267,12 +267,12 @@ public class Main {
 
     }
 
-    private static void changeLocation(Scanner in, StudentSystemClass manager){
+    private static void changeLocation(Scanner in, Area area){
         try{
             String name = in.nextLine().trim();
             String location = in.nextLine().trim();
 
-            boolean isDistracted =  manager.changeLocation(name, location);
+            boolean isDistracted =  area.changeLocation(name, location);
             if (isDistracted){
                 System.out.printf(Output.CHLD.getMsg(), name, location, name);
             } else {
@@ -293,11 +293,11 @@ public class Main {
 
     }
 
-    private static void changeLodge(Scanner in, StudentSystemClass manager){
+    private static void changeLodge(Scanner in, Area area){
         try {
             String name = in.nextLine().trim();
             String location = in.nextLine(). trim();
-            manager.changeLodge(name, location);
+            area.changeLodge(name, location);
 
             System.out.printf(Output.LSUC.getMsg(), location, name, name);
         }
@@ -315,7 +315,7 @@ public class Main {
 
     }
 
-    private static void listUsersInService(Scanner in, StudentSystemClass manager){
+    private static void listUsersInService(Scanner in, Area area){
         try {
             String order = in.next();
             String location = in.nextLine().trim();
@@ -324,7 +324,7 @@ public class Main {
                 System.out.println(Output.ONE.getMsg());
             }
 
-            TwoWayIterator<Student> it = manager.listStudentsInService(location);
+            TwoWayIterator<Student> it = area.listStudentsInService(location);
             boolean oldFirst = order.equals(">");
             if(!oldFirst) {
                 it.fullForward();
@@ -346,10 +346,10 @@ public class Main {
         }
     }
 
-    private static void getStudentLocation(Scanner in, StudentSystemClass manager){
+    private static void getStudentLocation(Scanner in, Area area){
         try {
             String name = in.nextLine().trim();
-            Service service = manager.getStudentCurrentService(name);
+            Service service = area.getStudentCurrentService(name);
 
             System.out.printf(Output.SLOC.getMsg(), name, service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
         } catch (Error1Exception e) {
@@ -357,11 +357,11 @@ public class Main {
         }
     }
 
-    private static void listVisitedServices(Scanner in, StudentSystemClass manager){
+    private static void listVisitedServices(Scanner in, Area area){
         try {
             String name = in.nextLine().trim();
 
-            Iterator<Service> it = manager.listVisitedServices(name);
+            Iterator<Service> it = area.listVisitedServices(name);
             while(it.hasNext()){
                 Service s = it.next();
                 System.out.println(s.getName());
@@ -375,7 +375,7 @@ public class Main {
         }
     }
 
-    private static void evaluate(Scanner in, StudentSystemClass manager){
+    private static void evaluate(Scanner in, Area area){
         try {
             int stars = Integer.parseInt(in.next());
             String location = in.nextLine().trim();
@@ -384,7 +384,7 @@ public class Main {
             if(stars<1 || stars>5)
                 System.out.println(Output.IEV.getMsg());
             else {
-                manager.evaluateService(stars, location, description);
+                area.evaluateService(stars, location, description);
                 System.out.println(Output.EVAL.getMsg());
             }
 
@@ -393,9 +393,9 @@ public class Main {
         }
     }
 
-    private static void listSortedByRating(StudentSystemClass manager){
+    private static void listSortedByRating(Area area){
         try {
-            Iterator<Service> it = manager.listServicesByRating();
+            Iterator<Service> it = area.listServicesByRating();
             while(it.hasNext()){
                 Service s = it.next();
                 System.out.printf(Output.LSBR.getMsg(), s.getName(), s.getAvgRating());
@@ -406,7 +406,7 @@ public class Main {
 
     }
 
-    private static void getClosestRanked(Scanner in, StudentSystemClass manager){
+    private static void getClosestRanked(Scanner in, Area area){
         try {
             String type = in.next();
             int stars = Integer.parseInt(in.next());
@@ -415,7 +415,7 @@ public class Main {
             if(stars<1 || stars>5)
                 System.out.println(Output.IEV.getMsg());
             else {
-                Iterator<Service> it = manager.listClosestServiceRanked(stars, type, name);
+                Iterator<Service> it = area.listClosestServiceRanked(stars, type, name);
                 System.out.printf(Output.SCL.getMsg(), type, stars);
                 while (it.hasNext()) {
                     Service s = it.next();
@@ -434,10 +434,10 @@ public class Main {
         }
     }
 
-    private static void listServiceReviewsTagged(Scanner in, StudentSystemClass manager){
+    private static void listServiceReviewsTagged(Scanner in, Area area){
         try {
             String tag = in.nextLine().trim();
-            Iterator<Service> it = manager.listServiceReviewsTagged(tag);
+            Iterator<Service> it = area.listServiceReviewsTagged(tag);
 
             while(it.hasNext()){
                 Service s = it.next();
@@ -449,12 +449,12 @@ public class Main {
         }
     }
 
-    private static void findBestService(Scanner in, StudentSystemClass manager){
+    private static void findBestService(Scanner in, Area area){
         try {
             String name = in.nextLine().trim();
             String type = in.nextLine().trim().toLowerCase();
 
-            Service best = manager.getBestService(name, type);
+            Service best = area.getBestService(name, type);
             System.out.println(best.getName());
 
         } catch (Error2Exception e) {

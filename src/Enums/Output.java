@@ -11,6 +11,7 @@ public enum Output {
     BOUNDS("%s created.\n"),
     ELF("eating %s is full!\n"),
     NB("Bounds %s does not exists.\n"),
+    SBND("System bounds not defined."),
     BL("%s loaded.\n"),
     NVS("%s is not a valid service!\n"),
     SC("%s added.\n"),
