@@ -207,7 +207,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * @throws NoSuchElementException - if size() == 0
      */
     public E removeFirst( ) {
-        if (!this.isEmpty())
+        if (this.isEmpty())
             throw new NoSuchElementException();
 
         E element = head.getElement();

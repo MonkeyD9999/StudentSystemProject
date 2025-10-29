@@ -28,8 +28,8 @@ public class Main {
     public static Area processCommand(Scanner in, Area area, String command){
 
         switch (command.toLowerCase().trim()){
-            case "help" -> printHelp();
-            case "exit" -> {
+            case "help" -> printHelp(); //done
+            case "exit" -> { //done
                 processSave(area);
                 System.out.println(Output.EXIT.getMsg());
             }
@@ -75,7 +75,7 @@ public class Main {
                 System.out.println(Output.BND.getMsg());
             }
             else{
-                String fileName = "AREA_"+area.getName().toLowerCase();
+                String fileName = "AREA_" + area.getName().toLowerCase().replaceAll(" ", "_");
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
                 oos.writeObject(area);
                 oos.flush();
@@ -89,13 +89,12 @@ public class Main {
 
     private static Area processLoad(String name, Area area){
         try{
-            String fileName = "AREA_"+name.toLowerCase().trim();
+            String fileName = "AREA_" + name.toLowerCase().replaceAll(" ", "_");
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
             if(area!=null){
                 processSave(area);
             }
             area = (AreaClass) in.readObject();
-
             System.out.printf(Output.BL.getMsg(), area.getName());
             in.close();
             return area;
@@ -115,9 +114,8 @@ public class Main {
         long bottomRightLong = in.nextLong();
         String name = in.nextLine().trim();
 
-
         try{
-            if(area!=null && area.getName().equals(name)){
+            if(area!=null && area.getName().equalsIgnoreCase(name)){
                 System.out.println(Output.BAE.getMsg());
             }
             else{
@@ -276,7 +274,7 @@ public class Main {
             if (isDistracted){
                 System.out.printf(Output.CHLD.getMsg(), name, location, name);
             } else {
-                System.out.printf(Output.CHL.getMsg(), name, location);
+                System.out.printf(Output.CHL.getMsg(), area.getStudent(name).getName(), location);
             }
         }
         catch (Error1Exception e){
@@ -349,10 +347,9 @@ public class Main {
     private static void getStudentLocation(Scanner in, Area area){
         try {
             String name = in.nextLine().trim();
-            Student s = area.getStudentCurrentService(name);
-            Service service = s.getCurrentService();
+            Service service = area.getStudentCurrentService(name);
 
-            System.out.printf(Output.SLOC.getMsg(), s.getName(), service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
+            System.out.printf(Output.SLOC.getMsg(), area.getStudent(name).getName(), service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
         } catch (Error1Exception e) {
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
         }
