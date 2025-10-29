@@ -185,11 +185,11 @@ public class AreaClass implements Area, Serializable {
         if (!(service instanceof LodgeService))
             throw new Error2Exception(lodge);
         if (service.equals(student.getCurrentLodge()))
-            throw new Error3Exception(name);
+            throw new Error3Exception(student.getName());
         if (((LodgeService) service).isFull())
-            throw new Error4Exception(lodge);
+            throw new Error4Exception(service.getName());
         if (student instanceof ThriftyStudent && !((ThriftyStudent) student).cheaperLodge(service))
-            throw new Error5Exception(name);
+            throw new Error5Exception(student.getName());
 
         // -- prev Lodge counter, ++ current Lodge counter
         LodgeService current = (LodgeService) student.getCurrentLodge();

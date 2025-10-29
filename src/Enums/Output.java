@@ -33,7 +33,7 @@ public enum Output {
     NSWT("No %s services!"),
     NSWA("No %s services with average!"),
     SA("%s %s added.\n"),
-    LSUC("lodging %s is now %s’s home. %s is at home.\n"),
+    LSUC("lodging %s is now %s's home. %s is at home.\n"),
     ISH("That is %s’s home!\n"),
     IST("Invalid student type!"),
     IS("%s is not a valid service!\n"),

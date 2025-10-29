@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 public class ThriftyStudent extends StudentClass implements Serializable {
 
+
     public ThriftyStudent(String id, String name, String type,Service lodge) {
         super(id, name, type, lodge);
     }
@@ -18,7 +19,7 @@ public class ThriftyStudent extends StudentClass implements Serializable {
     public boolean changeLocation(Service service) {
         currentService = service;
         if (service instanceof EatingService eatingService) {
-            if (eatingService.getPrice() < cheapestPlaceYet) {
+            if (eatingService.getPrice() <= cheapestPlaceYet) {
                 cheapestPlaceYet = eatingService.getPrice();
                 return false;
             }
@@ -35,7 +36,7 @@ public class ThriftyStudent extends StudentClass implements Serializable {
     }
 
     public boolean cheaperLodge(Service service){
-        return ((LodgeService) service).getPrice() < lodgingRent;
+        return service.getPrice() < lodgingRent;
     }
 
     @Override
@@ -45,5 +46,6 @@ public class ThriftyStudent extends StudentClass implements Serializable {
 
     @Override
     public Iterator<Service> listVisitedServices() { return null; }
+
 
 }

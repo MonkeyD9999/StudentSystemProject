@@ -26,11 +26,12 @@ public interface Area extends Serializable {
     Iterator<Service> listVisitedServices(String name);
     Iterator<Service> listServicesByRating();
 
-    Student getStudentCurrentService(String name);
+    Service getStudentCurrentService(String name);
     Service getBestService(String name, String type);
 
     Iterator<Service> listClosestServiceRanked(int stars, String type, String name);
     Iterator<Service> listServiceReviewsTagged(String tag);
 
     Student getStudent(String name);
+
 }

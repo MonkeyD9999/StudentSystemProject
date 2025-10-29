@@ -151,8 +151,11 @@ public class Main {
         int value = in.nextInt();
         String name = in.nextLine().trim();
 
+        if(area==null){
+            System.out.println(Output.BND.getMsg());
+        }
         //check invalid type
-        if(!type.equals("eating") && !type.equals("lodging") && !type.equals("leisure")){
+        else if(!type.equals("eating") && !type.equals("lodging") && !type.equals("leisure")){
             System.out.println(Output.IT.getMsg());
         }
         //check if valid price
@@ -186,14 +189,19 @@ public class Main {
     }
 
     private static void listServices (Area area){
-        Iterator<Service> it = area.getServicesAll();
-        //check if empty
-        if(!it.hasNext()){
-            System.out.printf(Output.NS.getMsg());
+        if(area==null){
+            System.out.println(Output.BND.getMsg());
         }
-        while(it.hasNext()){
-            Service s = it.next();
-            System.out.printf(Output.PRINT_SERVICE.getMsg(), s.getName(), s.getType(), s.getLocation().getLatitude(), s.getLocation().getLongitude());
+        else{
+            Iterator<Service> it = area.getServicesAll();
+            //check if empty
+            if(!it.hasNext()){
+                System.out.printf(Output.NS.getMsg());
+            }
+            while(it.hasNext()){
+                Service s = it.next();
+                System.out.printf(Output.PRINT_SERVICE.getMsg(), s.getName(), s.getType(), s.getLocation().getLatitude(), s.getLocation().getLongitude());
+            }
         }
     }
 
@@ -203,9 +211,11 @@ public class Main {
         String country = in.nextLine().trim();
         String currentLodge = in.nextLine().trim();
 
-
         try{
-            if(!type.equals("bookish") && !type.equals("outgoing") && !type.equals("thrifty")){
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
+            }
+            else if(!type.equals("bookish") && !type.equals("outgoing") && !type.equals("thrifty")){
                 System.out.println(Output.IST.getMsg());
             }
             else{
@@ -226,8 +236,12 @@ public class Main {
 
     private static void processRemoveStudent(String name, Area area){
         try{
-            area.removeStudent(name);
-            System.out.printf(Output.SHL.getMsg(), name);
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
+            } else {
+                area.removeStudent(name);
+                System.out.printf(Output.SHL.getMsg(), name);
+            }
         }
         catch (Error1Exception e){
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
@@ -236,22 +250,25 @@ public class Main {
 
     private  static void listStudents(String place, Area area){
         try{
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
+            } else {
+                Iterator<Student> it = area.getStudentsAll(place);
+                while(it.hasNext()){
+                    Student s = it.next();
+                    String type = null;
+                    if(s instanceof BookishStudent){
+                        type = "bookish";
+                    }
+                    else if(s instanceof OutgoingStudent){
+                        type = "outgoing";
+                    }
+                    else if(s instanceof ThriftyStudent){
+                        type = "thrifty";
+                    }
+                    System.out.printf(Output.PRINT_STUDENT.getMsg(), s.getName(), type, s.getCurrentService().getName());
 
-            Iterator<Student> it = area.getStudentsAll(place);
-            while(it.hasNext()){
-                Student s = it.next();
-                String type = null;
-                if(s instanceof BookishStudent){
-                    type = "bookish";
                 }
-                else if(s instanceof OutgoingStudent){
-                    type = "outgoing";
-                }
-                else if(s instanceof ThriftyStudent){
-                    type = "thrifty";
-                }
-                System.out.printf(Output.PRINT_STUDENT.getMsg(), s.getName(), type, s.getCurrentLodge().getName());
-
             }
         }
         catch(Error1Exception e){
@@ -270,11 +287,18 @@ public class Main {
             String name = in.nextLine().trim();
             String location = in.nextLine().trim();
 
-            boolean isDistracted =  area.changeLocation(name, location);
-            if (isDistracted){
-                System.out.printf(Output.CHLD.getMsg(), name, location, name);
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
             } else {
-                System.out.printf(Output.CHL.getMsg(), area.getStudent(name).getName(), location);
+                boolean isDistracted =  area.changeLocation(name, location);
+                Student student = area.getStudent(name);
+                Service newService = student.getCurrentService();
+
+                if (isDistracted){
+                    System.out.printf(Output.CHLD.getMsg(), student.getName(),newService.getName(), student.getName());
+                } else {
+                    System.out.printf(Output.CHL.getMsg(), student.getName(), newService.getName());
+                }
             }
         }
         catch (Error1Exception e){
@@ -295,9 +319,14 @@ public class Main {
         try {
             String name = in.nextLine().trim();
             String location = in.nextLine(). trim();
-            area.changeLodge(name, location);
 
-            System.out.printf(Output.LSUC.getMsg(), location, name, name);
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
+            } else {
+                area.changeLodge(name, location);
+                Student s = area.getStudent(name);
+                System.out.printf(Output.LSUC.getMsg(), location,s.getName(), s.getName());
+            }
         }
         catch (Error2Exception e){
             System.out.printf(Output.LDNE.getMsg(), e.getMessage());
@@ -306,9 +335,9 @@ public class Main {
         } catch(Error3Exception e){
             System.out.printf(Output.ISH.getMsg(), e.getMessage());
         } catch(Error4Exception e){
-            System.out.println(Output.LSF.getMsg());
+            System.out.printf(Output.LSF.getMsg(), e.getMessage());
         } catch (Error5Exception e) {
-            System.out.println(Output.MNAF.getMsg());
+            System.out.printf(Output.MNAF.getMsg(), e.getMessage());
         }
 
     }
@@ -318,24 +347,27 @@ public class Main {
             String order = in.next();
             String location = in.nextLine().trim();
 
-            if (!order.equals("<") && !order.equals(">")){
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
+            } else if (!order.equals("<") && !order.equals(">")){
                 System.out.println(Output.ONE.getMsg());
+            } else {
+                TwoWayIterator<Student> it = area.listStudentsInService(location);
+                boolean oldFirst = order.equals(">");
+                if(!oldFirst) {
+                    it.fullForward();
+                    while(it.hasPrevious()){
+                        Student s = it.previous();
+                        System.out.printf(Output.LUIS.getMsg(), s.getName(), s.getType());
+                    }
+                } else {
+                    while(it.hasNext()){
+                        Student s = it.next();
+                        System.out.printf(Output.LUIS.getMsg(), s.getName(), s.getType());
+                    }
+                }
             }
 
-            TwoWayIterator<Student> it = area.listStudentsInService(location);
-            boolean oldFirst = order.equals(">");
-            if(!oldFirst) {
-                it.fullForward();
-                while(it.hasPrevious()){
-                    Student s = it.previous();
-                    System.out.printf(Output.LUIS.getMsg(), s.getName(), s.getType());
-                }
-            } else {
-                while(it.hasNext()){
-                    Student s = it.next();
-                    System.out.printf(Output.LUIS.getMsg(), s.getName(), s.getType());
-                }
-            }
         }
         catch (Error1Exception e) {
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
@@ -347,9 +379,16 @@ public class Main {
     private static void getStudentLocation(Scanner in, Area area){
         try {
             String name = in.nextLine().trim();
-            Service service = area.getStudentCurrentService(name);
 
-            System.out.printf(Output.SLOC.getMsg(), area.getStudent(name).getName(), service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
+            } else {
+                Student s = area.getStudent(name);
+                Service service = area.getStudentCurrentService(name);
+
+                System.out.printf(Output.SLOC.getMsg(), s.getName(), service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
+            }
+
         } catch (Error1Exception e) {
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
         }
@@ -359,11 +398,16 @@ public class Main {
         try {
             String name = in.nextLine().trim();
 
-            Iterator<Service> it = area.listVisitedServices(name);
-            while(it.hasNext()){
-                Service s = it.next();
-                System.out.println(s.getName());
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
+            } else {
+                Iterator<Service> it = area.listVisitedServices(name);
+                while(it.hasNext()){
+                    Service s = it.next();
+                    System.out.println(s.getName());
+                }
             }
+
         } catch (Error1Exception e) {
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
         } catch (Error2Exception e) {
@@ -379,13 +423,14 @@ public class Main {
             String location = in.nextLine().trim();
             String description = in.nextLine().trim();
 
-            if(stars<1 || stars>5)
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
+            } else if(stars<1 || stars>5) {
                 System.out.println(Output.IEV.getMsg());
-            else {
+            } else {
                 area.evaluateService(stars, location, description);
                 System.out.println(Output.EVAL.getMsg());
             }
-
         }   catch (Error1Exception e) {
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
         }
@@ -410,9 +455,11 @@ public class Main {
             int stars = Integer.parseInt(in.next());
             String name = in.nextLine().trim();
 
-            if(stars<1 || stars>5)
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
+            } else if(stars<1 || stars>5) {
                 System.out.println(Output.IEV.getMsg());
-            else {
+            } else {
                 Iterator<Service> it = area.listClosestServiceRanked(stars, type, name);
                 System.out.printf(Output.SCL.getMsg(), type, stars);
                 while (it.hasNext()) {
@@ -435,11 +482,17 @@ public class Main {
     private static void listServiceReviewsTagged(Scanner in, Area area){
         try {
             String tag = in.nextLine().trim();
-            Iterator<Service> it = area.listServiceReviewsTagged(tag);
 
-            while(it.hasNext()){
-                Service s = it.next();
-                System.out.printf(Output.SPA.getMsg(), s.getType(), s.getName());
+
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
+            } else {
+                Iterator<Service> it = area.listServiceReviewsTagged(tag);
+
+                while(it.hasNext()){
+                    Service s = it.next();
+                    System.out.printf(Output.SPA.getMsg(), s.getType(), s.getName());
+                }
             }
 
         } catch (Error1Exception e) {
@@ -452,8 +505,12 @@ public class Main {
             String name = in.nextLine().trim();
             String type = in.nextLine().trim().toLowerCase();
 
-            Service best = area.getBestService(name, type);
-            System.out.println(best.getName());
+            if(area==null){
+                System.out.println(Output.BND.getMsg());
+            } else {
+                Service best = area.getBestService(name, type);
+                System.out.println(best.getName());
+            }
 
         } catch (Error2Exception e) {
             System.out.println(Output.IT.getMsg());
