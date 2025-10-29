@@ -26,7 +26,7 @@ public interface Area extends Serializable {
     Iterator<Service> listVisitedServices(String name);
     Iterator<Service> listServicesByRating();
 
-    Service getStudentCurrentService(String name);
+    Student getStudentCurrentService(String name);
     Service getBestService(String name, String type);
 
     Iterator<Service> listClosestServiceRanked(int stars, String type, String name);

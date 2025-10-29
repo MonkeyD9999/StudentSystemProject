@@ -70,6 +70,7 @@ public class AreaClass implements Area, Serializable {
     @Override
     public void addStudent(String type, String name, String country, String currentLodge) {
         Service lodge = getService(currentLodge);
+        Student student = getStudent(name);
         if(lodge==null){
             throw new Error1Exception(currentLodge);
         }
@@ -77,8 +78,8 @@ public class AreaClass implements Area, Serializable {
         if(lodge instanceof LodgeService && (((LodgeService) lodge).isFull())){
             throw new Error2Exception(lodge.getName());
         }
-        if(getStudent(name) != null){
-            throw new Error3Exception(lodge.getName());
+        if(student != null){
+            throw new Error3Exception(student.getName());
         }
 
         switch (type){
@@ -240,12 +241,12 @@ public class AreaClass implements Area, Serializable {
     }
 
     @Override
-    public Service getStudentCurrentService(String name) {
+    public Student getStudentCurrentService(String name) {
         Student student = getStudent(name);
         if (student == null)
             throw new Error1Exception(name);
 
-        return student.getCurrentService();
+        return student;
     }
 
     @Override
@@ -329,7 +330,7 @@ public class AreaClass implements Area, Serializable {
         Iterator<Service> it = services.iterator();
         while (it.hasNext()){
             Service s = it.next();
-            if(s.getName().equals(name)){
+            if(s.getName().equalsIgnoreCase(name)){
                 return s;
             }
         }

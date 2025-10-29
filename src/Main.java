@@ -349,9 +349,10 @@ public class Main {
     private static void getStudentLocation(Scanner in, Area area){
         try {
             String name = in.nextLine().trim();
-            Service service = area.getStudentCurrentService(name);
+            Student s = area.getStudentCurrentService(name);
+            Service service = s.getCurrentService();
 
-            System.out.printf(Output.SLOC.getMsg(), name, service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
+            System.out.printf(Output.SLOC.getMsg(), s.getName(), service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
         } catch (Error1Exception e) {
             System.out.printf(Output.NDNE.getMsg(), e.getMessage());
         }
