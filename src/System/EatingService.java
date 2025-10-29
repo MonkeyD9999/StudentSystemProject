@@ -32,7 +32,7 @@ public class EatingService extends ServiceClass {
         int index = 0;
         while(iterator.hasNext()) {
             Student current = iterator.next();
-            if (current.getName().equals(name)) {
+            if (current.getName().equalsIgnoreCase(name)) {
                 return index;
             }
             index++;

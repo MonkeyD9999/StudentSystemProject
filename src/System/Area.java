@@ -31,4 +31,6 @@ public interface Area extends Serializable {
 
     Iterator<Service> listClosestServiceRanked(int stars, String type, String name);
     Iterator<Service> listServiceReviewsTagged(String tag);
+
+    Student getStudent(String name);
 }
