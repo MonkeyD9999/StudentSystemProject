@@ -205,7 +205,7 @@ public class AreaClass implements Area, Serializable {
         if(service==null)
             throw new Error1Exception(location);
         if(!(service instanceof LodgeService) && !(service instanceof EatingService))
-            throw new Error2Exception(location);
+            throw new Error2Exception(service.getName());
 
         return service.listStudentsInService();
     }
@@ -326,7 +326,7 @@ public class AreaClass implements Area, Serializable {
         return it;
     }
 
-    private Service getService(String name) {
+    public Service getService(String name) {
         Iterator<Service> it = services.iterator();
         while (it.hasNext()){
             Service s = it.next();

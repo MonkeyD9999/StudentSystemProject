@@ -33,5 +33,5 @@ public interface Area extends Serializable {
     Iterator<Service> listServiceReviewsTagged(String tag);
 
     Student getStudent(String name);
-
+    Service getService(String location);
 }

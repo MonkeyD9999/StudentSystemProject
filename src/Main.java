@@ -354,15 +354,19 @@ public class Main {
             } else {
                 TwoWayIterator<Student> it = area.listStudentsInService(location);
                 boolean oldFirst = order.equals(">");
-                if(!oldFirst) {
-                    it.fullForward();
-                    while(it.hasPrevious()){
-                        Student s = it.previous();
+                Service service = area.getService(location);
+
+                if(!it.hasNext())
+                    System.out.printf(Output.NSO.getMsg(), service.getName());
+                if(oldFirst) {
+                    while(it.hasNext()){
+                        Student s = it.next();
                         System.out.printf(Output.LUIS.getMsg(), s.getName(), s.getType());
                     }
                 } else {
-                    while(it.hasNext()){
-                        Student s = it.next();
+                    it.fullForward();
+                    while(it.hasPrevious()){
+                        Student s = it.previous();
                         System.out.printf(Output.LUIS.getMsg(), s.getName(), s.getType());
                     }
                 }

@@ -67,8 +67,8 @@ class TwoWayDoublyIterator<E> extends DoublyIterator<E> implements TwoWayIterato
             throw new NoSuchElementException();
 
         E element = prevToReturn.getElement();
+        nextToReturn = prevToReturn;
         prevToReturn = prevToReturn.getPrevious();
-        nextToReturn = prevToReturn.getNext();
         return element;
     }
 
