@@ -17,7 +17,7 @@ public abstract class ServiceClass implements Service,Serializable {
         this.name = name;
         this.location = location;
         this.type = type;
-        avgRating = 0;
+        avgRating = 4;
         reviewCounter = 0;
         reviews = new DoublyLinkedList<Rating>();
     }
