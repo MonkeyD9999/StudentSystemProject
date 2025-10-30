@@ -16,21 +16,20 @@ public class OutgoingStudent extends StudentClass implements Serializable {
 
     @Override
     public boolean changeLocation(Service service) {
-        services.addLast(service);
+        if (!hasVisited(service.getName()))
+            services.addLast(service);
+
         currentService = service;
         return false;
     }
 
     @Override
     public void changeLodge(Service service) {
-        services.addLast(service);
+        if (!hasVisited(service.getName()))
+            services.addLast(service);
+
         currentService = service;
         currentLodge = service;
-    }
-
-    @Override
-    public boolean hasVisits() {
-        return services.isEmpty();
     }
 
     @Override
@@ -38,4 +37,13 @@ public class OutgoingStudent extends StudentClass implements Serializable {
         return services.iterator();
     }
 
+    private boolean hasVisited(String location) {
+        Iterator<Service> iterator = services.iterator();
+        while (iterator.hasNext()) {
+            Service service = iterator.next();
+            if (service.getName().equalsIgnoreCase(location))
+                return true;
+        }
+        return false;
+    }
 }

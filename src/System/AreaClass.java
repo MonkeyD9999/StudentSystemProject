@@ -217,11 +217,13 @@ public class AreaClass implements Area, Serializable {
         if (student == null)
             throw new Error1Exception(name);
         if (student instanceof ThriftyStudent)
-            throw new Error2Exception(name);
-        if (!student.hasVisits())
-            throw new Error3Exception(name);
+            throw new Error2Exception(student.getName());
 
-        return student.listVisitedServices();
+        Iterator<Service> it = student.listVisitedServices();
+        if (!it.hasNext())
+            throw new Error3Exception(student.getName());
+
+        return it;
     }
 
     @Override
@@ -229,7 +231,7 @@ public class AreaClass implements Area, Serializable {
         Iterator<Service> it = services.iterator();
         SortedList<Service> sortedByRating = new SortedDoublyLinkedList<>(new RatingComparator());
 
-        if (it.hasNext())
+        if (!it.hasNext())
             throw new Error1Exception("");
 
         while (it.hasNext()) {

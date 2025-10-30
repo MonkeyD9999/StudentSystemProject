@@ -40,8 +40,6 @@ public abstract class StudentClass implements Student, Serializable {
         return country;
     }
 
-    public abstract boolean hasVisits();
-
     public abstract Iterator<Service> listVisitedServices();
 
     public abstract boolean changeLocation(Service service);

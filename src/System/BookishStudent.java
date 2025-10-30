@@ -14,7 +14,7 @@ public class BookishStudent extends StudentClass implements Serializable {
 
     @Override
     public boolean changeLocation(Service service) {
-        if (service instanceof LeisureService) {
+        if (service instanceof LeisureService && !hasVisited(service.getName())) {
             leisureServices.addLast(service);
         }
         currentService = service;
@@ -32,9 +32,14 @@ public class BookishStudent extends StudentClass implements Serializable {
         return leisureServices.iterator();
     }
 
-    @Override
-    public boolean hasVisits() {
-        return leisureServices.isEmpty();
+    private boolean hasVisited(String location) {
+        Iterator<Service> iterator = leisureServices.iterator();
+        while (iterator.hasNext()) {
+            Service service = iterator.next();
+            if (service.getName().equalsIgnoreCase(location))
+                return true;
+        }
+        return false;
     }
 
 

@@ -44,11 +44,6 @@ public class ThriftyStudent extends StudentClass implements Serializable {
     }
 
     @Override
-    public boolean hasVisits() {
-        return false;
-    }
-
-    @Override
     public Iterator<Service> listVisitedServices() { return null; }
 
 

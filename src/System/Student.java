@@ -18,8 +18,6 @@ public interface Student extends Serializable {
     public String getCountry();
     public String getType();
 
-    public boolean hasVisits();
-
     public boolean changeLocation(Service service);
     public void changeLodge(Service service);
 
