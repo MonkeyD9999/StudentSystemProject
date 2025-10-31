@@ -5,21 +5,57 @@ import dataStructures.Iterator;
 import dataStructures.TwoWayIterator;
 
 import java.io.Serializable;
+import java.security.PublicKey;
 
 public interface Student extends Serializable {
 
+    /**
+     *
+     * @return name
+     */
     public String getName();
-    public Service getCurrentService();
-    public Service getCurrentLodge();
-    public String getCountry();
-    public String getType();
 
+    /**
+     *
+     * @return current service
+     */
+    public Service getCurrentService();
+
+    /**
+     *
+     * @return current lodge service
+     */
+    public Service getCurrentLodge();
+
+    /**
+     *
+     * @return the student country
+     */
+    public String getCountry();
+
+    /**
+     *
+     * @param service Service to move
+     * @return true if thrifty is distracted
+     */
     public boolean changeLocation(Service service);
+
+    /**
+     *
+     * @param service Service to be the new lodge
+     */
     public void changeLodge(Service service);
 
+    /**
+     *
+     * @return Iterator with all the visited places
+     */
     public Iterator<Service> listVisitedServices();
 
-    public void readLodge(Service service);
-    public void readCurrent(Service service);
+    /**
+     *
+     * @return Type of the student
+     */
+    public String getType();
 
 }

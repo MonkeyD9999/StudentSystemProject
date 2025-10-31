@@ -293,7 +293,6 @@ public class AreaClass implements Area, Serializable {
             Service best = null;
             while (it.hasNext()) {
                 Service s = it.next();
-                System.out.println(s.getName() + " " + s.getPrice());
                 if(best==null){
                     best = s;
                 }
@@ -315,7 +314,6 @@ public class AreaClass implements Area, Serializable {
             Service best = null;
             while (it.hasNext()) {
                 Service s = it.next();
-                //System.out.println(s.getName() + " " + s.getAvgRating());
                 if(best==null){
                     best = s;
                 }
@@ -336,7 +334,6 @@ public class AreaClass implements Area, Serializable {
 
                     }
                 }
-                //System.out.println(best.getName()+" "+best.getAvgRating());
             }
             return best;
         }

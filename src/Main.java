@@ -14,9 +14,30 @@ import dataStructures.*;
 
 public class Main {
 
-    private static final String AS="%s saved.\n";
-	
-	public static void main(String[] args) {
+    private static final String HELP="help";
+    private static final String EXIT="exit";
+    private static final String BOUNDS="bounds";
+    private static final String SAVE="save";
+    private static final String LOAD="load";
+    private static final String SERVICE="service";
+    private static final String SERVICES="services";
+    private static final String STUDENT="student";
+    private static final String LEAVE="leave";
+    private static final String STUDENTS="students";
+    private static final String GO="go";
+    private static final String MOVE="move";
+    private static final String USERS="users";
+    private static final String WHERE="where";
+    private static final String VISITED="visited";
+    private static final String STAR="star";
+    private static final String RANKING="ranking";
+    private static final String RANKED="ranked";
+    private static final String TAG="tag";
+    private static final String FIND="find";
+
+
+
+    public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
         Area area = null;
@@ -33,34 +54,34 @@ public class Main {
     public static Area processCommand(Scanner in, Area area, String command){
 
         switch (command.toLowerCase().trim()){
-            case "help" -> printHelp(); //done
-            case "exit" -> { //done
+            case HELP -> printHelp(); //done
+            case EXIT -> { //done
                 processSave(area);
                 System.out.println(Output.EXIT.getMsg());
             }
-            case "bounds" -> area = processAddBound(in, area);
-            case "save" -> {
+            case BOUNDS -> area = processAddBound(in, area);
+            case SAVE -> {
                 processSave(area);
                 if(area!=null){
-                    System.out.printf(AS, area.getName());
+                    System.out.printf(Output.AS.getMsg(), area.getName());
                 }
             }
-            case "load" -> area = processLoad(in.nextLine().trim(),area);
-            case "service" -> processAddService(in, area);
-            case "services" -> listServices(area);
-            case "student" -> processAddStudent(in, area);
-            case "leave" -> processRemoveStudent(in.nextLine().trim(), area);
-            case "students" -> listStudents(in.nextLine().trim(), area);
-            case "go" -> changeLocation(in, area);
-            case "move" -> changeLodge(in, area);
-            case "users" -> listUsersInService(in, area);
-            case "where" -> getStudentLocation(in, area);
-            case "visited" -> listVisitedServices(in, area);
-            case "star" -> evaluate(in, area); //done
-            case "ranking" -> listSortedByRating(area); //done
-            case "ranked" -> getClosestRanked(in, area); //done
-            case "tag" -> listServiceReviewsTagged(in, area); //done
-            case "find" -> findBestService(in, area); //doing
+            case LOAD -> area = processLoad(in.nextLine().trim(),area);
+            case SERVICE -> processAddService(in, area);
+            case SERVICES -> listServices(area);
+            case STUDENT -> processAddStudent(in, area);
+            case LEAVE -> processRemoveStudent(in.nextLine().trim(), area);
+            case STUDENTS -> listStudents(in.nextLine().trim(), area);
+            case GO -> changeLocation(in, area);
+            case MOVE -> changeLodge(in, area);
+            case USERS -> listUsersInService(in, area);
+            case WHERE -> getStudentLocation(in, area);
+            case VISITED -> listVisitedServices(in, area);
+            case STAR -> evaluate(in, area);
+            case RANKING -> listSortedByRating(area);
+            case RANKED -> getClosestRanked(in, area);
+            case TAG -> listServiceReviewsTagged(in, area);
+            case FIND -> findBestService(in, area);
 
             default -> System.out.println(Output.UNKNOWN.getMsg());
         }

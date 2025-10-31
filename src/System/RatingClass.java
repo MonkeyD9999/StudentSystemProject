@@ -19,11 +19,6 @@ public class RatingClass implements Rating, Serializable {
     }
 
     @Override
-    public String getLocation() {
-        return location;
-    }
-
-    @Override
     public String getDescription() {
         return description;
     }

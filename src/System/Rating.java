@@ -3,7 +3,15 @@ package System;
 import java.io.Serializable;
 
 public interface Rating extends  Serializable {
+    /**
+     *
+     * @return average rating
+     */
      int getStars();
-     String getLocation();
+
+    /**
+     *
+     * @return Description of the rating
+     */
      String getDescription();
 }

@@ -3,6 +3,7 @@ package Enums;
 public enum Output {
     HELP("%s - %s\n"),
     EXIT("Bye!"),
+    AS("%s saved.\n"),
     AT("Already there!"),
     IB("Invalid bounds."),
     BND("System bounds not defined."),
