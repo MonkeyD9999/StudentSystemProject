@@ -71,6 +71,7 @@ public class SortedDoublyLinkedList<E> implements SortedList<E> {
      * Returns true iff the list contains no elements.
      * @return true if list is empty
      */
+    // time complexity : O(1)
     public boolean isEmpty() {
         return currentSize==0;
     }
@@ -79,15 +80,17 @@ public class SortedDoublyLinkedList<E> implements SortedList<E> {
      * Returns the number of elements in the list.
      * @return number of elements in the list
      */
-
+    // time complexity : O(1)
     public int size() {
         return currentSize;
     }
+
 
     /**
      * Returns an iterator of the elements in the list (in proper sequence).
      * @return Iterator of the elements in the list
      */
+    // time complexity : O(1)
     public Iterator<E> iterator() {
         return new DoublyIterator<>(head);
     }
@@ -97,6 +100,7 @@ public class SortedDoublyLinkedList<E> implements SortedList<E> {
      * @return first element in the list
      * @throws NoSuchElementException - if size() == 0
      */
+    // time complexity : O(1)
     public E getMin( ) {
     	if (isEmpty())
             throw new NoSuchElementException();
@@ -109,6 +113,7 @@ public class SortedDoublyLinkedList<E> implements SortedList<E> {
      * @return last element in the list
      * @throws NoSuchElementException - if size() == 0
      */
+    // time complexity : O(1)
     public E getMax( ) {
     	if (isEmpty())
             throw new NoSuchElementException();
@@ -119,6 +124,7 @@ public class SortedDoublyLinkedList<E> implements SortedList<E> {
      * Returns the first occurrence of the element equals to the given element in the list.
      * @return element in the list or null
      */
+    // time complexity : O(n)
     public E get(E element) {
     	Iterator<E> it = iterator();
         while (it.hasNext()) {
@@ -138,6 +144,7 @@ public class SortedDoublyLinkedList<E> implements SortedList<E> {
      * @param element to be found
      * @return true iff the element exists in the list.
      */
+    // time complexity : O(n)
     public boolean contains(E element) {
         return get(element) != null;
     }
@@ -147,6 +154,7 @@ public class SortedDoublyLinkedList<E> implements SortedList<E> {
      * If there is an equal element, the new element is inserted after it.
      * @param element to be inserted
      */
+    // time complexity : O(n)
     public void add(E element) {
     	DoublyListNode<E> newNode = new DoublyListNode<>(element, null, null);
     	if (isEmpty()) {
@@ -185,6 +193,7 @@ public class SortedDoublyLinkedList<E> implements SortedList<E> {
      * Removes and returns the first occurrence of the element equals to the given element in the list.
      * @return element removed from the list or null if !belongs(element)
      */
+    // time complexity : O(n)
     public E remove(E element) {
     	if(!contains(element)) return null;
     	

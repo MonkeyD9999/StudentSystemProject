@@ -36,6 +36,7 @@ public class FilterIterator<E> implements Iterator<E>, Serializable {
      * @param list to be iterated
      * @param criterion filter
      */
+    // time complexity : O(n)
     public FilterIterator(Iterator<E> list, Predicate<E> criterion) {
         iterator = list;
         this.criterion = criterion;
@@ -47,6 +48,7 @@ public class FilterIterator<E> implements Iterator<E>, Serializable {
      *
      * @return true iff the iteration has more elements
      */
+    // time complexity : O(1)
     public boolean hasNext() {
         return nextToReturn != null;
     }
@@ -57,6 +59,7 @@ public class FilterIterator<E> implements Iterator<E>, Serializable {
      * @return the next element in the iteration
      * @throws NoSuchElementException - if call is made without verifying pre-condition
      */
+    // time complexity : O(n)
     public E next() {
         if (!hasNext())
         	throw new NoSuchElementException();
@@ -71,11 +74,13 @@ public class FilterIterator<E> implements Iterator<E>, Serializable {
      * Restarts the iteration.
      * After rewind, if the iteration is not empty, next will return the first element.
      */
+    // time complexity : O(n)
     public void rewind() {
         iterator.rewind();
         advanceNext();
     }
-    
+
+    // time complexity : O(n)
     private void advanceNext() {
     	nextToReturn = null;
     	

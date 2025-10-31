@@ -36,6 +36,7 @@ public class ListInArray<E> implements List<E> {
      *
      * @return true if list is empty
      */
+    // time complexity : O(1)
     public boolean isEmpty() {
         return counter==0;
     }
@@ -45,6 +46,7 @@ public class ListInArray<E> implements List<E> {
      *
      * @return number of elements in the list
      */
+    // time complexity : O(1)
     public int size() {
         return counter;
     }
@@ -54,6 +56,7 @@ public class ListInArray<E> implements List<E> {
      *
      * @return Iterator of the elements in the list
      */
+    // time complexity : O(1)
     public Iterator<E> iterator() {
         return new ArrayIterator<>(elems,counter);
     }
@@ -64,6 +67,7 @@ public class ListInArray<E> implements List<E> {
      * @return first element in the list
      * @throws NoSuchElementException - if size() == 0
      */
+    // time complexity : O(1)
     public E getFirst() {
         if (isEmpty()) { throw new NoSuchElementException();}
         return elems[0];
@@ -75,6 +79,7 @@ public class ListInArray<E> implements List<E> {
      * @return last element in the list
      * @throws NoSuchElementException - if size() == 0
      */
+    // time complexity : O(1)
     public E getLast() {
         if (isEmpty()) { throw new NoSuchElementException();}
         return elems[counter-1];
@@ -90,6 +95,7 @@ public class ListInArray<E> implements List<E> {
      * @return element at position
      * @throws InvalidPositionException if position is not valid in the list
      */
+    // time complexity : O(1)
     public E get(int position) {
         if (position < 0 || position >= counter) {throw new InvalidPositionException();}
         if (position == 0) {return getFirst();}
@@ -105,6 +111,7 @@ public class ListInArray<E> implements List<E> {
      * @param element - element to be searched in list
      * @return position of the first occurrence of the element in the list (or -1)
      */
+    // time complexity : O(n)
     public int indexOf(E element) {
         for (int i = 0; i < counter; i++) {
             if (elems[i].equals(element)) {return i;}
@@ -117,6 +124,7 @@ public class ListInArray<E> implements List<E> {
      *
      * @param element to be inserted
      */
+    // time complexity : O(n)
     public void addFirst(E element) {
         if (elems.length==counter) {refactor();}
 
@@ -132,6 +140,7 @@ public class ListInArray<E> implements List<E> {
      *
      * @param element to be inserted
      */
+    // time complexity : O(1) / O(n)
     public void addLast(E element) {
         if (elems.length==counter) {refactor();}
 
@@ -149,6 +158,7 @@ public class ListInArray<E> implements List<E> {
      * @param element  - element to be inserted
      * @throws InvalidPositionException - if position is not valid in the list
      */
+    // time complexity : O(n)
     public void add(int position, E element) {
         if (position < 0 || position > counter)
             throw new InvalidPositionException();
@@ -172,6 +182,7 @@ public class ListInArray<E> implements List<E> {
      * @return element removed from the first position of the list
      * @throws NoSuchElementException - if size() == 0
      */
+    // time complexity : O(n)
     public E removeFirst() {
         if (isEmpty()) { throw new NoSuchElementException();}
         E removedElement = elems[0];
@@ -190,6 +201,7 @@ public class ListInArray<E> implements List<E> {
      * @return element removed from the last position of the list
      * @throws NoSuchElementException - if size() == 0
      */
+    // time complexity : O(1)
     public E removeLast() {
         if (isEmpty()) { throw new NoSuchElementException();}
         E removedElement = elems[counter-1];
@@ -208,6 +220,7 @@ public class ListInArray<E> implements List<E> {
      * @return element removed at position
      * @throws InvalidPositionException - if position is not valid in the list
      */
+    // time complexity : O(n)
     public E remove(int position) {
         if (position < 0 || position > counter)
             throw new InvalidPositionException();
@@ -225,6 +238,7 @@ public class ListInArray<E> implements List<E> {
     }
 
     @SuppressWarnings("unchecked")
+    // time complexity : O(n)
     private void refactor() {
         E[] newElems = (E[]) new Object[elems.length * FACTOR];
         for (int i = 0; i < counter; i++) newElems[i] = elems[i];

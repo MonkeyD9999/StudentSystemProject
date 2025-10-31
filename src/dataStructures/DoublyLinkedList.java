@@ -35,6 +35,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * head and tail are initialized as null.
      * currentSize is initialized as 0.
      */
+    // time complexity : O(1)
     public DoublyLinkedList( ) {
         head = null;
         tail = null;
@@ -66,6 +67,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * Returns true iff the list contains no elements.
      * @return true if list is empty
      */
+    // time complexity : O(1)
     public boolean isEmpty() {
         return currentSize == 0;
     }
@@ -74,7 +76,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * Returns the number of elements in the list.
      * @return number of elements in the list
      */
-
+    // time complexity : O(1)
     public int size() {
         return currentSize;
     }
@@ -84,7 +86,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      *
      * @return Two-Way Iterator of the elements in the list
      */
-
+    // time complexity : O(1)
     public TwoWayIterator<E> twoWayiterator() {
         return new TwoWayDoublyIterator<>(head, tail);
     }
@@ -92,6 +94,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * Returns an iterator of the elements in the list (in proper sequence).
      * @return Iterator of the elements in the list
      */
+    // time complexity : O(1)
     public Iterator<E> iterator() {
         return new DoublyIterator<>(head);
     }
@@ -100,6 +103,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * Inserts the element at the first position in the list.
      * @param element - Element to be inserted
      */
+    // time complexity : O(1)
     public void addFirst( E element ) {
         DoublyListNode<E> newNode = new DoublyListNode<E>(element, null, head);
         if (this.isEmpty())
@@ -115,6 +119,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * Inserts the element at the last position in the list.
      * @param element - Element to be inserted
      */
+    // time complexity : O(1)
     public void addLast( E element ) {
         DoublyListNode<E> newNode = new DoublyListNode<E>(element, tail, null);
         if (this.isEmpty()){
@@ -132,6 +137,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * @return first element in the list
      * @throws NoSuchElementException - if size() == 0
      */
+    // time complexity : O(1)
     public E getFirst( ) {
         if (!this.isEmpty())
             throw new NoSuchElementException();
@@ -144,6 +150,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * @return last element in the list
      * @throws NoSuchElementException - if size() == 0
      */
+    // time complexity : O(1)
     public E getLast( ) {
         if (this.isEmpty())
             throw new NoSuchElementException();
@@ -161,6 +168,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * @return element at position
      * @throws InvalidPositionException if position is not valid in the list
      */
+    // time complexity : O(n)
     public E get( int position ) {
         if( position < 0 || position > currentSize ) {
             throw new InvalidPositionException();
@@ -187,6 +195,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * @param element - element to be searched in list
      * @return position of the first occurrence of the element in the list (or -1)
      */
+    // time complexity : O(n)
     public int indexOf( E element ) {
         DoublyListNode<E> node = head;
         int counter = 0;
@@ -206,6 +215,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * @param element - element to be inserted
      * @throws InvalidPositionException - if position is not valid in the list
      */
+    // time complexity : O(n)
     public void add( int position, E element ) {
         if ( position < 0 || position > currentSize )
             throw new InvalidPositionException();
@@ -231,6 +241,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * @return element removed from the first position of the list
      * @throws NoSuchElementException - if size() == 0
      */
+    // time complexity : O(1)
     public E removeFirst( ) {
         if (this.isEmpty())
             throw new NoSuchElementException();
@@ -250,6 +261,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * @return element removed from the last position of the list
      * @throws NoSuchElementException - if size() == 0
      */
+    // time complexity : O(1)
     public E removeLast( ) {
         if (this.isEmpty())
             throw new NoSuchElementException();
@@ -273,6 +285,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
      * @return element removed at position
      * @throws InvalidPositionException - if position is not valid in the list
      */
+    // time complexity : O(1)
     public E remove( int position ) {
         if ( position < 0 || position >= currentSize )
             throw new InvalidPositionException();
@@ -292,7 +305,7 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
         }
     }
 
-
+    // time complexity : O(n)
     private DoublyListNode<E> getNode( int position ) {
         if( position < 0 || position > currentSize ) {
             throw new InvalidPositionException();

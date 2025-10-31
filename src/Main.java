@@ -1,3 +1,8 @@
+/*
+* @author Tomás Mata (63431) t.mata@campus.fct.unl.pt
+* @author Rafael Pialgata (68672) r.pialgata@campus.fct.unl.pt
+*/
+
 import java.io.*;
 import java.util.Scanner;
 

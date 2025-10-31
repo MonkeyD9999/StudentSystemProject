@@ -27,6 +27,7 @@ class TwoWayDoublyIterator<E> extends DoublyIterator<E> implements TwoWayIterato
      * @param first - Node with the first element of the iteration
      * @param last  - Node with the last element of the iteration
      */
+    // time complexity : O(1)
     public TwoWayDoublyIterator(DoublyListNode<E> first, DoublyListNode<E> last) {
         super(first);
         lastNode = last;
@@ -38,6 +39,7 @@ class TwoWayDoublyIterator<E> extends DoublyIterator<E> implements TwoWayIterato
      * rather than throwing an exception.
      * @return true iff the iteration has more elements in the reverse direction
      */
+    // time complexity : O(1)
     public boolean hasPrevious( ) {
         return prevToReturn != null;
     }
@@ -47,6 +49,7 @@ class TwoWayDoublyIterator<E> extends DoublyIterator<E> implements TwoWayIterato
      * @return the next element in the iteration
      * @throws NoSuchElementException - if call is made without verifying pre-condition
      */
+    // time complexity : O(1)
     public E next( ){
         if ( !this.hasNext() )
             throw new NoSuchElementException();
@@ -62,6 +65,7 @@ class TwoWayDoublyIterator<E> extends DoublyIterator<E> implements TwoWayIterato
      * @return previous element in the iteration
      * @throws NoSuchElementException - if call is made without verifying pre-condition
      */
+    // time complexity : O(1)
     public E previous( ) {
         if ( !this.hasPrevious() )
             throw new NoSuchElementException();
@@ -77,7 +81,7 @@ class TwoWayDoublyIterator<E> extends DoublyIterator<E> implements TwoWayIterato
      * After fullForward, if iteration is not empty,
      * previous will return the last element
      */
-
+    // time complexity : O(1)
     public void fullForward() {
         prevToReturn = lastNode;
         nextToReturn = null;
@@ -87,6 +91,7 @@ class TwoWayDoublyIterator<E> extends DoublyIterator<E> implements TwoWayIterato
      * Restarts the iteration.
      * After rewind, if the iteration is not empty, next will return the first element.
      */
+    // time complexity : O(1)
     public void rewind() {
         nextToReturn = firstNode;
         prevToReturn = null;
