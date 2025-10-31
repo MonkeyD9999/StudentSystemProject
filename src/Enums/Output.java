@@ -30,8 +30,8 @@ public enum Output {
     LSF("lodging %s is full!\n"),
     NS("No services yet!\n"),
     NIS("No services in the system.\n"),
-    NSWT("No %s services!"),
-    NSWA("No %s services with average!"),
+    NSWT("No %s services!\n"),
+    NSWA("No %s services with average!\n"),
     SA("%s %s added.\n"),
     LSUC("lodging %s is now %s's home. %s is at home.\n"),
     ISH("That is %s's home!\n"),
@@ -59,7 +59,7 @@ public enum Output {
     EVAL("Your evaluation has been registered!"),
     SORD("Services sorted in descending order"),
     SCL("%s services closer with %d average"),
-    SPA("%s %s"),
+    SPA("%s %s\n"),
     SS("Services sorted in descending order");
 
     String helpMsg;

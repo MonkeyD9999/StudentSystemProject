@@ -444,7 +444,6 @@ public class Main {
         try {
             System.out.println(Output.SS.getMsg());
             Iterator<Service> it = area.listServicesByRating();
-            System.out.println(Output.LSDO.getMsg());
             while(it.hasNext()){
                 Service s = it.next();
                 System.out.printf(Output.LSBR.getMsg(), s.getName(), s.getAvgRating());
@@ -489,10 +488,10 @@ public class Main {
         try {
             String tag = in.nextLine().trim();
 
-
             if(area==null){
                 System.out.println(Output.BND.getMsg());
-            } else {
+            }
+            else {
                 Iterator<Service> it = area.listServiceReviewsTagged(tag);
 
                 while(it.hasNext()){

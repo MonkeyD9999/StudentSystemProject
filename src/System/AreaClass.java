@@ -142,17 +142,21 @@ public class AreaClass implements Area, Serializable {
         if(service==null)
             throw new Error1Exception(location);
 
-        if(ratingOrder.indexOf(service)==-1){
-            ratingOrder.addFirst(service);
-        }
-        else{
-            int index = ratingOrder.indexOf(service);
-            ratingOrder.remove(index);
-            ratingOrder.addFirst(service);
-        }
+        int oldAvgRating = service.getAvgRating();
 
         Rating r = new RatingClass(stars, location, description);
         service.newReview(stars);
+
+        if(oldAvgRating!=service.getAvgRating()){
+            if(ratingOrder.indexOf(service)==-1){
+                ratingOrder.addFirst(service);
+            }
+            else{
+                int index = ratingOrder.indexOf(service);
+                ratingOrder.remove(index);
+                ratingOrder.addFirst(service);
+            }
+        }
     }
 
     @Override
@@ -240,10 +244,15 @@ public class AreaClass implements Area, Serializable {
     @Override
     public Iterator<Service> listServicesByRating() {
 
+
+        /*
         Iterator<Service> ok = ratingOrder.iterator();
         while (ok.hasNext()){
-            System.out.println(ok.next().getName());
+            Service s = ok.next();
+            System.out.println(s.getName()+" - "+s.getAvgRating());
         }
+         */
+
 
         Iterator<Service> it = services.iterator();
         SortedList<Service> sortedByRating = new SortedDoublyLinkedList<>(new RatingComparator(ratingOrder));
