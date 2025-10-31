@@ -17,8 +17,8 @@ public abstract class ServiceClass implements Service,Serializable {
         this.name = name;
         this.location = location;
         this.type = type;
-        avgRating = 0;
-        reviewCounter = 0;
+        avgRating = 4;
+        reviewCounter = 1;
         reviews = new DoublyLinkedList<Rating>();
     }
 
@@ -31,7 +31,8 @@ public abstract class ServiceClass implements Service,Serializable {
     public String getType() {
         return type;
     }
-    public int getAvgRating() { return Math.round(avgRating); }
+    public int getAvgRating() {
+        return Math.round(avgRating); }
 
     public void newReview(int stars) {
         avgRating = (avgRating * reviewCounter + stars) / ++reviewCounter;

@@ -59,7 +59,8 @@ public enum Output {
     EVAL("Your evaluation has been registered!"),
     SORD("Services sorted in descending order"),
     SCL("%s services closer with %d average"),
-    SPA("%s %s");
+    SPA("%s %s"),
+    SS("Services sorted in descending order");
 
     String helpMsg;
 

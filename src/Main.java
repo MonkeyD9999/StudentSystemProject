@@ -442,6 +442,7 @@ public class Main {
 
     private static void listSortedByRating(Area area){
         try {
+            System.out.println(Output.SS.getMsg());
             Iterator<Service> it = area.listServicesByRating();
             while(it.hasNext()){
                 Service s = it.next();

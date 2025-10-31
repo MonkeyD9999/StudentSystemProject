@@ -25,6 +25,7 @@ public class AreaClass implements Area, Serializable {
 
     private DoublyLinkedList<Service> services;
     private DoublyLinkedList<Student> students;
+    private DoublyLinkedList<Service> ratingOrder;
 
     public AreaClass(String name, long topLeftLat, long topLeftLong, long bottomRightLat, long bottomRightLong) {
         this.name = name;
@@ -34,6 +35,7 @@ public class AreaClass implements Area, Serializable {
         this.bottomRightLong = bottomRightLong;
         services = new DoublyLinkedList<Service>();
         students = new DoublyLinkedList<Student>();
+        ratingOrder = new DoublyLinkedList<Service>();
     }
 
     @Override
@@ -140,6 +142,15 @@ public class AreaClass implements Area, Serializable {
         if(service==null)
             throw new Error1Exception(location);
 
+        if(ratingOrder.indexOf(service)==-1){
+            ratingOrder.addFirst(service);
+        }
+        else{
+            int index = ratingOrder.indexOf(service);
+            ratingOrder.remove(index);
+            ratingOrder.addFirst(service);
+        }
+
         Rating r = new RatingClass(stars, location, description);
         service.newReview(stars);
     }
@@ -228,9 +239,14 @@ public class AreaClass implements Area, Serializable {
 
     @Override
     public Iterator<Service> listServicesByRating() {
-        Iterator<Service> it = services.iterator();
-        SortedList<Service> sortedByRating = new SortedDoublyLinkedList<>(new RatingComparator());
 
+        Iterator<Service> ok = ratingOrder.iterator();
+        while (ok.hasNext()){
+            System.out.println(ok.next().getName());
+        }
+
+        Iterator<Service> it = services.iterator();
+        SortedList<Service> sortedByRating = new SortedDoublyLinkedList<>(new RatingComparator(ratingOrder));
         if (!it.hasNext())
             throw new Error1Exception("");
 
@@ -268,7 +284,7 @@ public class AreaClass implements Area, Serializable {
         if (student instanceof ThriftyStudent) {
             ordered = new SortedDoublyLinkedList<>(new PriceComparator());
         } else {
-            ordered = new SortedDoublyLinkedList<>(new RatingComparator());
+            ordered = new SortedDoublyLinkedList<>(new RatingComparator(ratingOrder));
         }
 
         while (it.hasNext()) {

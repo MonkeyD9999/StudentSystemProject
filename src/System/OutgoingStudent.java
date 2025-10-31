@@ -10,6 +10,7 @@ public class OutgoingStudent extends StudentClass implements Serializable {
 
     public OutgoingStudent(String id, String name, String type, Service lodge) {
         super(id, name, type, lodge);
+        services.addFirst(lodge);
     }
 
     private DoublyLinkedList<Service> services = new DoublyLinkedList<Service>();
