@@ -20,12 +20,12 @@ public abstract class StudentClass implements Student, Serializable {
         this.currentService = lodge;
     }
 
-    public void moveTo(Service service){
-        this.currentLodge = service;
+    public void readLodge(Service lodge) {
+        currentLodge = lodge;
     }
 
-    public void evaluate(Service service){
-        this.currentLodge = service;
+    public void readCurrent(Service current) {
+        currentService = current;
     }
 
     public String getName() {

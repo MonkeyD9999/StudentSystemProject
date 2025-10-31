@@ -8,10 +8,6 @@ import java.io.Serializable;
 
 public interface Student extends Serializable {
 
-    public void moveTo(Service service);
-
-    public void evaluate(Service service);
-
     public String getName();
     public Service getCurrentService();
     public Service getCurrentLodge();
@@ -22,5 +18,8 @@ public interface Student extends Serializable {
     public void changeLodge(Service service);
 
     public Iterator<Service> listVisitedServices();
+
+    public void readLodge(Service service);
+    public void readCurrent(Service service);
 
 }

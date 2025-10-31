@@ -3,8 +3,8 @@ package System;
 import Exceptions.*;
 import dataStructures.*;
 
-import java.io.Serial;
-import java.io.Serializable;
+import java.io.*;
+import java.util.LinkedList;
 
 public class AreaClass implements Area, Serializable {
     /**
@@ -419,4 +419,140 @@ public class AreaClass implements Area, Serializable {
                 loc.getLongitude()>=topLeftLong && loc.getLongitude()<=bottomRightLong;
     }
 
+
+    @Serial
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+
+        //copia os serviços
+        out.writeInt(services.size());
+        Iterator<Service> serviceIterator = services.iterator();
+        while (serviceIterator.hasNext()) {
+            out.writeObject(serviceIterator.next());
+        }
+
+        //copia os students
+        out.writeInt(students.size());
+        Iterator<Student> studentIterator = students.iterator();
+        while (studentIterator.hasNext()) {
+            out.writeObject(studentIterator.next());
+        }
+
+        //copia a ordem da mudança de average
+        out.writeInt(ratingOrder.size());
+        Iterator<Service> ratingOrderIterator = ratingOrder.iterator();
+        while (ratingOrderIterator.hasNext()) {
+            out.writeObject(ratingOrderIterator.next());
+        }
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        //lê tipos primitivos
+        in.defaultReadObject();
+
+        //restaura os serviços
+        this.services = new DoublyLinkedList<>();
+        int sizeServices = in.readInt();
+        for(int i = 0; i < sizeServices; i++){
+            Service s = (Service) in.readObject();
+            services.addLast(s);
+        }
+
+        //restaura os students
+        this.students = new DoublyLinkedList<>();
+        int sizeStudents = in.readInt();
+        for(int i = 0; i < sizeStudents; i++){
+            Student s = (Student) in.readObject();
+            students.addLast(s);
+        }
+
+        // restaura a ordem dos average
+        this.ratingOrder = new DoublyLinkedList<>();
+        int sizeRatedServices = in.readInt();
+        for(int i = 0; i < sizeRatedServices; i++){
+            Service s = (Service) in.readObject();
+            ratingOrder.addLast(s);
+        }
+
+
+
+
+
+        //reparaçao de referencias service antes de students
+        // --- Corrige listas de clientes nos serviços ---
+        Iterator<Service> serviceIterator = services.iterator();
+        while (serviceIterator.hasNext()) {
+            Service s = serviceIterator.next();
+            if (service instanceof EatingService eating) {
+                DoublyLinkedList<Student> corrected = new DoublyLinkedList<>();
+                for (Student s : eating.getCostumers()) {
+                    Student realStudent = getStudent(s.getName());
+                    if (realStudent != null) corrected.addLast(realStudent);
+                }
+                eating.setCostumers(corrected);
+            } else if (service instanceof LodgeService lodge) {
+                DoublyLinkedList<Student> corrected = new DoublyLinkedList<>();
+                for (Student s : lodge.getCostumers()) {
+                    Student realStudent = getStudent(s.getName());
+                    if (realStudent != null) corrected.addLast(realStudent);
+                }
+                lodge.setCostumers(corrected);
+            }
+        }
+
+
+        //teste de reparaçao de referencias de students no geral
+        Iterator<Student> studentIt = students.iterator();
+        while (studentIt.hasNext()) {
+            Student student = studentIt.next();
+
+            //reparar current service
+            Service current = student.getCurrentService();
+            if (current != null) {
+                Service realService = getService(current.getName());
+                if (realService != null)
+                    student.readCurrent(realService);
+            }
+
+            //reparar current lodge
+            Service lodge = student.getCurrentLodge();
+            if (lodge != null) {
+                Service realLodge = getService(lodge.getName());
+                if (realLodge != null)
+                    student.readLodge(realLodge);
+            }
+
+            // reparaçao de referencia bookish student
+            if(student instanceof BookishStudent) {
+                DoublyLinkedList<Service> correctedVisited = new DoublyLinkedList<>();
+
+                Iterator<Service> visitedIt = student.listVisitedServices();
+                while (visitedIt.hasNext()) {
+                    Service visited = visitedIt.next();
+                    Service realService = getService(visited.getName());
+                    if (realService != null) {
+                        correctedVisited.addLast(realService);
+                    }
+                }
+                ((BookishStudent) student).readVisited(correctedVisited);
+            }
+
+            //reparaçao de referencia outgoing student
+            if(student instanceof OutgoingStudent){
+                DoublyLinkedList<Service> correctedVisited = new DoublyLinkedList<>();
+
+                Iterator<Service> visitedIt = student.listVisitedServices();
+                while (visitedIt.hasNext()) {
+                    Service visited = visitedIt.next();
+                    Service realService = getService(visited.getName());
+                    if (realService != null) {
+                        correctedVisited.addLast(realService);
+                    }
+                }
+                ((OutgoingStudent) student).readVisited(correctedVisited);
+            }
+        }
+        }
+    }
 }

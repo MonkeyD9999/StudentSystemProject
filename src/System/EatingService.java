@@ -16,7 +16,7 @@ public class EatingService extends ServiceClass {
         costumers = new DoublyLinkedList<Student>();
     }
 
-    public long getPrice() { return price; }
+    public double getPrice() { return price; }
 
     public boolean isFull(){ return costumers.size() >= number_seats; }
 

@@ -10,13 +10,13 @@ public class ThriftyStudent extends StudentClass implements Serializable {
     public ThriftyStudent(String id, String name, String type,Service lodge) {
         super(id, name, type, lodge);
         if (lodge != null)
-            lodgingRent = lodge.getPrice();
+            lodgingRent = (long) lodge.getPrice();
         else
             lodgingRent = Long.MAX_VALUE;
     }
 
 
-    private long cheapestPlaceYet = Long.MAX_VALUE;
+    private double cheapestPlaceYet = Long.MAX_VALUE;
     private long lodgingRent;
 
     @Override
@@ -24,7 +24,7 @@ public class ThriftyStudent extends StudentClass implements Serializable {
         currentService = service;
         if (service instanceof EatingService eatingService) {
             if (eatingService.getPrice() <= cheapestPlaceYet) {
-                cheapestPlaceYet = eatingService.getPrice();
+                cheapestPlaceYet =  eatingService.getPrice();
                 return false;
             }
             return true;
@@ -34,7 +34,7 @@ public class ThriftyStudent extends StudentClass implements Serializable {
 
     @Override
     public void changeLodge(Service service) {
-        lodgingRent = ((LodgeService) service).getPrice();
+        lodgingRent = (long) ((LodgeService) service).getPrice();
         currentService = service;
         currentLodge = service;
     }

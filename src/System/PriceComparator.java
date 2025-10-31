@@ -6,7 +6,7 @@ public class PriceComparator implements Comparator<Service> {
 
     @Override
     public int compare(Service x, Service y) {
-        long diff = y.getPrice() - x.getPrice();
+        double diff = y.getPrice() - x.getPrice();
         if (diff > 0)
             return 1;
         else if (diff < 0)

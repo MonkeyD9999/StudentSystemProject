@@ -70,39 +70,34 @@ public class Main {
     }
 
     private static void processSave (Area area){
-        try{
-            if(area==null){
-                System.out.println(Output.BND.getMsg());
-            }
-            else{
-                String fileName = "AREA_" + area.getName().toLowerCase().replaceAll(" ", "_")+".ser";
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
+        if(area==null){
+            System.out.println(Output.BND.getMsg());
+        }
+        else{
+            String fileName = "AREA_" + area.getName().toLowerCase().replaceAll(" ", "_")+".ser";
+            try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));){
                 oos.writeObject(area);
-                oos.flush();
-                oos.close();
+            } catch (IOException ignored) {
+
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
         }
     }
 
 
     private static Area processLoad(String name, Area area){
-        try{
-            String fileName = "AREA_" + name.toLowerCase().replaceAll(" ", "_")+".ser";
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
+        String fileName = "AREA_" + name.toLowerCase().replaceAll(" ", "_")+".ser";
+
+        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))){
             if(area!=null){
                 processSave(area);
             }
             area = (AreaClass) in.readObject();
             System.out.printf(Output.BL.getMsg(), area.getName());
-            in.close();
             return area;
         } catch (FileNotFoundException e){
             System.out.println(Output.SBND.getMsg());
         }
-        catch(ClassNotFoundException | IOException e){
-            throw new RuntimeException(e);
+        catch(ClassNotFoundException | IOException ignored){
         }
         return area;
     }

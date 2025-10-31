@@ -10,7 +10,7 @@ public interface Service extends Serializable {
     LocationClass getLocation();
     String getType();
     int getAvgRating();
-    long getPrice();
+    double getPrice();
 
     void newReview(Rating rating);
 

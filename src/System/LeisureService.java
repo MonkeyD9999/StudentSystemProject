@@ -13,7 +13,7 @@ public class LeisureService extends ServiceClass {
 
     }
 
-    public long getPrice() { return ticket_cost; }
+    public double getPrice() { return (double) (ticket_cost * 100) /student_disc; }
 
     @Override
     public TwoWayIterator<Student> listStudentsInService() {
