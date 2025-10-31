@@ -51,11 +51,11 @@ public class Main {
             case "users" -> listUsersInService(in, area);
             case "where" -> getStudentLocation(in, area);
             case "visited" -> listVisitedServices(in, area);
-            case "star" -> evaluate(in, area);
-            case "ranking" -> listSortedByRating(area);
-            case "ranked" -> getClosestRanked(in, area);
-            case "tag" -> listServiceReviewsTagged(in, area);
-            case "find" -> findBestService(in, area);
+            case "star" -> evaluate(in, area); //done
+            case "ranking" -> listSortedByRating(area); //done
+            case "ranked" -> getClosestRanked(in, area); //done
+            case "tag" -> listServiceReviewsTagged(in, area); //done
+            case "find" -> findBestService(in, area); //doing
 
             default -> System.out.println(Output.UNKNOWN.getMsg());
         }
@@ -75,7 +75,7 @@ public class Main {
                 System.out.println(Output.BND.getMsg());
             }
             else{
-                String fileName = "AREA_" + area.getName().toLowerCase().replaceAll(" ", "_");
+                String fileName = "AREA_" + area.getName().toLowerCase().replaceAll(" ", "_")+".ser";
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
                 oos.writeObject(area);
                 oos.flush();
@@ -89,7 +89,7 @@ public class Main {
 
     private static Area processLoad(String name, Area area){
         try{
-            String fileName = "AREA_" + name.toLowerCase().replaceAll(" ", "_");
+            String fileName = "AREA_" + name.toLowerCase().replaceAll(" ", "_")+".ser";
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
             if(area!=null){
                 processSave(area);
@@ -119,7 +119,7 @@ public class Main {
                 System.out.println(Output.BAE.getMsg());
             }
             else{
-                String fileName = "AREA_"+name.toLowerCase();
+                String fileName = "AREA_"+name.toLowerCase().replaceAll(" ","_")+".ser";
                 ObjectInputStream inn = new ObjectInputStream(new FileInputStream(fileName));
                 System.out.println(Output.BAE.getMsg());
                 inn.close();
@@ -239,8 +239,8 @@ public class Main {
             if(area==null){
                 System.out.println(Output.BND.getMsg());
             } else {
-                area.removeStudent(name);
-                System.out.printf(Output.SHL.getMsg(), name);
+                Student s = area.removeStudent(name);
+                System.out.printf(Output.SHL.getMsg(), s.getName());
             }
         }
         catch (Error1Exception e){
@@ -442,11 +442,16 @@ public class Main {
 
     private static void listSortedByRating(Area area){
         try {
-            System.out.println(Output.SS.getMsg());
-            Iterator<Service> it = area.listServicesByRating();
-            while(it.hasNext()){
-                Service s = it.next();
-                System.out.printf(Output.LSBR.getMsg(), s.getName(), s.getAvgRating());
+            if(area!=null){
+                System.out.println(Output.SS.getMsg());
+                Iterator<Service> it = area.listServicesByRating();
+                while(it.hasNext()){
+                    Service s = it.next();
+                    System.out.printf(Output.LSBR.getMsg(), s.getName(), s.getAvgRating());
+                }
+            }
+            else {
+                System.out.printf(Output.NIS.getMsg(), "");
             }
         } catch (Error1Exception e) {
             System.out.printf(Output.NIS.getMsg(), e.getMessage());
@@ -463,7 +468,7 @@ public class Main {
             if(area==null){
                 System.out.println(Output.BND.getMsg());
             } else if(stars<1 || stars>5) {
-                System.out.println(Output.IEV.getMsg());
+                System.out.println(Output.ISE.getMsg());
             } else {
                 Iterator<Service> it = area.listClosestServiceRanked(stars, type, name);
                 System.out.printf(Output.SCL.getMsg(), type, stars);
@@ -493,7 +498,6 @@ public class Main {
             }
             else {
                 Iterator<Service> it = area.listServiceReviewsTagged(tag);
-
                 while(it.hasNext()){
                     Service s = it.next();
                     System.out.printf(Output.SPA.getMsg(), s.getType(), s.getName());

@@ -34,8 +34,9 @@ public abstract class ServiceClass implements Service,Serializable {
     public int getAvgRating() {
         return Math.round(avgRating); }
 
-    public void newReview(int stars) {
-        avgRating = ((avgRating * reviewCounter) + stars)/++reviewCounter;
+    public void newReview(Rating rating) {
+        avgRating = ((avgRating * reviewCounter) + rating.getStars())/++reviewCounter;
+        reviews.addLast(rating);
     }
 
     public Iterator<Rating> listReviews() { return reviews.iterator(); }

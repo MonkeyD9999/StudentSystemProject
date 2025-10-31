@@ -73,11 +73,11 @@ public class AreaClass implements Area, Serializable {
     public void addStudent(String type, String name, String country, String currentLodge) {
         Service lodge = getService(currentLodge);
         Student s = getStudent(name);
-        if(lodge==null){
+        if(!(lodge instanceof LodgeService)){
             throw new Error1Exception(currentLodge);
         }
 
-        if(lodge instanceof LodgeService && (((LodgeService) lodge).isFull())){
+        if((((LodgeService) lodge).isFull())){
             throw new Error2Exception(lodge.getName());
         }
         if(s != null){
@@ -89,21 +89,31 @@ public class AreaClass implements Area, Serializable {
             case "outgoing" -> students.addLast(new OutgoingStudent(name, country, type, lodge));
             case "thrifty" -> students.addLast(new ThriftyStudent(name, country, type, lodge));
         }
-        if(lodge instanceof LodgeService){
-            ((LodgeService) lodge).newCostumer(students.getLast());
-        }
+        ((LodgeService) lodge).newCostumer(students.getLast());
     }
 
     @Override
-    public void removeStudent(String name) {
+    public Student removeStudent(String name) {
         Student remove = getStudent(name);
         if(remove==null){
             throw new Error1Exception(name);
         }
         else{
             int index = students.indexOf(remove);
-            students.remove(index);
+            Student s = students.remove(index);
+            Service lodge = s.getCurrentLodge();
+            if(lodge instanceof LodgeService){
+                ((LodgeService) lodge).leavingCostumer(s);
+            }
+            Service current = s.getCurrentService();
+            if(current instanceof LodgeService && current!=lodge){
+                ((LodgeService) current).leavingCostumer(s);
+            }
+            if(current instanceof EatingService){
+                ((EatingService) current).leaveSeat(s);
+            }
         }
+        return remove;
     }
 
     @Override
@@ -145,7 +155,7 @@ public class AreaClass implements Area, Serializable {
         int oldAvgRating = service.getAvgRating();
 
         Rating r = new RatingClass(stars, location, description);
-        service.newReview(stars);
+        service.newReview(r);
 
         if(oldAvgRating!=service.getAvgRating()){
             if(ratingOrder.indexOf(service)==-1){
@@ -243,17 +253,6 @@ public class AreaClass implements Area, Serializable {
 
     @Override
     public Iterator<Service> listServicesByRating() {
-
-
-        /*
-        Iterator<Service> ok = ratingOrder.iterator();
-        while (ok.hasNext()){
-            Service s = ok.next();
-            System.out.println(s.getName()+" - "+s.getAvgRating());
-        }
-         */
-
-
         Iterator<Service> it = services.iterator();
         SortedList<Service> sortedByRating = new SortedDoublyLinkedList<>(new RatingComparator(ratingOrder));
         if (!it.hasNext())
@@ -289,19 +288,55 @@ public class AreaClass implements Area, Serializable {
         if (!it.hasNext())
             throw new Error3Exception(type);
 
-        SortedList<Service> ordered;
+        // se é thrifty, ver qual o mais barato em ordem de inserção
         if (student instanceof ThriftyStudent) {
-            ordered = new SortedDoublyLinkedList<>(new PriceComparator());
-        } else {
-            ordered = new SortedDoublyLinkedList<>(new RatingComparator(ratingOrder));
+            Service best = null;
+            while (it.hasNext()) {
+                Service s = it.next();
+                //System.out.println(s.getName() + " " + s.getPrice());
+                if(best==null){
+                    best = s;
+                }
+                else if(best.getPrice()>s.getPrice()){
+                    best = s;
+                }
+                else if(s instanceof LeisureService && best.getPrice()>=s.getPrice()){
+                    best = s;
+                }
+            }
+            return best;
+        }
+        // senao ver qual tem melhor rating e que o average foi mudado menos recentemente
+        else {
+            Service best = null;
+            while (it.hasNext()) {
+                Service s = it.next();
+                //System.out.println(s.getName() + " " + s.getAvgRating());
+                if(best==null){
+                    best = s;
+                }
+                else{
+                    if(best.getAvgRating()<s.getAvgRating()){
+                        best = s;
+                    }
+                    else if(best.getAvgRating()==s.getAvgRating()){
+                        int indexBest = ratingOrder.indexOf(best);
+                        int indexS = ratingOrder.indexOf(s);
+
+                        if(indexBest!=-1 && indexS!=-1 && indexBest<indexS){ // 1 para 1
+                            best = s;
+                        }
+                        else if(indexBest!=-1 && indexS==-1){ // 1 para -1
+                            best = s;
+                        }
+
+                    }
+                }
+                //System.out.println(best.getName()+" "+best.getAvgRating());
+            }
+            return best;
         }
 
-        while (it.hasNext()) {
-            Service s = it.next();
-            ordered.add(s);
-        }
-
-        return ordered.getMin();
     }
 
     @Override
@@ -347,9 +382,9 @@ public class AreaClass implements Area, Serializable {
     public Iterator<Service> listServiceReviewsTagged(String tag) {
         Iterator<Service> it = new FilterIterator<>(services.iterator(), new ReviewHasTag(tag));
 
-        if (!it.hasNext())
+        if (!it.hasNext()){
             throw new Error1Exception("");
-
+        }
         return it;
     }
 

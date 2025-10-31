@@ -9,8 +9,6 @@ public enum Output {
     BAE("Bounds already exists. Please load it!"),
     PRINT_STUDENT("%s: %s at %s.\n"),
     BOUNDS("%s created.\n"),
-    ELF("eating %s is full!\n"),
-    NB("Bounds %s does not exists.\n"),
     SBND("System bounds not defined."),
     BL("%s loaded.\n"),
     SC("%s added.\n"),
@@ -22,6 +20,7 @@ public enum Output {
     IDP("Invalid discount price!"),
     IC("Invalid capacity!"),
     IEV("Invalid evaluation!"),
+    ISE("Invalid stars!"),
     UNKNOWN("Unknown command. Type help to see available commands."),
     UL("Unknown %s!\n"),
     ALREADY_EXISTS("%s already exists!\n"),
@@ -57,8 +56,7 @@ public enum Output {
     THR("%s is thrifty!\n"),
     NVL("%s has not visited any locations!\n"),
     EVAL("Your evaluation has been registered!"),
-    SORD("Services sorted in descending order"),
-    SCL("%s services closer with %d average"),
+    SCL("%s services closer with %d average\n"),
     SPA("%s %s\n"),
     SS("Services sorted in descending order");
 

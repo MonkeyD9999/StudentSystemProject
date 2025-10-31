@@ -14,7 +14,7 @@ public interface Area extends Serializable {
     Iterator<Service> getServicesAll();
 
     void addStudent(String type, String name, String country, String currentLodge);
-    void removeStudent(String name);
+    Student removeStudent(String name);
     Iterator<Student> getStudentsAll(String place);
 
     void evaluateService(int star, String location, String description);

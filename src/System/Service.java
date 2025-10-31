@@ -12,7 +12,7 @@ public interface Service extends Serializable {
     int getAvgRating();
     long getPrice();
 
-    void newReview(int stars);
+    void newReview(Rating rating);
 
     Iterator<Rating> listReviews();
     TwoWayIterator<Student> listStudentsInService();

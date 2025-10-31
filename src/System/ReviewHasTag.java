@@ -15,9 +15,17 @@ public class ReviewHasTag implements Predicate<Service> {
         Iterator<Rating> it = service.listReviews();
         while (it.hasNext()) {
             Rating r = it.next();
-            if (r.getDescription().toLowerCase().contains(tag))
-                return true;
+            String [] parts = r.getDescription().split(" ");
+            for(int i = 0; i < parts.length; i++) {
+                if(parts[i].toLowerCase().equalsIgnoreCase(tag)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
+    /*
+    System.out.println(r.getDescription());
+    System.out.println(tag);
+     */
 }
