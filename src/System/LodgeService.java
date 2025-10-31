@@ -35,6 +35,10 @@ public class LodgeService extends ServiceClass {
         return costumers.twoWayiterator();
     }
 
+    public void readCustomers(DoublyLinkedList<Student> customers) {
+        this.costumers = customers;
+    }
+
     private int find(String name) {
         Iterator<Student> iterator = costumers.iterator();
         int index = 0;

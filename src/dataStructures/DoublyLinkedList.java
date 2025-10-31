@@ -2,6 +2,10 @@ package dataStructures;
 
 import dataStructures.exceptions.InvalidPositionException;
 import dataStructures.exceptions.NoSuchElementException;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 /**
  * Doubly Linked List
@@ -16,15 +20,15 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
 	/**
      *  Node at the head of the list.
      */
-    private DoublyListNode<E> head;
+    private transient DoublyListNode<E> head;
     /**
      * Node at the tail of the list.
      */
-    private DoublyListNode<E> tail;
+    private transient DoublyListNode<E> tail;
     /**
      * Number of elements in the list.
      */
-    private int currentSize;
+    private transient int currentSize;
 
     /**
      * Constructor of an empty double linked list.
@@ -36,6 +40,27 @@ public class DoublyLinkedList<E> implements TwoWayList<E>,Serializable {
         tail = null;
         currentSize = 0;
     }
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject(); // escreve os campos normais (não temos aqui, mas é boa prática)
+        oos.writeInt(currentSize); // escreve o tamanho
+        DoublyListNode<E> node = head;
+        while (node != null) {
+            oos.writeObject(node.getElement()); // escreve cada elemento
+            node = node.getNext();
+        }
+        oos.flush();
+    }
+
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject(); // lê os campos normais
+        int size = ois.readInt(); // lê o tamanho
+        for (int i = 0; i < size; i++) {
+            @SuppressWarnings("unchecked")
+            E element = (E) ois.readObject();
+            addLast(element); // recria os nós
+        }
+    }
+
 
     /**
      * Returns true iff the list contains no elements.

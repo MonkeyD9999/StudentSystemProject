@@ -2,6 +2,10 @@ package dataStructures;
 
 import dataStructures.exceptions.*;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 
 /**
  * Sorted Doubly linked list Implementation
@@ -39,6 +43,28 @@ public class SortedDoublyLinkedList<E> implements SortedList<E> {
         tail = null;
         currentSize = 0;
         this.comparator = comparator;
+    }
+
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject(); // escreve os campos normais (não temos aqui, mas é boa prática)
+        oos.writeInt(currentSize); // escreve o tamanho
+        DoublyListNode<E> node = head;
+        while (node != null) {
+            oos.writeObject(node.getElement()); // escreve cada elemento
+            node = node.getNext();
+        }
+        oos.flush();
+    }
+
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject(); // lê os campos normais
+        int size = ois.readInt(); // lê o tamanho
+        for (int i = 0; i < size; i++) {
+            @SuppressWarnings("unchecked")
+            E element = (E) ois.readObject();
+            add(element); // recria os nós
+        }
     }
 
     /**

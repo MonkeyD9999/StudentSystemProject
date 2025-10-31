@@ -27,6 +27,10 @@ public class EatingService extends ServiceClass {
 
     public TwoWayIterator<Student> listStudentsInService() { return costumers.twoWayiterator(); }
 
+    public void readCustomers(DoublyLinkedList<Student> customers) {
+        this.costumers = customers;
+    }
+
     private int find(String name) {
         Iterator<Student> iterator = costumers.iterator();
         int index = 0;
