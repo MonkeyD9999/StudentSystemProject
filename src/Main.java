@@ -444,6 +444,7 @@ public class Main {
         try {
             System.out.println(Output.SS.getMsg());
             Iterator<Service> it = area.listServicesByRating();
+            System.out.println(Output.LSDO.getMsg());
             while(it.hasNext()){
                 Service s = it.next();
                 System.out.printf(Output.LSBR.getMsg(), s.getName(), s.getAvgRating());
