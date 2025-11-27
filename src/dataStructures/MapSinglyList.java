@@ -14,7 +14,8 @@ class MapSinglyList<K,V> implements Map<K, V> {
     private int size;
 
     public MapSinglyList() {
-        //TODO: Left as exercise
+        head = null;
+        size = 0;
     }
 
     /**
@@ -24,8 +25,7 @@ class MapSinglyList<K,V> implements Map<K, V> {
      */
   
     public boolean isEmpty() {
-	//TODO: Left as exercise
-        return false;
+        return size == 0;
     }
 
     /**
@@ -35,8 +35,7 @@ class MapSinglyList<K,V> implements Map<K, V> {
      */
     @Override
     public int size() {
-	//TODO: Left as exercise
-        return 0;
+	    return size;
     }
 
     /**
@@ -49,7 +48,12 @@ class MapSinglyList<K,V> implements Map<K, V> {
      */
     @Override
     public V get(K key) {
-        //TODO: Left as exercise
+        SinglyListNode<Entry<K,V>> node = head;
+        while (node != null) {
+            if (node.getElement().key().equals(key))
+                return node.getElement().value();
+            node = node.getNext();
+        }
         return null;
     }
     
@@ -66,7 +70,26 @@ class MapSinglyList<K,V> implements Map<K, V> {
      */
     
     public V put(K key, V value) {
-        //TODO: Left as an exercise.
+        SinglyListNode<Entry<K,V>> node = head;
+        SinglyListNode<Entry<K,V>> prev = null;
+        while (node != null) {
+            Entry<K,V> e = node.getElement();
+            if (e.key().equals(key)) {
+                V old = e.value();
+                SinglyListNode<Entry<K,V>> newNode = new SinglyListNode<>(new Entry<>(key, value), node.getNext());
+
+                if(prev == null) head = newNode;
+                else prev.setNext(newNode);
+
+                return old;
+            }
+            prev = node;
+            node = node.getNext();
+        }
+
+        // entry(key) == null
+        head = new SinglyListNode<>(new Entry<>(key, value), head);
+        size++;
         return null;
     }
 
@@ -80,7 +103,23 @@ class MapSinglyList<K,V> implements Map<K, V> {
      * or null if the dictionary does not an entry with that key
      */
     public V remove(K key) {
-        //TODO: Left as an exercise.
+        SinglyListNode<Entry<K,V>> prev = null;
+        SinglyListNode<Entry<K,V>> curr = head;
+
+        while (curr != null) {
+            if (curr.getElement().key().equals(key)) {
+
+                if (prev == null)
+                    head = curr.getNext();
+                else
+                    prev.setNext(curr.getNext());
+
+                size--;
+                return curr.getElement().value();
+            }
+            prev = curr;
+            curr = curr.getNext();
+        }
         return null;
     }
 

@@ -45,8 +45,20 @@ package dataStructures;
      // specified number; or zero if all such primes are greater
      // than Integer.MAX VALUE.
      protected static int nextPrime( int number ){
-         //TODO: Left as exercise
-        
+         if (number <= 2) return 2;
+
+         int candidate = (number % 2 == 0) ? number + 1 : number;
+
+         while (candidate > 0) { // overflow
+             if (isPrime(candidate))
+                 return candidate;
+
+             if (candidate >= Integer.MAX_VALUE - 2)
+                 return 0;
+
+             candidate += 2;
+         }
+
          return 0;
      }
 
@@ -130,5 +142,18 @@ package dataStructures;
 	@SuppressWarnings({"unchecked","rawtypes"})
      public Iterator<K> keys() {
          return new KeysIterator(iterator());
+     }
+
+     private static boolean isPrime(int n){
+         if (n < 2) return false;
+         if (n % 2 == 0) return n == 2;
+
+         // Testar até sqrt(n) sem usar Math.sqrt()
+         // i*i <= n
+         for (int i = 3; i*i <= n; i += 2) {
+             if (n % i == 0)
+                 return false;
+         }
+         return true;
      }
  }

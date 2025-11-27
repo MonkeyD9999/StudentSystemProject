@@ -21,7 +21,12 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
     
     public SepChainHashTable( int capacity ){
         super(capacity);
-       //TODO: Left as exercise
+        int arraySize = HashTable.nextPrime((int) (capacity / IDEAL_LOAD_FACTOR));
+
+        table = (MapSinglyList<K,V>[]) new MapSinglyList[arraySize];
+        for ( int i = 0; i < arraySize; i++ )
+            table[i] = new MapSinglyList<>();
+        maxSize = (int)(arraySize * MAX_LOAD_FACTOR);
     }
 
     // Returns the hash value of the specified key.
@@ -37,8 +42,8 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
      * or null if the dictionary does not have an entry with that key
      */
     public V get(K key) {
-        //TODO: Left as an exercise.
-    	return null;
+        int hash = hash(key);
+        return table[hash].get(key);
     }
 
     /**
@@ -54,9 +59,13 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
     public V put(K key, V value) {
         if (isFull())
             rehash();
-        //TODO: Left as an exercise.
-       
-        return null;
+
+        int hash = hash(key);
+        V old = table[hash].put(key, value);
+
+        if (old == null)
+            currentSize++;
+        return old;
     }
 
 
@@ -74,8 +83,13 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
      * or null if the dictionary does not an entry with that key
      */
     public V remove(K key) {
-        //TODO: Left as an exercise.
-        return null;
+        int hash = hash(key);
+        V old = table[hash].remove(key);
+
+
+        if (old != null)
+            currentSize--;
+        return old;
     }
 
     /**
@@ -86,6 +100,5 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
     public Iterator<Entry<K, V>> iterator() {
         return new SepChainHashTableIterator<>(table);
     }
-
 
 }

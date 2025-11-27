@@ -10,10 +10,13 @@ import dataStructures.exceptions.NoSuchElementException;
 
 class SepChainHashTableIterator<K,V> implements Iterator<Map.Entry<K,V>> {
 
-    //TODO: Left as exercise
+    private Map<K,V>[] table;
+    private int currentIndex;
+    private Iterator<Map.Entry<K,V>> listIterator;
 
     public SepChainHashTableIterator(Map<K,V>[] table) {
-        //TODO: Left as exercise
+        this.table = table;
+        rewind();
     }
 
     /**
@@ -23,7 +26,20 @@ class SepChainHashTableIterator<K,V> implements Iterator<Map.Entry<K,V>> {
      * @return true iff the iteration has more elements
      */
     public boolean hasNext() {
-	//TODO: Left as exercise
+	    // Se o iterador da lista atual existe e ainda tem elementos → OK
+        if (listIterator != null && listIterator.hasNext()) {
+            return true;
+        }
+
+        // Caso contrário, avançamos para o próximo bucket que tenha elementos
+        int n = table.length;
+        while (++currentIndex < n) {
+            if (!table[currentIndex].isEmpty()) {
+                listIterator = table[currentIndex].iterator();
+                return listIterator.hasNext();
+            }
+        }
+
         return false;
     }
 
@@ -34,8 +50,10 @@ class SepChainHashTableIterator<K,V> implements Iterator<Map.Entry<K,V>> {
      * @throws NoSuchElementException - if call is made without verifying pre-condition
      */
     public Map.Entry<K,V> next() {
-        //TODO: Left as exercise
-        return null;
+        if (!hasNext())
+            throw new NoSuchElementException();
+
+        return listIterator.next();
     }
 
     /**
@@ -43,7 +61,16 @@ class SepChainHashTableIterator<K,V> implements Iterator<Map.Entry<K,V>> {
      * After rewind, if the iteration is not empty, next will return the first element.
      */
     public void rewind() {
-        //TODO: Left as exercise
+        currentIndex = -1;
+        listIterator = null;
+
+        // Avança até ao primeiro bucket não vazio
+        while (++currentIndex < table.length) {
+            if (!table[currentIndex].isEmpty()) {
+                listIterator = table[currentIndex].iterator();
+                return;
+            }
+        }
     }
 }
 

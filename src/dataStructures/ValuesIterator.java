@@ -24,8 +24,7 @@ class ValuesIterator<E> implements Iterator<E> {
      */
     @Override
     public boolean hasNext() {
-       //TODO: Left as an exercise.
-	return false;
+	    return false;
     }
 
     /**
