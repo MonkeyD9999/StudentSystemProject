@@ -130,8 +130,9 @@ class BTNode<E> implements Node<E> {
      */
 
     public int getHeight() {
-        //TODO: Left as an exercise.
-        return 0;
+        int leftH = (leftChild == null ? -1 : ((BTNode<E>) leftChild).getHeight());
+        int rightH = (rightChild == null ? -1 : ((BTNode<E>) rightChild).getHeight());
+        return Math.max(leftH, rightH) + 1;
     }
 
     /**
@@ -139,8 +140,9 @@ class BTNode<E> implements Node<E> {
      * @return
      */
     BTNode<E> furtherLeftElement() {
-        //TODO: Left as an exercise.
-	return null;
+        if(leftChild==null)
+            return this;
+	    return ((BTNode<E>) leftChild).furtherLeftElement();
     }
 
    /**
@@ -148,8 +150,9 @@ class BTNode<E> implements Node<E> {
      * @return
      */
     BTNode<E> furtherRightElement() {
-         //TODO: Left as an exercise.
-	return null;
+        if(rightChild==null)
+            return this;
+        return ((BTNode<E>) rightChild).furtherRightElement();
     }
 
    //new methods: Left as an exercise.

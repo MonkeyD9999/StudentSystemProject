@@ -60,9 +60,13 @@ public class BSTSortedMap<K extends Comparable<K>,V> extends BTree<Map.Entry<K,V
     }
 
     private BTNode<Entry<K,V>> getNode(BTNode<Entry<K,V>> node, K key) {
-        //TODO: Left as an exercise.
-        
-        return null;
+        int comp = key.compareTo(node.getElement().key());
+        if (comp == 0)
+            return node;
+        else if (comp < 0)
+            return getNode((BTNode<Entry<K,V>>) node.getLeftChild(), key);
+        else
+            return getNode((BTNode<Entry<K,V>>) node.getRightChild(), key);
     }
 
     /**
@@ -77,8 +81,37 @@ public class BSTSortedMap<K extends Comparable<K>,V> extends BTree<Map.Entry<K,V
      */
     @Override
     public V put(K key, V value) {
-        //TODO: Left as an exercise.
-       
+
+        if (root == null) {
+            root = new BTNode<>(new Entry<>(key, value));
+            currentSize++;
+            return null;
+        }
+
+        BTNode<Entry<K,V>> node = (BTNode<Entry<K,V>>) root;
+        BTNode<Entry<K,V>> parent = null;
+        int comp = 0;
+
+        while (node != null) {
+            comp = key.compareTo(node.getElement().key());
+            if (comp == 0) {
+                V oldValue = node.getElement().value();
+                node.setElement(new Entry<>(key, value));
+                return oldValue;
+            }
+
+            parent = node;
+            if(comp<0)
+                node = (BTNode<Entry<K,V>>) node.getLeftChild();
+            else
+                node = (BTNode<Entry<K,V>>) node.getRightChild();
+        }
+
+        BTNode<Entry<K,V>> newNode = new BTNode<>(new Entry<>(key, value));
+        if (comp < 0)
+            parent.setLeftChild(newNode);
+        else
+            parent.setRightChild(newNode);
         return null;
     }
 
@@ -94,9 +127,50 @@ public class BSTSortedMap<K extends Comparable<K>,V> extends BTree<Map.Entry<K,V
      */
     @Override
     public V remove(K key) {
-        //TODO: Left as an exercise.
-       
-        return null;
+        BTNode<Entry<K,V>> node = (BTNode<Entry<K,V>>) root;
+        BTNode<Entry<K,V>> parent = null;
+        int comp = 0;
+
+        // find node to remove
+        while (node != null) {
+            comp = key.compareTo(node.getElement().key());
+            if (comp == 0) break;
+            parent = node;
+            if (comp < 0)
+                node = (BTNode<Entry<K,V>>) node.getLeftChild();
+            else
+                node = (BTNode<Entry<K,V>>) node.getRightChild();
+        }
+
+        if (node == null) return null;
+        V removedValue = node.getElement().value();
+
+        // node with 2 children
+        // successor is node after removed node, in order
+        // switch removed with successor
+        if (node.getLeftChild() != null && node.getRightChild() != null) {
+            BTNode<Entry<K, V>> successor = (BTNode<Entry<K, V>>) node.getRightChild();
+            BTNode<Entry<K, V>> succParent = node;
+
+            while (successor.getLeftChild() != null) {
+                succParent = successor;
+                successor = (BTNode<Entry<K, V>>) successor.getLeftChild();
+            }
+
+            node.setElement(successor.getElement());
+            node = successor;
+            parent = succParent;
+        }
+
+        // node with 1 or 0 child
+        BTNode<Entry<K,V>> child = (node.getLeftChild() != null) ? (BTNode<Entry<K,V>>) node.getLeftChild() :(BTNode<Entry<K,V>>) node.getRightChild();
+
+        if (parent == null) { root = child; }
+        else if (parent.getLeftChild() == child) { parent.setLeftChild(child); }
+        else { parent.setRightChild(child); }
+
+        currentSize--;
+        return removedValue;
     }
 
     /**
