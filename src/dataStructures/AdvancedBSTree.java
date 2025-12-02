@@ -7,7 +7,7 @@ package dataStructures;
  * @param <V> Generic Value
  */
 abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K,V>{
-      /**
+    /**
  	* Performs a single left rotation rooted at z node.
  	* Node y was a  right  child  of z before the  rotation,
  	* then z becomes the left child of y after the rotation.
@@ -15,9 +15,13 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
 	 * @pre: z has a right child
  	*/
 	protected void rotateLeft( BTNode<Entry<K,V>> z){
-   	 //TODO: Left as an exercise.
-   	 //  a single rotation modifies a constant number of parent-child relationships,
-    	// it can be implemented in O(1)time
+        BTNode<Entry<K,V>> y = (BTNode<Entry<K,V>>) z.getRightChild();
+        BTNode<Entry<K,V>> leftSubTree = (BTNode<Entry<K,V>>) y.getLeftChild();
+
+        z.setRightChild(leftSubTree);
+
+        y.setLeftChild(z);
+        replaceParentLink(z, y);
 	}
 
      /**
@@ -28,9 +32,12 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
      * @pre: z has a left child
      */
     protected void rotateRight( BTNode<Entry<K,V>> z){
-        //TODO: Left as an exercise.
-        //  a single rotation modifies a constant number of parent-child relationships,
-        // it can be implemented in O(1)time
+        BTNode<Entry<K,V>> y = (BTNode<Entry<K,V>>) z.getLeftChild();
+        BTNode<Entry<K,V>> rightSubTree = (BTNode<Entry<K,V>>) y.getRightChild();
+
+        z.setLeftChild(rightSubTree);
+        y.setRightChild(z);
+        replaceParentLink(z, y);
     }
 
     /**
@@ -50,12 +57,43 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
      * @return the new root of the restructured subtree
      */
     protected BTNode<Entry<K,V>> restructure (BTNode<Entry<K,V>> x) {
-        //TODO: Left as an exercise.
-        // the modification of a tree T caused by a trinode restructuring operation
-        // can be implemented through case analysis either as a single rotation or as a double rotation.
-        // The double rotation arises when position x has the middle of the three relevant keys
-        // and is first rotated above its parent Y, and then above what was originally its grandparent Z.
-        // In any of the cases, the trinode restructuring is completed with O(1)running time
+        BTNode<Entry<K,V>> y = (BTNode<Entry<K,V>>) x.getParent();
+        BTNode<Entry<K,V>> z = (BTNode<Entry<K,V>>) y.getParent();
+        // z > y > x (zigzig dir)
+        if (y == z.getLeftChild() && x == y.getLeftChild()) {
+            rotateRight(z);
+            return y;
+        }
+        // z < y < x (zigzig esq)
+        if (y == z.getRightChild() && x == y.getRightChild()) {
+            rotateLeft(z);
+            return y;
+        }
+        // x no meio
+        if (y == z.getLeftChild() && x == y.getRightChild()) {
+            rotateLeft(y);
+            rotateRight(z);
+            return x;
+        }
+        if (y == z.getRightChild() && x == y.getLeftChild()) {
+            rotateRight(y);
+            rotateLeft(z);
+            return x;
+        }
+
         return null;
+    }
+
+
+    private void replaceParentLink(BTNode<Entry<K,V>> oldNode, BTNode<Entry<K,V>> newNode) {
+        BTNode<Entry<K,V>> parent = (BTNode<Entry<K,V>>) oldNode.getParent();
+        newNode.setParent(parent);
+
+        if (parent == null)
+            root = newNode;
+        else if (parent.getLeftChild() == oldNode)
+            parent.setLeftChild(newNode);
+        else
+            parent.setRightChild(newNode);
     }
 }

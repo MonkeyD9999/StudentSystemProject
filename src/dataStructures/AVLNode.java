@@ -17,7 +17,7 @@ class AVLNode<E> extends BTNode<E> {
     public AVLNode( E element, AVLNode<E> parent,
                     AVLNode<E> left, AVLNode<E> right ){
         super(element,parent,left,right);
-        //TODO: Left as an exercise.
+        height = Math.max(left.getHeight(), right.getHeight()) + 1;
     }
     public AVLNode( E element, AVLNode<E> parent){
         super(element, parent,null, null);
@@ -37,7 +37,10 @@ class AVLNode<E> extends BTNode<E> {
      * @param node
      */
     public void setLeftChild(AVLNode<E> node) {
-        //TODO: Left as an exercise.
+        this.setLeftChild(node);
+        if(node!=null)
+            node.setParent(this);
+        updateHeight();
     }
 
     /**
@@ -45,10 +48,25 @@ class AVLNode<E> extends BTNode<E> {
      * @param node
      */
     public void setRightChild(AVLNode<E> node) {
-        //TODO: Left as an exercise.
+        this.setRightChild(node);
+        if(node!=null)
+            node.setParent(this);
+        updateHeight();
     }
-// others public methods
-//TODO: Left as an exercise.
 
+
+    public void updateHeight() {
+        height = 1 + Math.max(height((AVLNode<E>) getLeftChild()), height((AVLNode<E>) getRightChild()));
+    }
+
+    /**
+     * Returns difference between the height of left subtree and right subtree
+     */
+    public int balanceFactor() {
+        return height((AVLNode<E>) getLeftChild()) -
+                height((AVLNode<E>) getRightChild());
+    }
+
+// others public methods
 
 }
