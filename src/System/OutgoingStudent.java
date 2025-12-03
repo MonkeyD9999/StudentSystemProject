@@ -38,10 +38,6 @@ public class OutgoingStudent extends StudentClass implements Serializable {
         return services.iterator();
     }
 
-    public void readVisited(DoublyLinkedList<Service> visited) {
-        services = visited;
-    }
-
     private boolean hasVisited(String location) {
         Iterator<Service> iterator = services.iterator();
         while (iterator.hasNext()) {

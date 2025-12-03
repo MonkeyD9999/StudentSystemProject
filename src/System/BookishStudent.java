@@ -32,9 +32,6 @@ public class BookishStudent extends StudentClass implements Serializable {
         return leisureServices.iterator();
     }
 
-    public void readVisited(DoublyLinkedList<Service> services){
-        leisureServices = services;
-    }
 
     private boolean hasVisited(String location) {
         Iterator<Service> iterator = leisureServices.iterator();

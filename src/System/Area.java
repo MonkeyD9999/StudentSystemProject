@@ -1,8 +1,8 @@
 package System;
 
 import Exceptions.AlreadyExistsObjectException;
-import dataStructures.DoublyLinkedList;
 import dataStructures.Iterator;
+import dataStructures.Map;
 import dataStructures.TwoWayIterator;
 
 import java.io.Serializable;
@@ -29,7 +29,7 @@ public interface Area extends Serializable {
      *
      * @return Iterator with all the services
      */
-    Iterator<Service> getServicesAll();
+    Iterator<Map.Entry<String,Service>> getServicesAll();
 
     /**
      *
@@ -82,7 +82,7 @@ public interface Area extends Serializable {
      * @param location Name of a service
      * @return Iterator with all the students in the service
      */
-    TwoWayIterator<Student> listStudentsInService(String location);
+    Service listStudentsInService(String location);
 
     /**
      *
@@ -126,7 +126,7 @@ public interface Area extends Serializable {
      * @param tag Description of a rating
      * @return Iterator with the services that have a rating with a description that have the tag
      */
-    Iterator<Service> listServiceReviewsTagged(String tag);
+    Iterator<Map.Entry<String, Service>> listServiceReviewsTagged(String tag);
 
     /**
      *
@@ -134,11 +134,4 @@ public interface Area extends Serializable {
      * @return Student or -1 if doesn't exists
      */
     Student getStudent(String name);
-
-    /**
-     *
-     * @param location Name of a service
-     * @return Service or -1 if doesn't exists
-     */
-    Service getService(String location);
 }

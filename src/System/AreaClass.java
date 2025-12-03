@@ -23,8 +23,8 @@ public class AreaClass implements Area, Serializable {
     private long bottomRightLat;
     private long bottomRightLong;
 
-    private DoublyLinkedList<Service> services;
-    private DoublyLinkedList<Student> students;
+    private AVLSortedMap<String, Service> services;
+    private SinglyLinkedList<Student> students;
     private DoublyLinkedList<Service> ratingOrder;
 
     public AreaClass(String name, long topLeftLat, long topLeftLong, long bottomRightLat, long bottomRightLong) {
@@ -33,8 +33,8 @@ public class AreaClass implements Area, Serializable {
         this.topLeftLong = topLeftLong;
         this.bottomRightLat = bottomRightLat;
         this.bottomRightLong = bottomRightLong;
-        services = new DoublyLinkedList<Service>();
-        students = new DoublyLinkedList<Student>();
+        services = new AVLSortedMap<>();
+        students = new SinglyLinkedList<>();
         ratingOrder = new DoublyLinkedList<Service>();
     }
 
@@ -48,30 +48,25 @@ public class AreaClass implements Area, Serializable {
         if(!isInside(loc)) {
             throw new Error1Exception("");
         }
-
-
-        Iterator<Service> it = services.iterator();
-        while (it.hasNext()){
-            Service s = it.next();
-            if(s.getName().equalsIgnoreCase(name)){
-                throw new AlreadyExistsObjectException(s.getName());
-            }
+        if(services.get(name) != null) {
+            throw new AlreadyExistsObjectException(services.get(name).getName());
         }
-        switch (type){
-            case EAT -> services.addLast(new EatingService(name, type, loc, price, value));
-            case LODGE -> services.addLast(new LodgeService(name, type, loc, price, value));
-            case LEISURE -> services.addLast(new LeisureService(name, type, loc, price, value));
+
+        switch (type) {
+            case EAT -> services.insert(name, new EatingService(name, type, loc, price, value));
+            case LODGE -> services.insert(name, new LodgeService(name, type, loc, price, value));
+            case LEISURE -> services.insert(name, new LeisureService(name, type, loc, price, value));
         }
     }
 
     @Override
-    public Iterator<Service> getServicesAll() {
+    public Iterator<Map.Entry<String,Service>> getServicesAll() {
         return services.iterator();
     }
 
     @Override
     public void addStudent(String type, String name, String country, String currentLodge) {
-        Service lodge = getService(currentLodge);
+        Service lodge = services.get(currentLodge);
         Student s = getStudent(name);
         if(!(lodge instanceof LodgeService)){
             throw new Error1Exception(currentLodge);
@@ -147,7 +142,7 @@ public class AreaClass implements Area, Serializable {
 
     @Override
     public void evaluateService(int stars, String location, String description) {
-        Service service = getService(location);
+        Service service = services.get(location);
 
         if(service==null)
             throw new Error1Exception(location);
@@ -172,7 +167,7 @@ public class AreaClass implements Area, Serializable {
     @Override
     public boolean changeLocation(String name, String location) {
         Student student = getStudent(name);
-        Service service = getService(location);
+        Service service = services.get(location);
 
         if(student==null){
             throw new Error1Exception(name);
@@ -203,7 +198,7 @@ public class AreaClass implements Area, Serializable {
     @Override
     public void changeLodge(String name, String lodge) {
         Student student = getStudent(name);
-        Service service = getService(lodge);
+        Service service = services.get(lodge);
 
         if (student == null)
             throw new Error1Exception(name);
@@ -224,15 +219,15 @@ public class AreaClass implements Area, Serializable {
     }
 
     @Override
-    public TwoWayIterator<Student> listStudentsInService(String location) {
-        Service service = getService(location);
+    public Service listStudentsInService(String location) {
+        Service service = services.get(location);
 
         if(service==null)
             throw new Error1Exception(location);
         if(!(service instanceof LodgeService) && !(service instanceof EatingService))
             throw new Error2Exception(service.getName());
 
-        return service.listStudentsInService();
+        return service;
     }
 
     @Override
@@ -253,13 +248,13 @@ public class AreaClass implements Area, Serializable {
 
     @Override
     public Iterator<Service> listServicesByRating() {
-        Iterator<Service> it = services.iterator();
+        Iterator<Map.Entry<String, Service>> it = services.iterator();
         SortedList<Service> sortedByRating = new SortedDoublyLinkedList<>(new RatingComparator(ratingOrder));
         if (!it.hasNext())
             throw new Error1Exception("");
 
         while (it.hasNext()) {
-            Service s = it.next();
+            Service s = it.next().value();
             sortedByRating.add(s);
         }
 
@@ -284,7 +279,7 @@ public class AreaClass implements Area, Serializable {
         if (student == null)
             throw new Error1Exception(name);
 
-        Iterator<Service> it = new FilterIterator<>(services.iterator(), new IsServiceType(type));
+        Iterator<Map.Entry<String, Service>> it = services.iterator();
         if (!it.hasNext())
             throw new Error3Exception(type);
 
@@ -292,7 +287,7 @@ public class AreaClass implements Area, Serializable {
         if (student instanceof ThriftyStudent) {
             Service best = null;
             while (it.hasNext()) {
-                Service s = it.next();
+                Service s = it.next().value();
                 if(best==null){
                     best = s;
                 }
@@ -313,7 +308,7 @@ public class AreaClass implements Area, Serializable {
         else {
             Service best = null;
             while (it.hasNext()) {
-                Service s = it.next();
+                Service s = it.next().value();
                 if(best==null){
                     best = s;
                 }
@@ -342,7 +337,7 @@ public class AreaClass implements Area, Serializable {
 
     @Override
     public Iterator<Service> listClosestServiceRanked(int stars, String type, String name) {
-        Student student = getStudent(name);
+        /*Student student = getStudent(name);
 
         if (student == null)
             throw new Error1Exception(name);
@@ -376,28 +371,18 @@ public class AreaClass implements Area, Serializable {
                 r.addLast(s);
         }
 
-        return r.iterator();
+        return r.iterator();*/
+        return null;
     }
 
     @Override
-    public Iterator<Service> listServiceReviewsTagged(String tag) {
-        Iterator<Service> it = new FilterIterator<>(services.iterator(), new ReviewHasTag(tag));
+    public Iterator<Map.Entry<String,Service>> listServiceReviewsTagged(String tag) {
+        Iterator<Map.Entry<String, Service>> it = services.iterator();
 
         if (!it.hasNext()){
             throw new Error1Exception("");
         }
         return it;
-    }
-
-    public Service getService(String name) {
-        Iterator<Service> it = services.iterator();
-        while (it.hasNext()){
-            Service s = it.next();
-            if(s.getName().equalsIgnoreCase(name)){
-                return s;
-            }
-        }
-        return null;
     }
 
     public Student getStudent(String name){

@@ -214,13 +214,13 @@ public class Main {
             System.out.println(Output.BND.getMsg());
         }
         else{
-            Iterator<Service> it = area.getServicesAll();
+            Iterator<Map.Entry<String,Service>> it = area.getServicesAll();
             //check if empty
             if(!it.hasNext()){
                 System.out.printf(Output.NS.getMsg());
             }
             while(it.hasNext()){
-                Service s = it.next();
+                Service s = it.next().value();
                 System.out.printf(Output.PRINT_SERVICE.getMsg(), s.getName(), s.getType(), s.getLocation().getLatitude(), s.getLocation().getLongitude());
             }
         }
@@ -373,9 +373,10 @@ public class Main {
             } else if (!order.equals("<") && !order.equals(">")){
                 System.out.println(Output.ONE.getMsg());
             } else {
-                TwoWayIterator<Student> it = area.listStudentsInService(location);
+
+                Service service = area.listStudentsInService(location);
+                TwoWayIterator<Student> it = service.listStudentsInService();
                 boolean oldFirst = order.equals(">");
-                Service service = area.getService(location);
 
                 if(!it.hasNext())
                     System.out.printf(Output.NSO.getMsg(), service.getName());
@@ -384,7 +385,8 @@ public class Main {
                         Student s = it.next();
                         System.out.printf(Output.LUIS.getMsg(), s.getName(), s.getType());
                     }
-                } else {
+                }
+                else {
                     it.fullForward();
                     while(it.hasPrevious()){
                         Student s = it.previous();
@@ -518,9 +520,9 @@ public class Main {
                 System.out.println(Output.BND.getMsg());
             }
             else {
-                Iterator<Service> it = area.listServiceReviewsTagged(tag);
+                Iterator<Map.Entry<String,Service>> it = area.listServiceReviewsTagged(tag);
                 while(it.hasNext()){
-                    Service s = it.next();
+                    Service s = it.next().value();
                     System.out.printf(Output.SPA.getMsg(), s.getType(), s.getName());
                 }
             }
