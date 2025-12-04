@@ -123,8 +123,7 @@ public class Main {
         } catch (FileNotFoundException e){
             System.out.println(Output.SBND.getMsg());
         }
-        catch(ClassNotFoundException | IOException ignored){
-        }
+        catch(ClassNotFoundException | IOException ignored){ }
         return area;
     }
 

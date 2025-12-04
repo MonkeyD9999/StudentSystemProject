@@ -37,7 +37,7 @@ class AVLNode<E> extends BTNode<E> {
      * @param node
      */
     public void setLeftChild(AVLNode<E> node) {
-        this.setLeftChild(node);
+        super.setLeftChild(node);
         if(node!=null)
             node.setParent(this);
         updateHeight();
@@ -48,7 +48,7 @@ class AVLNode<E> extends BTNode<E> {
      * @param node
      */
     public void setRightChild(AVLNode<E> node) {
-        this.setRightChild(node);
+        super.setRightChild(node);
         if(node!=null)
             node.setParent(this);
         updateHeight();

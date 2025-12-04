@@ -18,10 +18,10 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
         BTNode<Entry<K,V>> y = (BTNode<Entry<K,V>>) z.getRightChild();
         BTNode<Entry<K,V>> leftSubTree = (BTNode<Entry<K,V>>) y.getLeftChild();
 
-        z.setRightChild(leftSubTree);
 
-        y.setLeftChild(z);
+        z.setRightChild(leftSubTree);
         replaceParentLink(z, y);
+        y.setLeftChild(z);
 	}
 
      /**
@@ -36,8 +36,8 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
         BTNode<Entry<K,V>> rightSubTree = (BTNode<Entry<K,V>>) y.getRightChild();
 
         z.setLeftChild(rightSubTree);
-        y.setRightChild(z);
         replaceParentLink(z, y);
+        y.setRightChild(z);
     }
 
     /**

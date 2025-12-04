@@ -109,7 +109,35 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
     }
 
      private void rehash(){
-        //TODO: Left as an exercise.
+         Entry<K,V>[] oldTable = table;
+
+         int newCapacity = HashTable.nextPrime(table.length * 2);
+
+         @SuppressWarnings("unchecked")
+         Entry<K,V>[] newTable = (Entry<K,V>[]) new Entry[newCapacity];
+
+         table = newTable;
+         currentSize = 0;
+         maxSize = (int) (newCapacity * MAX_LOAD_FACTOR);
+
+         // reinserir todas as entradas válidas
+         for (int i = 0; i < oldTable.length; i++) {
+             Entry<K,V> e = oldTable[i];
+
+             if (e != null && e != REMOVED_CELL) {
+
+                 int hash = Math.abs(e.key().hashCode()) % table.length;
+                 int j = 0;
+
+                 while (table[hash] != null) {
+                     j++;
+                     hash = (hash + j) % table.length;
+                 }
+
+                 table[hash] = new Entry<>(e.key(), e.value());
+                 currentSize++;
+             }
+         }
      }
 
    
