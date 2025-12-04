@@ -70,7 +70,27 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
 
 
     private void rehash() {
-        //TODO: Left as an exercise.
+        Map<K,V>[] oldTable = table;
+
+        int newCapacity = HashTable.nextPrime(table.length * 2);
+
+        table = (MapSinglyList<K,V>[]) new MapSinglyList[newCapacity];
+        for (int i = 0; i < newCapacity; i++)
+            table[i] = new MapSinglyList<>();
+
+        currentSize = 0;
+        maxSize = (int)(newCapacity * MAX_LOAD_FACTOR);
+
+        for (int i = 0; i < oldTable.length; i++) {
+            Map<K,V> bucket = oldTable[i];
+
+            Iterator<Entry<K,V>> it = bucket.iterator();
+
+            while (it.hasNext()) {
+                Entry<K,V> e = it.next();
+                put(e.key(), e.value());
+            }
+        }
     }
 
     /**
