@@ -72,23 +72,19 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
         BTNode<Entry<K,V>> z = (BTNode<Entry<K,V>>) y.getParent();
 
 
-        // Caso 1: Z -> Y (Esq) -> X (Esq) (Rotação Simples à Direita)
         if (y == z.getLeftChild() && x == y.getLeftChild()) {
             rotateRight(z);
             return y;
         }
-        // Caso 2: Z -> Y (Dir) -> X (Dir) (Rotação Simples à Esquerda)
         else if (y == z.getRightChild() && x == y.getRightChild()) {
             rotateLeft(z);
             return y;
         }
-        // Caso 3: Z -> Y (Esq) -> X (Dir) (Rotação Dupla: Esq + Dir)
         else if (y == z.getLeftChild() && x == y.getRightChild()) {
             rotateLeft(y);
             rotateRight(z);
             return x;
         }
-        // Caso 4: Z -> Y (Dir) -> X (Esq) (Rotação Dupla: Dir + Esq)
         else {
             rotateRight(y);
             rotateLeft(z);

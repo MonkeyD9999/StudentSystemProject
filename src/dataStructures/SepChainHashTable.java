@@ -19,7 +19,7 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
         this(DEFAULT_CAPACITY);
     }
 
-    @SuppressWarnings({})
+    @SuppressWarnings({"unchecked"})
     public SepChainHashTable( int capacity ){
         super(capacity);
         int arraySize = HashTable.nextPrime((int) (capacity / IDEAL_LOAD_FACTOR));
@@ -70,7 +70,7 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
     }
 
 
-    @SuppressWarnings({})
+    @SuppressWarnings("unchecked")
     private void rehash() {
         Map<K,V>[] oldTable = table;
 

@@ -140,8 +140,6 @@ public class AVLSortedMap <K extends Comparable<K>,V> extends AdvancedBSTree<K,V
         if (hLeft > hRight) return left;
         if (hRight > hLeft) return right;
 
-        // Caso de alturas iguais
-        // Se node é filho esquerdo do pai dele, retornamos o filho esquerdo (para fazer zig-zig).
         if (parent != null && node == (AVLNode<Entry<K, V>>) parent.getLeftChild()) {
             return left;
         } else {

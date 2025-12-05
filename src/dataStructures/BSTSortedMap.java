@@ -81,7 +81,6 @@ public class BSTSortedMap<K extends Comparable<K>,V> extends BTree<Map.Entry<K,V
      * @return previous value associated with key,
      * or null if the dictionary does not have an entry with that key
      */
-    @Override
     public V put(K key, V value) {
 
         if (root == null) {
@@ -191,7 +190,7 @@ public class BSTSortedMap<K extends Comparable<K>,V> extends BTree<Map.Entry<K,V
      * @return iterator of the values in the dictionary
      */
     @Override
-    @SuppressWarnings({})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Iterator<V> values() {
         return new ValuesIterator(iterator());
     }
@@ -202,7 +201,7 @@ public class BSTSortedMap<K extends Comparable<K>,V> extends BTree<Map.Entry<K,V
      * @return iterator of the keys in the dictionary
      */
     @Override
-    @SuppressWarnings({})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Iterator<K> keys() {
         return new KeysIterator(iterator());
     }

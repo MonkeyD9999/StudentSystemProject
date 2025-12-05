@@ -1,4 +1,9 @@
 package dataStructures;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * Closed Hash Table
  * @author AED  Team
@@ -106,11 +111,9 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
         if (isFull())
             rehash();
 
-        //verifica se existe uma key igual
         int index = searchLinearProving(key);
         if(index == NOT_FOUND){
 
-            // faz hash até encontrar um espaço livre
             int hash = Math.abs(key.hashCode()) % table.length;
             while(table[hash] != null && table[hash]!=REMOVED_CELL){
 
@@ -122,7 +125,6 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
             return null;
         }
 
-        // se já existe substitui
         else {
             Entry<K, V> old = table[index];
             table[index] = new Entry<>(key,value);
@@ -142,8 +144,6 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
          table = newTable;
          currentSize = 0;
          maxSize = (int) (newCapacity * MAX_LOAD_FACTOR);
-
-         // reinserir todas as entradas válidas
          for (int i = 0; i < oldTable.length; i++) {
              Entry<K,V> e = oldTable[i];
 
@@ -174,7 +174,7 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
      * or null if the dictionary does not an entry with that key
      */
     @Override
-    @SuppressWarnings({})
+    @SuppressWarnings("unchecked")
     public V remove(K key) {
         int hash = searchLinearProving(key);
         if(hash == NOT_FOUND){
@@ -192,9 +192,49 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
      * @return iterator of the entries in the dictionary
      */
     @Override
-    @SuppressWarnings({})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Iterator<Entry<K, V>> iterator() {
         return new FilterIterator<>(new ArrayIterator(table,table.length-1), m -> m!=null && m!= REMOVED_CELL);
     }
 
+    @SuppressWarnings("unchecked")
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject();
+
+        oos.writeInt(currentSize);
+
+        for (Entry<K,V> entry : table) {
+            if (entry != null && entry != REMOVED_CELL) {
+                oos.writeObject(entry);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject();
+
+        int size = ois.readInt();
+
+        int arraySize = HashTable.nextPrime((int) (size / IDEAL_LOAD_FACTOR) + 1);
+
+        table = (Entry<K,V>[]) new Entry[arraySize];
+        maxSize = (int)(arraySize * MAX_LOAD_FACTOR);
+        currentSize = 0;
+
+        for (int i = 0; i < size; i++) {
+            Entry<K,V> entry  = (Entry<K,V>) ois.readObject();
+
+            int hash = Math.abs(entry.key().hashCode()) % table.length;
+            int j = 0;
+
+            while (table[hash] != null) {
+                j++;
+                hash = (hash + j) % table.length;
+            }
+
+            table[hash] = entry;
+            currentSize++;
+        }
+    }
 }

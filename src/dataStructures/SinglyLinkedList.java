@@ -4,21 +4,25 @@ import dataStructures.Iterator;
 import dataStructures.List;
 
 import dataStructures.exceptions.*;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class SinglyLinkedList<E> implements List<E>, Serializable {
     /**
      *  Node at the head of the list.
      */
-    private SinglyListNode<E> head;
+    private transient SinglyListNode<E> head;
     /**
      * Node at the tail of the list.
      */
-    private SinglyListNode<E> tail;
+    private transient SinglyListNode<E> tail;
     /**
      * Number of elements in the list.
      */
-    private int currentSize;
+    private transient int currentSize;
     /**
      * Constructor of an empty singly linked list.
      * head and tail are initialized as null.
@@ -251,6 +255,29 @@ public class SinglyLinkedList<E> implements List<E>, Serializable {
             node.setNext(oldNode.getNext());
             currentSize--;
             return oldNode.getElement();
+        }
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject();
+        oos.writeInt(currentSize);
+        SinglyListNode<E> node = head;
+        while (node != null) {
+            oos.writeObject(node.getElement());
+            node = node.getNext();
+        }
+        oos.flush();
+    }
+
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject();
+        int size = ois.readInt();
+        for (int i = 0; i < size; i++) {
+            @SuppressWarnings("unchecked")
+            E element = (E) ois.readObject();
+            addLast(element);
         }
     }
 

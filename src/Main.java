@@ -1,5 +1,5 @@
 /*
-* @author Tomás Mata (63431) t.mata@campus.fct.unl.pt
+* @author Tomas Mata (63431) t.mata@campus.fct.unl.pt
 * @author Rafael Pialgata (68672) r.pialgata@campus.fct.unl.pt
 */
 

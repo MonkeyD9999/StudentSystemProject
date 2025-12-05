@@ -26,12 +26,10 @@ class SepChainHashTableIterator<K,V> implements Iterator<Map.Entry<K,V>> {
      * @return true iff the iteration has more elements
      */
     public boolean hasNext() {
-	    // Se o iterador da lista atual existe e ainda tem elementos → OK
         if (listIterator != null && listIterator.hasNext()) {
             return true;
         }
 
-        // Caso contrário, avançamos para o próximo bucket que tenha elementos
         int n = table.length;
         while (++currentIndex < n) {
             if (!table[currentIndex].isEmpty()) {
@@ -64,7 +62,6 @@ class SepChainHashTableIterator<K,V> implements Iterator<Map.Entry<K,V>> {
         currentIndex = -1;
         listIterator = null;
 
-        // Avança até ao primeiro bucket não vazio
         while (++currentIndex < table.length) {
             if (!table[currentIndex].isEmpty()) {
                 listIterator = table[currentIndex].iterator();

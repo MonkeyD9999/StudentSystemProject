@@ -301,7 +301,6 @@ public class AreaClass implements Area, Serializable {
         if (!it.hasNext())
             throw new Error3Exception(type);
 
-        // se é thrifty, ver qual o mais barato em ordem de inserção
         if (student instanceof ThriftyStudent) {
             Service best = null;
             while (it.hasNext()) {
@@ -322,7 +321,6 @@ public class AreaClass implements Area, Serializable {
             }
             return best;
         }
-        // senao ver qual tem melhor rating e que o average foi mudado menos recentemente
         else {
             Service best = null;
             while (it.hasNext()) {

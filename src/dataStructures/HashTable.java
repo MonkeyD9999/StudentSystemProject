@@ -1,4 +1,9 @@
 package dataStructures;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * Hash Table
  * @author AED  Team
@@ -25,10 +30,6 @@ package dataStructures;
          size=capacity;
      }
 
-     // Public Static Methods
-
-     // Returns the hash code of the specified key,
-     // which is an integer in the range 0, ..., b-1.
      public static int hash( String key ){
 
          int a = 127; // a is a prime number.
@@ -39,11 +40,7 @@ package dataStructures;
              hashCode = ( hashCode * a + key.charAt(i) ) % b;
          return hashCode;
      }
-     // Protected Static Methods
 
-     // Returns a prime number that is not less than the
-     // specified number; or zero if all such primes are greater
-     // than Integer.MAX VALUE.
      protected static int nextPrime( int number ){
          if (number <= 2) return 2;
 
@@ -62,7 +59,6 @@ package dataStructures;
          return 0;
      }
 
-     // Returns true iff the hash table cannot contain more entries.
      protected boolean isFull( ){
          return currentSize == maxSize;
      }
@@ -148,12 +144,11 @@ package dataStructures;
          if (n < 2) return false;
          if (n % 2 == 0) return n == 2;
 
-         // Testar até sqrt(n) sem usar Math.sqrt()
-         // i*i <= n
          for (int i = 3; i*i <= n; i += 2) {
              if (n % i == 0)
                  return false;
          }
          return true;
      }
+
  }

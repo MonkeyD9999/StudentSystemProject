@@ -47,23 +47,23 @@ public class SortedDoublyLinkedList<E> implements SortedList<E> {
 
 
     private void writeObject(ObjectOutputStream oos) throws IOException {
-        oos.defaultWriteObject(); // escreve os campos normais (não temos aqui, mas é boa prática)
-        oos.writeInt(currentSize); // escreve o tamanho
+        oos.defaultWriteObject();
+        oos.writeInt(currentSize);
         DoublyListNode<E> node = head;
         while (node != null) {
-            oos.writeObject(node.getElement()); // escreve cada elemento
+            oos.writeObject(node.getElement());
             node = node.getNext();
         }
         oos.flush();
     }
 
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        ois.defaultReadObject(); // lê os campos normais
-        int size = ois.readInt(); // lê o tamanho
+        ois.defaultReadObject();
+        int size = ois.readInt();
         for (int i = 0; i < size; i++) {
             @SuppressWarnings("unchecked")
             E element = (E) ois.readObject();
-            add(element); // recria os nós
+            add(element);
         }
     }
 
