@@ -101,10 +101,10 @@ public class Main {
         }
         else{
             String fileName = "AREA_" + area.getName().toLowerCase().replaceAll(" ", "_")+".ser";
-            try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));){
+            try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))){
                 oos.writeObject(area);
             } catch (IOException ignored) {
-
+                throw new RuntimeException();
             }
         }
     }

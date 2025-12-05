@@ -1,7 +1,5 @@
 package dataStructures;
 
-import static javax.swing.Spring.height;
-
 /**
  * AVL Tree Sorted Map
  * @author AED  Team

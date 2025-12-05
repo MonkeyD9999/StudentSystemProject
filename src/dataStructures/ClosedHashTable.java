@@ -197,7 +197,6 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
         return new FilterIterator<>(new ArrayIterator(table,table.length-1), m -> m!=null && m!= REMOVED_CELL);
     }
 
-    @SuppressWarnings("unchecked")
     private void writeObject(ObjectOutputStream oos) throws IOException {
         oos.defaultWriteObject();
 

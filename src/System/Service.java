@@ -1,6 +1,7 @@
 package System;
 
 import dataStructures.Iterator;
+import dataStructures.Map;
 import dataStructures.TwoWayIterator;
 
 import java.io.Serializable;
@@ -46,7 +47,7 @@ public interface Service extends Serializable {
      *
      * @return Iterator with all the ratings
      */
-    Iterator<Rating> listReviews();
+    Iterator<Map.Entry<Integer, Rating>> listReviews();
 
     /**
      *

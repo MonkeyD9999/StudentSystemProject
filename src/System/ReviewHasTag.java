@@ -1,6 +1,7 @@
 package System;
 
 import dataStructures.Iterator;
+import dataStructures.Map;
 import dataStructures.Predicate;
 
 public class ReviewHasTag implements Predicate<Service> {
@@ -12,9 +13,9 @@ public class ReviewHasTag implements Predicate<Service> {
 
     @Override
     public boolean check(Service service) {
-        Iterator<Rating> it = service.listReviews();
+        Iterator<Map.Entry<Integer, Rating>> it = service.listReviews();
         while (it.hasNext()) {
-            Rating r = it.next();
+            Rating r = it.next().value();
             String [] parts = r.getDescription().split(" ");
             for(int i = 0; i < parts.length; i++) {
                 if(parts[i].toLowerCase().equalsIgnoreCase(tag)) {

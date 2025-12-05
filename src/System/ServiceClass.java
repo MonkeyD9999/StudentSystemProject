@@ -12,6 +12,7 @@ public abstract class ServiceClass implements Service,Serializable {
     private int reviewCounter;
     private float avgRating;
     private DoublyLinkedList<Rating> reviews;
+    private ClosedHashTable<Integer,Rating>  reviewS;
 
     public ServiceClass(String name,String type, LocationClass location) {
         this.name = name;
@@ -20,6 +21,7 @@ public abstract class ServiceClass implements Service,Serializable {
         avgRating = 4;
         reviewCounter = 1;
         reviews = new DoublyLinkedList<Rating>();
+        reviewS = new ClosedHashTable<>();
     }
 
     public String getName() {
@@ -37,9 +39,10 @@ public abstract class ServiceClass implements Service,Serializable {
     public void newReview(Rating rating) {
         avgRating = ((avgRating * reviewCounter) + rating.getStars())/++reviewCounter;
         reviews.addLast(rating);
+        reviewS.put(rating.getStars(), rating);
     }
 
-    public Iterator<Rating> listReviews() { return reviews.iterator(); }
+    public Iterator<Map.Entry<Integer, Rating>> listReviews() { return reviewS.iterator(); }
 
     public abstract TwoWayIterator<Student> listStudentsInService();
 
