@@ -81,10 +81,14 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
      */
     @Override
     public V get(K key) {
-        int hash = Math.abs(key.hashCode()) % table.length;
-        Entry<K, V> entry = table[hash];
+        int index = searchLinearProving(key);
 
+        if(index == NOT_FOUND)
+            return null;
+
+        Entry<K, V> entry = table[index];
         return entry.value();
+
     }
 
     /**
@@ -102,10 +106,29 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
         if (isFull())
             rehash();
 
-        int hash = Math.abs(key.hashCode()) % table.length;
-        Entry<K, V> old = table[hash];
-        table[hash] = new Entry<>(key,value);
-        return old.value();
+        //verifica se existe uma key igual
+        int index = searchLinearProving(key);
+        if(index == NOT_FOUND){
+
+            // faz hash até encontrar um espaço livre
+            int hash = Math.abs(key.hashCode()) % table.length;
+            while(table[hash] != null && table[hash]!=REMOVED_CELL){
+
+                hash = (hash +1) % table.length;
+
+            }
+            currentSize++;
+            table[hash] = new Entry<>(key,value);
+            return null;
+        }
+
+        // se já existe substitui
+        else {
+            Entry<K, V> old = table[index];
+            table[index] = new Entry<>(key,value);
+            currentSize++;
+            return old.value();
+        }
     }
 
      private void rehash(){
@@ -151,11 +174,15 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
      * or null if the dictionary does not an entry with that key
      */
     @Override
+    @SuppressWarnings({})
     public V remove(K key) {
-        int hash = Math.abs(key.hashCode()) % table.length;
+        int hash = searchLinearProving(key);
+        if(hash == NOT_FOUND){
+            return null;
+        }
         Entry<K, V> removed = table[hash];
         table[hash] = (Entry<K, V>) REMOVED_CELL;
-
+        currentSize--;
         return removed.value();
     }
 
@@ -165,8 +192,9 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
      * @return iterator of the entries in the dictionary
      */
     @Override
+    @SuppressWarnings({})
     public Iterator<Entry<K, V>> iterator() {
-        return new FilterIterator(new ArrayIterator(table,table.length-1), m -> m!=null && m!= REMOVED_CELL);
+        return new FilterIterator<>(new ArrayIterator(table,table.length-1), m -> m!=null && m!= REMOVED_CELL);
     }
 
 }

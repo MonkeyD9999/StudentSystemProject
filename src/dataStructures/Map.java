@@ -12,6 +12,7 @@ import java.io.Serializable;
 
 public interface Map<K,V> extends Serializable {
 
+    @SuppressWarnings({})
     record Entry<K,V>(K key,V value) implements Serializable {
         
         public boolean equals(Object obj) {

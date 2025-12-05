@@ -191,6 +191,7 @@ public class BSTSortedMap<K extends Comparable<K>,V> extends BTree<Map.Entry<K,V
      * @return iterator of the values in the dictionary
      */
     @Override
+    @SuppressWarnings({})
     public Iterator<V> values() {
         return new ValuesIterator(iterator());
     }
@@ -201,6 +202,7 @@ public class BSTSortedMap<K extends Comparable<K>,V> extends BTree<Map.Entry<K,V
      * @return iterator of the keys in the dictionary
      */
     @Override
+    @SuppressWarnings({})
     public Iterator<K> keys() {
         return new KeysIterator(iterator());
     }

@@ -297,7 +297,7 @@ public class AreaClass implements Area, Serializable {
         if (student == null)
             throw new Error1Exception(name);
 
-        Iterator<Service> it = services.iterator();
+        Iterator<Service> it = new FilterIterator<>(services.iterator(),new IsServiceType(type));
         if (!it.hasNext())
             throw new Error3Exception(type);
 

@@ -18,7 +18,8 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
     public SepChainHashTable( ){
         this(DEFAULT_CAPACITY);
     }
-    
+
+    @SuppressWarnings({})
     public SepChainHashTable( int capacity ){
         super(capacity);
         int arraySize = HashTable.nextPrime((int) (capacity / IDEAL_LOAD_FACTOR));
@@ -69,6 +70,7 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
     }
 
 
+    @SuppressWarnings({})
     private void rehash() {
         Map<K,V>[] oldTable = table;
 
