@@ -24,10 +24,6 @@ class AVLNode<E> extends BTNode<E> {
         height= 0;
     }
 
-    private int height(AVLNode<E> no) {
-        if (no==null)	return -1;
-        return no.getHeight();
-    }
     public int getHeight() {
         return height;
     }
@@ -56,15 +52,22 @@ class AVLNode<E> extends BTNode<E> {
 
 
     public void updateHeight() {
-        height = 1 + Math.max(height((AVLNode<E>) getLeftChild()), height((AVLNode<E>) getRightChild()));
+        this.height = 1 + Math.max(getLeftHeight(), getRightHeight());
     }
 
     /**
      * Returns difference between the height of left subtree and right subtree
      */
     public int balanceFactor() {
-        return height((AVLNode<E>) getLeftChild()) -
-                height((AVLNode<E>) getRightChild());
+        return getLeftHeight() - getRightHeight();
+    }
+
+    private int getLeftHeight() {
+        return (getLeftChild() == null) ? 0 : ((AVLNode<E>)getLeftChild()).getHeight();
+    }
+
+    private int getRightHeight() {
+        return (getRightChild() == null) ? 0 : ((AVLNode<E>)getRightChild()).getHeight();
     }
 
 // others public methods

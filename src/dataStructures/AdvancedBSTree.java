@@ -16,12 +16,15 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
  	*/
 	protected void rotateLeft( BTNode<Entry<K,V>> z){
         BTNode<Entry<K,V>> y = (BTNode<Entry<K,V>>) z.getRightChild();
-        BTNode<Entry<K,V>> leftSubTree = (BTNode<Entry<K,V>>) y.getLeftChild();
+        BTNode<Entry<K,V>> yLeftSubTree = (BTNode<Entry<K,V>>) y.getLeftChild();
 
-
-        z.setRightChild(leftSubTree);
+        z.setRightChild(yLeftSubTree);
+       if(yLeftSubTree != null) { yLeftSubTree.setParent(z); }
         replaceParentLink(z, y);
         y.setLeftChild(z);
+
+        if (z instanceof AVLNode) ((AVLNode<Entry<K,V>>) z).updateHeight();
+        if (y instanceof AVLNode) ((AVLNode<Entry<K,V>>) y).updateHeight();
 	}
 
      /**
@@ -33,11 +36,15 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
      */
     protected void rotateRight( BTNode<Entry<K,V>> z){
         BTNode<Entry<K,V>> y = (BTNode<Entry<K,V>>) z.getLeftChild();
-        BTNode<Entry<K,V>> rightSubTree = (BTNode<Entry<K,V>>) y.getRightChild();
+        BTNode<Entry<K,V>> yRightSubTree = (BTNode<Entry<K,V>>) y.getRightChild();
 
-        z.setLeftChild(rightSubTree);
-        replaceParentLink(z, y);
+        z.setLeftChild(yRightSubTree);
+        if (yRightSubTree != null) {  yRightSubTree.setParent(z); }
         y.setRightChild(z);
+        replaceParentLink(z, y);
+
+        if (z instanceof AVLNode) ((AVLNode<Entry<K,V>>) z).updateHeight();
+        if (y instanceof AVLNode) ((AVLNode<Entry<K,V>>) y).updateHeight();
     }
 
     /**
@@ -59,35 +66,36 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
     protected BTNode<Entry<K,V>> restructure (BTNode<Entry<K,V>> x) {
         BTNode<Entry<K,V>> y = (BTNode<Entry<K,V>>) x.getParent();
         BTNode<Entry<K,V>> z = (BTNode<Entry<K,V>>) y.getParent();
-        // z > y > x (zigzig dir)
+
+
+        // Caso 1: Z -> Y (Esq) -> X (Esq) (Rotação Simples à Direita)
         if (y == z.getLeftChild() && x == y.getLeftChild()) {
             rotateRight(z);
             return y;
         }
-        // z < y < x (zigzig esq)
-        if (y == z.getRightChild() && x == y.getRightChild()) {
+        // Caso 2: Z -> Y (Dir) -> X (Dir) (Rotação Simples à Esquerda)
+        else if (y == z.getRightChild() && x == y.getRightChild()) {
             rotateLeft(z);
             return y;
         }
-        // x no meio
-        if (y == z.getLeftChild() && x == y.getRightChild()) {
+        // Caso 3: Z -> Y (Esq) -> X (Dir) (Rotação Dupla: Esq + Dir)
+        else if (y == z.getLeftChild() && x == y.getRightChild()) {
             rotateLeft(y);
             rotateRight(z);
             return x;
         }
-        if (y == z.getRightChild() && x == y.getLeftChild()) {
+        // Caso 4: Z -> Y (Dir) -> X (Esq) (Rotação Dupla: Dir + Esq)
+        else {
             rotateRight(y);
             rotateLeft(z);
             return x;
         }
-
-        return null;
     }
 
 
     private void replaceParentLink(BTNode<Entry<K,V>> oldNode, BTNode<Entry<K,V>> newNode) {
         BTNode<Entry<K,V>> parent = (BTNode<Entry<K,V>>) oldNode.getParent();
-        newNode.setParent(parent);
+        if (newNode != null) { newNode.setParent(parent); }
 
         if (parent == null)
             root = newNode;

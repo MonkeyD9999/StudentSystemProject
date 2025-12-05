@@ -30,7 +30,7 @@ public class AVLSortedMap <K extends Comparable<K>,V> extends AdvancedBSTree<K,V
             parent = node;
             int cmp = key.compareTo(node.getElement().key());
 
-            if (cmp == 0) {  // atualizar
+            if (cmp == 0) {
                 V old = node.getElement().value();
                 node.setElement(new Entry<>(key, value));
                 return old;
@@ -64,30 +64,20 @@ public class AVLSortedMap <K extends Comparable<K>,V> extends AdvancedBSTree<K,V
 
             int balanceFactor = node.balanceFactor();
 
-            // LEFT HEAVY
-            if (balanceFactor > 1) {
-                AVLNode<Entry<K,V>> left = (AVLNode<Entry<K,V>>) node.getLeftChild();
-                int bfLeft  = left.balanceFactor();
-                // LL
-                if (bfLeft >= 0) { rotateRight(node); }
-                // LR
-                else {
-                    rotateLeft(left);
-                    rotateRight(node);
-                }
-            }
+            if (Math.abs(balanceFactor) > 1) {
 
-            // RIGHT HEAVY
-            else if (balanceFactor < -1) {
-                AVLNode<Entry<K,V>> right = (AVLNode<Entry<K,V>>) node.getRightChild();
-                int bfRight  = right.balanceFactor();
-                // RR
-                if (bfRight <= 0) { rotateLeft(node); }
-                // RL
-                else {
-                    rotateRight(right);
-                    rotateLeft(node);
-                }
+                AVLNode<Entry<K,V>> y = tallerChild(node);
+                if(y==null) System.out.println("y deu merda is null");
+                AVLNode<Entry<K,V>> x = tallerChild(y);
+                if(x==null) System.out.println("x deu merda is null");
+
+                node = (AVLNode<Entry<K,V>>) restructure(x);
+
+                AVLNode<Entry<K,V>> leftChild = (AVLNode<Entry<K,V>>) node.getLeftChild();
+                AVLNode<Entry<K,V>> rightChild = (AVLNode<Entry<K,V>>) node.getRightChild();
+                if (leftChild != null) { leftChild.updateHeight(); }
+                if (rightChild != null) { rightChild.updateHeight(); }
+                node.updateHeight();
             }
 
             node = (AVLNode<Entry<K,V>>) node.getParent();
@@ -133,10 +123,30 @@ public class AVLSortedMap <K extends Comparable<K>,V> extends AdvancedBSTree<K,V
         else if (parent.getLeftChild() == node) { parent.setLeftChild(child); }
         else { parent.setRightChild(child); }
 
-        rebalance(parent);
         currentSize--;
+        rebalance(parent);
 
         return oldValue;
+    }
+
+    private AVLNode<Entry<K, V>> tallerChild(AVLNode<Entry<K, V>> node) {
+        AVLNode<Entry<K, V>> left = (AVLNode<Entry<K, V>>) node.getLeftChild();
+        AVLNode<Entry<K, V>> right = (AVLNode<Entry<K, V>>) node.getRightChild();
+        AVLNode<Entry<K, V>> parent = (AVLNode<Entry<K, V>>) node.getRightChild();
+
+        int hLeft = (left == null) ? 0 : left.getHeight();
+        int hRight = (right == null) ? 0 : right.getHeight();
+
+        if (hLeft > hRight) return left;
+        if (hRight > hLeft) return right;
+
+        // Caso de alturas iguais
+        // Se node é filho esquerdo do pai dele, retornamos o filho esquerdo (para fazer zig-zig).
+        if (parent != null && node == (AVLNode<Entry<K, V>>) parent.getLeftChild()) {
+            return left;
+        } else {
+            return right;
+        }
     }
 
 
