@@ -21,9 +21,9 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
         z.setRightChild(yLeftSubTree);
        if(yLeftSubTree != null) { yLeftSubTree.setParent(z); }
         y.setLeftChild(z);
-        //replaceParentLink(z, y);
-        z.setParent(y);
-        y.setParent(null);
+        replaceParentLink(z, y);
+        //z.setParent(y);
+        //y.setParent(null);
 
         if (z instanceof AVLNode) ((AVLNode<Entry<K,V>>) z).updateHeight();
         if (y instanceof AVLNode) ((AVLNode<Entry<K,V>>) y).updateHeight();
@@ -43,9 +43,9 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
         z.setLeftChild(yRightSubTree);
         if (yRightSubTree != null) {  yRightSubTree.setParent(z); }
         y.setRightChild(z);
-        //replaceParentLink(z, y);
-        y.setParent(null);
-        z.setParent(y);
+        replaceParentLink(z, y);
+        //y.setParent(null);
+        //z.setParent(y);
 
         if (z instanceof AVLNode) ((AVLNode<Entry<K,V>>) z).updateHeight();
         if (y instanceof AVLNode) ((AVLNode<Entry<K,V>>) y).updateHeight();

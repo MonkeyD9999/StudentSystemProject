@@ -343,8 +343,7 @@ public class Main {
             if(area==null){
                 System.out.println(Output.BND.getMsg());
             } else {
-                area.changeLodge(name, location);
-                Student s = area.getStudent(name);
+                Student s = area.changeLodge(name, location);
                 System.out.printf(Output.LSUC.getMsg(), s.getCurrentLodge().getName(),s.getName(), s.getName());
             }
         }
@@ -409,8 +408,12 @@ public class Main {
             if(area==null){
                 System.out.println(Output.BND.getMsg());
             } else {
+
                 Student s = area.getStudent(name);
-                Service service = area.getStudentCurrentService(name);
+                if(s==null){
+                    throw new Error1Exception(name);
+                }
+                Service service = s.getCurrentService();
 
                 System.out.printf(Output.SLOC.getMsg(), s.getName(), service.getName(), service.getType(), service.getLocation().getLatitude(), service.getLocation().getLongitude());
             }

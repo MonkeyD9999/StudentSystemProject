@@ -24,7 +24,8 @@ public class AreaClass implements Area, Serializable {
     private long bottomRightLong;
 
     private SinglyLinkedList<Service> services;
-    private SinglyLinkedList<Student> students;
+    private SinglyLinkedList<Student> studentsOrder;
+    private ClosedHashTable<String,Student>  students;
     private DoublyLinkedList<Service> ratingOrder;
 
     public AreaClass(String name, long topLeftLat, long topLeftLong, long bottomRightLat, long bottomRightLong) {
@@ -34,7 +35,8 @@ public class AreaClass implements Area, Serializable {
         this.bottomRightLat = bottomRightLat;
         this.bottomRightLong = bottomRightLong;
         services = new SinglyLinkedList<>();
-        students = new SinglyLinkedList<>();
+        studentsOrder = new SinglyLinkedList<>();
+        students = new ClosedHashTable<>();
         ratingOrder = new DoublyLinkedList<Service>();
     }
 
@@ -68,7 +70,7 @@ public class AreaClass implements Area, Serializable {
     @Override
     public void addStudent(String type, String name, String country, String currentLodge) {
         Service lodge = getService(currentLodge);
-        Student s = getStudent(name);
+        Student s = students.get(name.toLowerCase());
         if(!(lodge instanceof LodgeService)){
             throw new Error1Exception(currentLodge);
         }
@@ -81,58 +83,72 @@ public class AreaClass implements Area, Serializable {
         }
 
         switch (type){
-            case "bookish" -> students.addLast(new BookishStudent(name, country, type, lodge));
-            case "outgoing" -> students.addLast(new OutgoingStudent(name, country, type, lodge));
-            case "thrifty" -> students.addLast(new ThriftyStudent(name, country, type, lodge));
+            case "bookish" -> students.put(name.toLowerCase(),new BookishStudent(name, country, type, lodge));
+            case "outgoing" -> students.put(name.toLowerCase(),new OutgoingStudent(name, country, type, lodge));
+            case "thrifty" -> students.put(name.toLowerCase(),new ThriftyStudent(name, country, type, lodge));
         }
-        ((LodgeService) lodge).newCostumer(students.getLast());
+        studentsOrder.addLast(students.get(name.toLowerCase()));
+        ((LodgeService) lodge).newCostumer(students.get(name.toLowerCase()));
     }
 
     @Override
     public Student removeStudent(String name) {
-        Student remove = getStudent(name);
+        Student remove = students.get(name.toLowerCase());
         if(remove==null){
             throw new Error1Exception(name);
         }
         else{
-            int index = students.indexOf(remove);
-            Student s = students.remove(index);
-            Service lodge = s.getCurrentLodge();
+            students.remove(name.toLowerCase());
+            Service lodge = remove.getCurrentLodge();
             if(lodge instanceof LodgeService){
-                ((LodgeService) lodge).leavingCostumer(s);
+                ((LodgeService) lodge).leavingCostumer(remove);
             }
-            Service current = s.getCurrentService();
+            Service current = remove.getCurrentService();
             if(current instanceof LodgeService && current!=lodge){
-                ((LodgeService) current).leavingCostumer(s);
+                ((LodgeService) current).leavingCostumer(remove);
             }
             if(current instanceof EatingService){
-                ((EatingService) current).leaveSeat(s);
+                ((EatingService) current).leaveSeat(remove);
             }
+        }
+
+        Iterator<Student> it =  studentsOrder.iterator();
+        int index=0;
+        while(it.hasNext()){
+            Student student = it.next();
+            if(student.getName().equalsIgnoreCase(name)){
+                studentsOrder.remove(index);
+            }
+            index++;
         }
         return remove;
     }
 
     @Override
     public Iterator<Student> getStudentsAll(String place) {
-        if(students.isEmpty()){
+        if(studentsOrder.isEmpty()){
             throw new Error1Exception(place);
         }
         if(place.equals("all")){
+
             Comparator<Student> comparator = new Comparator<Student>() {
                 @Override
                 public int compare(Student o1, Student o2) {
                     return o1.getName().compareTo(o2.getName());
                 }
             };
+
             SortedDoublyLinkedList<Student> organized = new SortedDoublyLinkedList<>(comparator);
-            for(int i=0; i<students.size(); i++){
-                organized.add(students.get(i));
+            Iterator<Student> iterator = studentsOrder.iterator();
+            while(iterator.hasNext()){
+                Student student = iterator.next();
+                organized.add(student);
             }
             return organized.iterator();
         }
         else{
             Predicate<Student> fromPlace = p ->p.getCountry().equalsIgnoreCase(place);
-            Iterator<Student> temp =  students.iterator();
+            Iterator<Student> temp =  studentsOrder.iterator();
             FilterIterator<Student> filter = new FilterIterator<Student>(temp, fromPlace);
             if(!filter.hasNext()){
                 throw new Error1Exception(place);
@@ -167,7 +183,7 @@ public class AreaClass implements Area, Serializable {
 
     @Override
     public boolean changeLocation(String name, String location) {
-        Student student = getStudent(name);
+        Student student = students.get(name.toLowerCase());
         Service service = getService(location);
 
         if(student==null){
@@ -197,8 +213,8 @@ public class AreaClass implements Area, Serializable {
     }
 
     @Override
-    public void changeLodge(String name, String lodge) {
-        Student student = getStudent(name);
+    public Student changeLodge(String name, String lodge) {
+        Student student = students.get(name.toLowerCase());
         Service service = getService(lodge);
 
         if (student == null)
@@ -217,6 +233,8 @@ public class AreaClass implements Area, Serializable {
         current.leavingCostumer(student);
         ((LodgeService) service).newCostumer(student);
         student.changeLodge(service);
+
+        return student;
     }
 
     @Override
@@ -233,7 +251,7 @@ public class AreaClass implements Area, Serializable {
 
     @Override
     public Iterator<Service> listVisitedServices(String name) {
-        Student student = getStudent(name);
+        Student student = students.get(name.toLowerCase());
 
         if (student == null)
             throw new Error1Exception(name);
@@ -271,17 +289,8 @@ public class AreaClass implements Area, Serializable {
     }
 
     @Override
-    public Service getStudentCurrentService(String name) {
-        Student student = getStudent(name);
-        if (student == null)
-            throw new Error1Exception(name);
-
-        return student.getCurrentService();
-    }
-
-    @Override
     public Service getBestService(String name, String type) {
-        Student student = getStudent(name);
+        Student student = students.get(name.toLowerCase());
 
         if (!(type.equalsIgnoreCase("eating") || type.equalsIgnoreCase("leisure") || type.equalsIgnoreCase("lodging")))
             throw new Error2Exception("");
@@ -346,7 +355,7 @@ public class AreaClass implements Area, Serializable {
 
     @Override
     public Iterator<Service> listClosestServiceRanked(int stars, String type, String name) {
-        Student student = getStudent(name);
+        Student student = students.get(name.toLowerCase());
 
         if (student == null)
             throw new Error1Exception(name);
@@ -404,15 +413,7 @@ public class AreaClass implements Area, Serializable {
     }
 
     public Student getStudent(String name){
-
-        Iterator<Student> it =  students.iterator();
-        while(it.hasNext()){
-            Student student = it.next();
-            if(student.getName().equalsIgnoreCase(name)){
-                return student;
-            }
-        }
-        return null;
+        return students.get(name.toLowerCase());
     }
 
     /*

@@ -75,7 +75,7 @@ public interface Area extends Serializable {
      * @param name Name of the student
      * @param lodge Name of the new Lodge service he will be staying at
      */
-    void changeLodge(String name, String lodge);
+    Student changeLodge(String name, String lodge);
 
     /**
      *
@@ -96,13 +96,6 @@ public interface Area extends Serializable {
      * @return Iterator with all the services with a descending order of their average rating
      */
     Iterator<Service> listServicesByRating();
-
-    /**
-     *
-     * @param name Name of the student
-     * @return Service the student is currently at
-     */
-    Service getStudentCurrentService(String name);
 
     /**
      *
