@@ -213,13 +213,13 @@ public class Main {
             System.out.println(Output.BND.getMsg());
         }
         else{
-            Iterator<Map.Entry<String,Service>> it = area.getServicesAll();
+            Iterator<Service> it = area.getServicesAll();
             //check if empty
             if(!it.hasNext()){
                 System.out.printf(Output.NS.getMsg());
             }
             while(it.hasNext()){
-                Service s = it.next().value();
+                Service s = it.next();
                 System.out.printf(Output.PRINT_SERVICE.getMsg(), s.getName(), s.getType(), s.getLocation().getLatitude(), s.getLocation().getLongitude());
             }
         }
@@ -519,9 +519,9 @@ public class Main {
                 System.out.println(Output.BND.getMsg());
             }
             else {
-                Iterator<Map.Entry<String,Service>> it = area.listServiceReviewsTagged(tag);
+                Iterator<Service> it = area.listServiceReviewsTagged(tag);
                 while(it.hasNext()){
-                    Service s = it.next().value();
+                    Service s = it.next();
                     System.out.printf(Output.SPA.getMsg(), s.getType(), s.getName());
                 }
             }

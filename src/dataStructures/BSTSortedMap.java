@@ -60,8 +60,7 @@ public class BSTSortedMap<K extends Comparable<K>,V> extends BTree<Map.Entry<K,V
     }
 
     private BTNode<Entry<K,V>> getNode(BTNode<Entry<K,V>> node, K key) {
-        if (node == null)
-            return null;
+        if(node==null) return null;
 
         int comp = key.compareTo(node.getElement().key());
         if (comp == 0)
@@ -183,7 +182,7 @@ public class BSTSortedMap<K extends Comparable<K>,V> extends BTree<Map.Entry<K,V
      */
     @Override
     public Iterator<Entry<K, V>> iterator() {
-        return new InOrderIterator((BTNode<Entry<K,V>>) root);
+        return new InOrderIterator<>((BTNode<Entry<K,V>>) root);
     }
 
     /**

@@ -27,7 +27,6 @@ public class BookishStudent extends StudentClass implements Serializable {
         currentLodge = service;
     }
 
-    @Override
     public Iterator<Service> listVisitedServices() {
         return leisureServices.iterator();
     }

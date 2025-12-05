@@ -20,13 +20,27 @@ abstract class BTree<E> extends Tree<E> {
      * Return the further left node of the tree
      * @return
      */
-    BTNode<E> furtherLeftElement() { return ((BTNode<E>)root).furtherLeftElement(); }
+    BTNode<E> furtherLeftElement() {
+        if(root == null) return null;
+        BTNode<E> furtherLeft = (BTNode<E>) root;
+        while(furtherLeft.getLeftChild()!=null) {
+            furtherLeft= (BTNode<E>) furtherLeft.getLeftChild();
+        }
+        return furtherLeft;
+    }
 
     /**
      * Return the further right node of the tree
      * @return
      */
-    BTNode<E> furtherRightElement() { return ((BTNode<E>)root).furtherRightElement(); }
+    BTNode<E> furtherRightElement() {
+        if(root == null) return null;
+        BTNode<E> furtherRight = (BTNode<E>) root;
+        while(furtherRight.getRightChild()!=null) {
+            furtherRight= (BTNode<E>) furtherRight.getRightChild();
+        }
+        return furtherRight;
+    }
 
    //new methods: Left as an exercise.
 }

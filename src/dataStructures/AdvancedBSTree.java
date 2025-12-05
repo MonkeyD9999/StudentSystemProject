@@ -20,8 +20,10 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
 
         z.setRightChild(yLeftSubTree);
        if(yLeftSubTree != null) { yLeftSubTree.setParent(z); }
-        replaceParentLink(z, y);
         y.setLeftChild(z);
+        //replaceParentLink(z, y);
+        z.setParent(y);
+        y.setParent(null);
 
         if (z instanceof AVLNode) ((AVLNode<Entry<K,V>>) z).updateHeight();
         if (y instanceof AVLNode) ((AVLNode<Entry<K,V>>) y).updateHeight();
@@ -41,7 +43,9 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
         z.setLeftChild(yRightSubTree);
         if (yRightSubTree != null) {  yRightSubTree.setParent(z); }
         y.setRightChild(z);
-        replaceParentLink(z, y);
+        //replaceParentLink(z, y);
+        y.setParent(null);
+        z.setParent(y);
 
         if (z instanceof AVLNode) ((AVLNode<Entry<K,V>>) z).updateHeight();
         if (y instanceof AVLNode) ((AVLNode<Entry<K,V>>) y).updateHeight();
@@ -53,7 +57,7 @@ abstract class AdvancedBSTree <K extends Comparable<K>,V> extends BSTSortedMap<K
      *
      * @param x - root of the rotation
      * <pre>
-     *          z=c       z=c        z=a         z=a
+     *       1  z=c     3 z=c      4 z=a         z=a 2
      *          /  \      /  \       /  \        /  \
      *        y=b  t4   y=a  t4    t1  y=c     t1  y=b
      *       /  \      /  \           /  \         /  \

@@ -29,7 +29,7 @@ public interface Area extends Serializable {
      *
      * @return Iterator with all the services
      */
-    Iterator<Map.Entry<String,Service>> getServicesAll();
+    Iterator<Service> getServicesAll();
 
     /**
      *
@@ -126,7 +126,7 @@ public interface Area extends Serializable {
      * @param tag Description of a rating
      * @return Iterator with the services that have a rating with a description that have the tag
      */
-    Iterator<Map.Entry<String, Service>> listServiceReviewsTagged(String tag);
+    Iterator<Service> listServiceReviewsTagged(String tag);
 
     /**
      *
@@ -134,4 +134,6 @@ public interface Area extends Serializable {
      * @return Student or -1 if doesn't exists
      */
     Student getStudent(String name);
+
+    Service getService(String name);
 }

@@ -46,11 +46,6 @@ public interface Student extends Serializable {
      */
     public void changeLodge(Service service);
 
-    /**
-     *
-     * @return Iterator with all the visited places
-     */
-    public Iterator<Service> listVisitedServices();
 
     /**
      *

@@ -43,8 +43,5 @@ public class ThriftyStudent extends StudentClass implements Serializable {
         return service.getPrice() < lodgingRent;
     }
 
-    @Override
-    public Iterator<Service> listVisitedServices() { return null; }
-
 
 }

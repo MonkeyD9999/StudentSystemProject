@@ -33,7 +33,6 @@ public class OutgoingStudent extends StudentClass implements Serializable {
         currentLodge = service;
     }
 
-    @Override
     public Iterator<Service> listVisitedServices() {
         return services.iterator();
     }
